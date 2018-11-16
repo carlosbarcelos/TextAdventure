@@ -24,7 +24,7 @@ def introSequence():
 
     pName = input('Welcome adventurer. What shall I call you? ')
 
-    pClasses = ['ATK Class', 'INT Class', 'DEF Class']
+    pClasses = ['Brute', 'Scholar', 'Druid']
     pClass = 'NA'
     while pClass not in pClasses:
         pClass = input(f'Please select a class: {pClasses} > ')
@@ -55,8 +55,6 @@ def main(args):
     # Initilization
     with open(args.worldSave) as f:
         m = json.load(f)
-    with open(args.enemiesSave) as f:
-        e = json.load(f)
     # If there is a player save try that, else start the game manually
     if args.playerSave:
         with open(args.playerSave) as f:
@@ -65,9 +63,9 @@ def main(args):
         # p = Player.createFromJSON(pJSON)
     else:
         #p = introSequence()
-        p = Player('NAME', 'ATK Class') # Dev mode
+        p = Player('MyName', 'Brute') # Dev mode
 
-    ge = GameEngine(m, e, p)
+    ge = GameEngine(m, p)
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()
@@ -86,8 +84,6 @@ parser = argparse.ArgumentParser(description='Adventure (Working Title)')
 
 parser.add_argument('--world', dest='worldSave', type=str, default='resources/map.json',
                     help='The save file for the world')
-parser.add_argument('--enemies', dest='enemiesSave', type=str, default='resources/enemies.json',
-                    help='The save file for the enemies')
 parser.add_argument('--player', dest='playerSave', type=str, default='',
                     help='The save file for the player')
 
