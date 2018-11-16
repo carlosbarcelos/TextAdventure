@@ -56,6 +56,12 @@ class Player():
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
 
+    # Add items to the player inventory
+    def gainItems(self, items):
+        for i in items:
+            print(f'You got: {i}')
+            self.inventory.append(i)
+
     # Do battle with some enemy
     def battle(self, e, statTuple):
         # Enemy battle information

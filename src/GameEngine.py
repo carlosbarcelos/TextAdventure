@@ -6,6 +6,10 @@
 The GameEngine class with member veriables and functions.
 '''
 
+BATTLE_EXP = 5
+EXPLORE_EXP = 5
+TBD_DEF_EXP = 5
+
 # A simple way to ask yes or no questions
 def questionYesNo(question):
     while "the answer is invalid":
@@ -153,10 +157,12 @@ class GameEngine():
                 if isVictorious:
                     print('You won that battle.')
                     # Reward the player for victory
-                    self.player.gainExp(5)
-                    # Remove the enemy from the room
+                    self.player.gainExp(BATTLE_EXP)
+                    if e['Inventory']:
+                        self.player.gainItems(e['Inventory'])
                     self.map['Map'][self.currentRoom]['Enemies'].remove(e)
                     return True
+                    
                 else:
                     print('You lost that battle.')
                     # Add the enemy back to the
