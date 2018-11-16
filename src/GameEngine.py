@@ -16,9 +16,8 @@ def questionYesNo(question):
             return False
 
 class GameEngine():
-    def __init__(self, map, enemies, player):
+    def __init__(self, map, player):
         self.map = map
-        self.enemies = enemies
         self.player = player
         self.currentRoom = 'Room 1'
         self.isOver = False
@@ -86,7 +85,7 @@ class GameEngine():
         try:
             nextRoom = self.map['Map'][self.currentRoom]['Connections'][dir]
             self.currentRoom = self.map['Map'][nextRoom]['Title']
-            print(self.map['Map'][self.currentRoom]['Description'])
+            self.look()
             return True
         except KeyError:
             print(f"Move '{dir}': Invalid direction.")
@@ -127,25 +126,44 @@ class GameEngine():
         return action
 
     # Battle an enemy in the room
-    # TODO: What if multiple enemies in room
+    # TODO: Return the victor of the battle or None if no battle took place
     def battle(self, noun):
-        try:
-            # Find the enemy in the room
-            e = self.enemies[self.currentRoom]
-            print(e) # TODO: Pretty print enemy stats
+        # A battle cannot take place without an enemy
+        if not self.map['Map'][self.currentRoom]['Enemies']:
+            print('There are no enemies in this room to battle')
+            return False
 
-            # TODO: Prompt user for battle wager
-            if self.player.battle(e):
-                print(f"The battle was won. {e['Name']} was defeated.")
-                # TODO: What happens when player wins?
-                return True # Player wins battle
-            else:
-                print(f"The battle was lost. {e['Name']} was victorious.")
-                # TODO: What happens when player looses?
-                return False # Player looses battle
-        except KeyError:
-            print(f"There is no enemy '{noun}' in the room")
-            return False # The battle was not fought
+        # An enemy must be selected to start a battle
+        if noun is None:
+            print('Select an enemy to battle.')
+            return None
+
+        # Find the enemy in the room
+        for e in self.map['Map'][self.currentRoom]['Enemies']:
+            if e['Name'] == noun:
+                # If the enemy has move than one stat, start topTrumpBattle()
+                if len(e['Stats']) > 1:
+                    isVictorious = self.player.topTrumpBattle(e)
+
+                # Else, start a normal battle
+                else:
+                    isVictorious = self.player.battle(e, e['Stats'].popitem())
+
+                # Perform after action report
+                if isVictorious:
+                    print('You won that battle.')
+                    # Reward the player for victory
+                    self.player.gainExp(5)
+                    # Remove the enemy from the room
+                    self.map['Map'][self.currentRoom]['Enemies'].remove(e)
+                    return True
+                else:
+                    print('You lost that battle.')
+                    # Add the enemy back to the
+                    return False
+
+        print(f"The enemy '{noun}' is not in this room")
+        return None
 
     # Display the map
     def displayMap(self):
@@ -156,6 +174,12 @@ class GameEngine():
     # Look around and get a feel for where you are
     def look(self):
         print(self.map['Map'][self.currentRoom]['Description'])
+        enemyList = self.map['Map'][self.currentRoom]['Enemies']
+        if enemyList:
+            enemyNames = [e['Name'] for e in enemyList]
+            print(f'There are a few enemies here: {enemyNames}')
+        else:
+            print('There are no enemies in this room.')
 
     # Display help information
     def help(self):
