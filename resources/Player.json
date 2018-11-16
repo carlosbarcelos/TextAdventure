@@ -1,0 +1,20 @@
+{
+  "Save Date" : 0,
+  "Player" :
+  {
+    "pName" : "Player",
+    "pClass" : "ATK Class",
+    "inventory" : [],
+    "level" : 0,
+    "exp" : 0,
+    "upgradesAvailable" : 0,
+    "stats" :
+    {
+      "ATK_min": 10,
+      "DEF_min": 0,
+      "INT_min": 5,
+      "ATK_max": 20,
+      "DEF_max": 5,
+      "INT_max": 10}
+  }
+}

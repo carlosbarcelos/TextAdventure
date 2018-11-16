@@ -1,0 +1,28 @@
+{
+  "Map" : "This is the main map",
+  "Difficulty" : "Difficulty",
+  "Version" : "Version Number",
+  "Map" :
+  {
+    "Room 1" : {
+      "Title" : "Room 1",
+      "Description" : "Welcome to Room 1",
+      "Items" : ["a", "b"],
+      "Connections" : {"north" : "Room 2", "west" : "Room 3"}
+    },
+
+    "Room 2" : {
+      "Title" : "Room 2",
+      "Description" : "Welcome to Room 2",
+      "Items" : [],
+      "Connections" : {"south" : "Room 2"}
+    },
+
+    "Room 3" : {
+      "Title" : "Room 3",
+      "Description" : "Welcome to Room 3",
+      "Items" : ["a"],
+      "Connections" : {"east" : "Room 1"}
+    }
+  }
+}
