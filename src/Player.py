@@ -6,10 +6,7 @@
 The player class with member veriables and functions.
 '''
 
-from random import randint
-import colorama # Colored console text
-colorama.init(autoreset=True)
-# TODO: Consider something like --> print(f'{colorama.Fore.RED}===== ADVENTURE =====')
+from random import randint # Pseudo-random numbers
 
 MAX_EXP = 100
 
@@ -57,7 +54,7 @@ class Player():
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
 
     # Add items to the player inventory
-    def gainItems(self, items):
+    def getItems(self, items):
         for i in items:
             print(f'You got: {i}')
             self.inventory.append(i)

@@ -6,8 +6,9 @@
 The GameEngine class with member veriables and functions.
 '''
 
-import glob # Search files/directories
-import json     # Handle JSON files
+import glob                   # Search files/directories
+import json                   # Handle JSON files
+import networkx as nx         # Directed graph
 from datetime import datetime # Current datetime
 
 BATTLE_EXP = 5
@@ -163,7 +164,7 @@ class GameEngine():
                     # Reward the player for victory
                     self.player.gainExp(BATTLE_EXP)
                     if e['Inventory']:
-                        self.player.gainItems(e['Inventory'])
+                        self.player.getItems(e['Inventory'])
                     self.map[self.currentRoom]['Enemies'].remove(e)
                     return True
 
@@ -176,9 +177,18 @@ class GameEngine():
         return None
 
     # Display the map
+    # TODO: Dispaly map.json as a printable string
     def displayMap(self):
-        # TODO: Dispaly map.json as a printable string
         print('Display map not yet implemented')
+        '''
+        mapGraph = nx.DiGraph()
+
+        # Make a directed graph structure from the map JSON
+        mapGraph.add_nodes_from(map['Map'].keys())
+        for room in mapGraph.nodes():
+            for dest in map['Map'][room]['Connections'].values():
+                mapGraph.add_edge(room, dest)
+        '''
         return False
 
     # Look around and get a feel for where you are
