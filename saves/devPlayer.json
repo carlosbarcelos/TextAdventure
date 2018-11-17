@@ -1,0 +1,14 @@
+{
+  "pName" : "Name",
+  "pClass" : "Brute",
+  "inventory" : ["foo", "bar"],
+  "level" : 3,
+  "exp" : 15,
+  "upgradesAvailable" : 2,
+  "stats" :
+  {
+    "ATK" : [1,2],
+    "INT" : [3,4],
+    "DEF" : [5,6]
+  }
+}

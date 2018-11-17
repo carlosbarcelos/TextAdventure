@@ -6,6 +6,10 @@
 The GameEngine class with member veriables and functions.
 '''
 
+import glob # Search files/directories
+import json     # Handle JSON files
+from datetime import datetime # Current datetime
+
 BATTLE_EXP = 5
 EXPLORE_EXP = 5
 TBD_DEF_EXP = 5
@@ -87,13 +91,13 @@ class GameEngine():
             return False
 
         try:
-            nextRoom = self.map['Map'][self.currentRoom]['Connections'][dir]
-            self.currentRoom = self.map['Map'][nextRoom]['Title']
+            nextRoom = self.map[self.currentRoom]['Connections'][dir]
+            self.currentRoom = self.map[nextRoom]['Title']
             self.look()
             return True
         except KeyError:
             print(f"Move '{dir}': Invalid direction.")
-            print(f"Possible directions from {self.currentRoom}: {self.map['Map'][self.currentRoom]['Connections']}")
+            print(f"Possible directions from {self.currentRoom}: {self.map[self.currentRoom]['Connections']}")
             return False
 
     # Taken a given item and add it to the player inventory
@@ -103,10 +107,10 @@ class GameEngine():
             return False
 
         returnState = False
-        items = self.map['Map'][self.currentRoom]['Items']
+        items = self.map[self.currentRoom]['Items']
 
         if noun in items:
-            self.map['Map'][self.currentRoom]['Items'].remove(noun)
+            self.map[self.currentRoom]['Items'].remove(noun)
             self.player.inventory.append(noun)
             print(f'Inventory: {self.player.inventory}')
         else:
@@ -133,7 +137,7 @@ class GameEngine():
     # TODO: Return the victor of the battle or None if no battle took place
     def battle(self, noun):
         # A battle cannot take place without an enemy
-        if not self.map['Map'][self.currentRoom]['Enemies']:
+        if not self.map[self.currentRoom]['Enemies']:
             print('There are no enemies in this room to battle')
             return False
 
@@ -143,7 +147,7 @@ class GameEngine():
             return None
 
         # Find the enemy in the room
-        for e in self.map['Map'][self.currentRoom]['Enemies']:
+        for e in self.map[self.currentRoom]['Enemies']:
             if e['Name'] == noun:
                 # If the enemy has move than one stat, start topTrumpBattle()
                 if len(e['Stats']) > 1:
@@ -160,9 +164,9 @@ class GameEngine():
                     self.player.gainExp(BATTLE_EXP)
                     if e['Inventory']:
                         self.player.gainItems(e['Inventory'])
-                    self.map['Map'][self.currentRoom]['Enemies'].remove(e)
+                    self.map[self.currentRoom]['Enemies'].remove(e)
                     return True
-                    
+
                 else:
                     print('You lost that battle.')
                     # Add the enemy back to the
@@ -174,13 +178,13 @@ class GameEngine():
     # Display the map
     def displayMap(self):
         # TODO: Dispaly map.json as a printable string
-        print('MAP')
+        print('Display map not yet implemented')
         return False
 
     # Look around and get a feel for where you are
     def look(self):
-        print(self.map['Map'][self.currentRoom]['Description'])
-        enemyList = self.map['Map'][self.currentRoom]['Enemies']
+        print(self.map[self.currentRoom]['Description'])
+        enemyList = self.map[self.currentRoom]['Enemies']
         if enemyList:
             enemyNames = [e['Name'] for e in enemyList]
             print(f'There are a few enemies here: {enemyNames}')
@@ -196,9 +200,21 @@ class GameEngine():
 
     # Save the player and world status
     def save(self):
-        print('Save is not yet implemented.')
-        # TODO
-        return False
+        playerSaves = len(glob.glob1('saves/', 'Player*.json'))
+        worldSaves = len(glob.glob1('saves/', 'World*.json'))
+
+        # Create the Player save file
+        playerData = self.player.toJSON()
+        fn = f'saves/Player_{playerSaves+1}.json'
+        with open(fn, 'w') as s:
+            json.dump(playerData, s)
+        print(f'Player saved as {fn}')
+
+        # Create the World save file
+        fn = f'saves/World_{worldSaves+1}.json'
+        with open(fn, 'w') as s:
+            json.dump(self.map, s)
+        print(f'World saved as {fn}')
 
     # Quit the game
     def quit(self):
