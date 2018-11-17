@@ -17,23 +17,23 @@ MAX_EXP = 100
 def setPlayerStats(pClass):
     # ATK Class
     if pClass == 'Brute':
-        stats = {'ATK_min': 10, 'DEF_min': 0, 'INT_min': 5,'ATK_max': 20, 'DEF_max': 5, 'INT_max': 10}
+        stats = {'ATK' : [10, 20], 'INT' : [5, 10], 'DEF' : [0, 5]}
     # INT Class
     elif pClass == 'Scholar':
-        stats = {'ATK_min': 0, 'DEF_min': 5, 'INT_min': 10,'ATK_max': 5, 'DEF_max': 10, 'INT_max': 20}
+        stats = {'ATK' : [0, 5], 'INT' : [10, 20], 'DEF' : [5, 10]}
     # DEF Class
     elif pClass == 'Druid':
-        stats = {'ATK_min': 5, 'DEF_min': 10, 'INT_min': 0,'ATK_max': 10, 'DEF_max': 20, 'INT_max': 5}
+        stats = {'ATK' : [5, 10], 'INT' : [0, 5], 'DEF' : [10, 20]}
     return stats
 
 class Player():
-    def __init__(self, pName, pClass):
+    def __init__(self, pName, pClass, inventory=[], level=1, exp=0, upgradesAvailable=0):
         self.pName = pName
         self.pClass = pClass
-        self.inventory = []
-        self.level = 1
-        self.exp = 0
-        self.upgradesAvailable = 0
+        self.inventory = inventory
+        self.level = level
+        self.exp = exp
+        self.upgradesAvailable = upgradesAvailable
         self.stats = setPlayerStats(self.pClass)
 
     # Print the player stats
@@ -44,9 +44,9 @@ class Player():
             print(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
         else:
             print(f'== Exp: {self.exp} / {MAX_EXP}')
-        print(f"== ATK: {self.stats['ATK_min']}..{self.stats['ATK_max']}")
-        print(f"== DEF: {self.stats['DEF_min']}..{self.stats['DEF_max']}")
-        print(f"== INT: {self.stats['INT_min']}..{self.stats['INT_max']}")
+        print(f"== ATK: {self.stats['ATK'][0]}..{self.stats['ATK'][1]}")
+        print(f"== INT: {self.stats['INT'][0]}..{self.stats['INT'][1]}")
+        print(f"== DEF: {self.stats['DEF'][0]}..{self.stats['DEF'][1]}")
         print(f'== Inventory: {self.inventory}')
         print(f'=====================')
 
@@ -69,7 +69,7 @@ class Player():
         eStatVal = statTuple[1]
 
         # Get the players battle value from within the range
-        pStatVal = randint(self.stats[f'{statType}_min'], self.stats[f'{statType}_max'])
+        pStatVal = randint(self.stats[statType][0], self.stats[statType][1])
 
         print(f'=== {statType} Battle ===')
         print(f'= {self.pName}: {pStatVal}')
@@ -87,8 +87,8 @@ class Player():
         print('=== Stat Comparison ===')
         print('=      Player | Enemy =')
         for s in eStats:
-            pStatMin = self.stats[f'{s}_min']
-            pStatMax = self.stats[f'{s}_min']
+            pStatMin = self.stats[s][0]
+            pStatMax = self.stats[s][1]
             eStat = e['Stats'][s]
             print(f'= {s}: {pStatMin}..{pStatMax} | {eStat}')
         print(f'======================')
@@ -101,3 +101,15 @@ class Player():
         # Get the enemy value and return the battle
         statTuple = (selectedStat, e['Stats'][selectedStat])
         return self.battle(e, statTuple)
+
+    # Convert the player data to a JSON data dump
+    def toJSON(self):
+        jData = {}
+        jData['pName'] = self.pName
+        jData['pClass'] = self.pClass
+        jData['inventory'] = self.inventory
+        jData['level'] = self.level
+        jData['exp'] = self.exp
+        jData['upgradesAvailable'] = self.upgradesAvailable
+        jData['stats'] = self.stats
+        return jData

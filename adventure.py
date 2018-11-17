@@ -4,6 +4,7 @@
 @date TODO
 '''
 
+import os # Search files/directories
 import sys      # Various system variables
 import json     # Handle JSON files
 import networkx as nx # Directed graph
@@ -25,10 +26,10 @@ def introSequence():
     pName = input('Welcome adventurer. What shall I call you? ')
 
     pClasses = ['Brute', 'Scholar', 'Druid']
-    pClass = 'NA'
+    pClass = ''
     while pClass not in pClasses:
         pClass = input(f'Please select a class: {pClasses} > ')
-    return Player(pName, pClass)
+    return (pName, pClass)
 
 mapGraph = nx.DiGraph()
 
@@ -57,13 +58,18 @@ def main(args):
         m = json.load(f)
     # If there is a player save try that, else start the game manually
     if args.playerSave:
-        with open(args.playerSave) as f:
+        fn = f'saves/{args.playerSave}.json'
+        if not os.path.isfile(fn):
+            pDetails = introSequence()
+            p = Player(pDetails[0], pDetails[1])
+        with open(fn) as f:
             pJSON = json.load(f)
-        # TODO: enable this
-        # p = Player.createFromJSON(pJSON)
+        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], \
+            pJSON['level'], pJSON['exp'], pJSON['upgradesAvailable'])
+        print(f'Player loaded from {fn}')
     else:
-        #p = introSequence()
-        p = Player('MyName', 'Brute') # Dev mode
+        pDetails = introSequence()
+        p = Player(pDetails[0], pDetails[1])
 
     ge = GameEngine(m, p)
     # Start the core game loop
@@ -72,7 +78,6 @@ def main(args):
 
     print('The adventure is over . . .')
     return 0
-
 ##############
 ## End Main ##
 ##############
@@ -85,7 +90,7 @@ parser = argparse.ArgumentParser(description='Adventure (Working Title)')
 parser.add_argument('--world', dest='worldSave', type=str, default='resources/map.json',
                     help='The save file for the world')
 parser.add_argument('--player', dest='playerSave', type=str, default='',
-                    help='The save file for the player')
+                    help='The save file for the player. Type only the file name, without extension. Ex) Player_1')
 
 args = parser.parse_args()
 ##############################

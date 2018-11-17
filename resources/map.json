@@ -1,53 +1,47 @@
 {
-  "Map" : "This is the main map",
-  "Difficulty" : "Difficulty",
-  "Version" : "Version Number",
-  "Map" :
-  {
-    "Room 1" : {
-      "Title" : "Room 1",
-      "Description" : "Welcome to Room 1",
-      "Items" : ["a", "b"],
-      "Enemies" :
-      [
-        {
-          "Name": "e1",
-          "Description" : "Enemy 1 Description",
-          "Inventory" : ["item1", "item2"],
-          "Stats" : { "ATK" : 1, "DEF" : 2, "INT" : 3 }
-        }
-      ],
-      "Connections" : {"north" : "Room 2"}
-    },
+  "Room 1" : {
+    "Title" : "Room 1",
+    "Description" : "Welcome to Room 1",
+    "Items" : ["a", "b"],
+    "Enemies" :
+    [
+      {
+        "Name": "e1",
+        "Description" : "Enemy 1 Description",
+        "Inventory" : ["item1", "item2"],
+        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 }
+      }
+    ],
+    "Connections" : {"north" : "Room 2"}
+  },
 
-    "Room 2" : {
-      "Title" : "Room 2",
-      "Description" : "Welcome to Room 2",
-      "Items" : [],
-      "Enemies" :
-      [
-        {
-          "Name": "e1",
-          "Description" : "Enemy 1 Description",
-          "Inventory" : [],
-          "Stats" : { "ATK" : 1, "DEF" : 2, "INT" : 3 }
-        },
-        {
-          "Name": "e2",
-          "Description" : "Enemy 2 Description",
-          "Inventory" : [],
-          "Stats" : { "ATK" : 1, "DEF" : 2, "INT" : 3 }
-        }
-      ],
-      "Connections" : {"north" : "Room 3", "south" : "Room 1"}
-    },
+  "Room 2" : {
+    "Title" : "Room 2",
+    "Description" : "Welcome to Room 2",
+    "Items" : [],
+    "Enemies" :
+    [
+      {
+        "Name": "e1",
+        "Description" : "Enemy 1 Description",
+        "Inventory" : [],
+        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 }
+      },
+      {
+        "Name": "e2",
+        "Description" : "Enemy 2 Description",
+        "Inventory" : [],
+        "Stats" : { "ATK" : 1}
+      }
+    ],
+    "Connections" : {"north" : "Room 3", "south" : "Room 1"}
+  },
 
-    "Room 3" : {
-      "Title" : "Room 3",
-      "Description" : "Welcome to Room 3",
-      "Items" : ["a"],
-      "Enemies" :[],
-      "Connections" : {"south" : "Room 2"}
-    }
+  "Room 3" : {
+    "Title" : "Room 3",
+    "Description" : "Welcome to Room 3",
+    "Items" : ["a"],
+    "Enemies" :[],
+    "Connections" : {"south" : "Room 2"}
   }
 }
