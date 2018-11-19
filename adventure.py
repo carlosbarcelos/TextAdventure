@@ -74,9 +74,6 @@ def initalize(args):
 def main(args):
     ge = initalize(args)
 
-    ge.displayMap()
-    sys.exit(1)
-
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()

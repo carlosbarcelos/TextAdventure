@@ -9,10 +9,16 @@
         "Name": "e1",
         "Description" : "Enemy 1 Description",
         "Inventory" : ["item1", "item2"],
-        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 }
+        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 },
+        "Area" : "ATK",
+        "Icon" : " ",
+        "Coordinates" : [0,0]
       }
     ],
-    "Connections" : {"north" : "Room 2"}
+    "Connections" : {"north" : "Room 2"},
+    "Area" : "ATK",
+    "Icon" : " ",
+    "Coordinates" : [0,1]
   },
 
   "Room 2" : {
@@ -34,7 +40,10 @@
         "Stats" : { "ATK" : 1}
       }
     ],
-    "Connections" : {"north" : "Room 3", "south" : "Room 1"}
+    "Connections" : {"north" : "Room 3", "south" : "Room 1"},
+    "Area" : "INT",
+    "Icon" : " ",
+    "Coordinates" : [0,1]
   },
 
   "Room 3" : {
@@ -42,6 +51,20 @@
     "Description" : "Welcome to Room 3",
     "Items" : ["a"],
     "Enemies" :[],
-    "Connections" : {"south" : "Room 2"}
+    "Connections" : {"north" : "Room 4", "south" : "Room 2"},
+    "Area" : "DEF",
+    "Icon" : " ",
+    "Coordinates" : [1,0]
+  },
+
+  "Room 4" : {
+    "Title" : "Room 4",
+    "Description" : "Welcome to Room 4",
+    "Items" : [],
+    "Enemies" :[],
+    "Connections" : {"south" : "Room 3"},
+    "Area" : "",
+    "Icon" : " ",
+    "Coordinates" : [1,1]
   }
 }
