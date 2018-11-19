@@ -8,7 +8,7 @@ The GameEngine class with member veriables and functions.
 
 import glob                   # Search files/directories
 import json                   # Handle JSON files
-import networkx as nx         # Directed graph
+import math                   # Math functionality
 from datetime import datetime # Current datetime
 
 BATTLE_EXP = 5
@@ -176,20 +176,33 @@ class GameEngine():
         print(f"The enemy '{noun}' is not in this room")
         return None
 
-    # Display the map
-    # TODO: Dispaly map.json as a printable string
+    # Display the map; Expects a square map
     def displayMap(self):
-        print('Display map not yet implemented')
-        '''
-        mapGraph = nx.DiGraph()
+        # Create 2D map array
+        mapLen = int(math.sqrt(len(self.map.keys())))
+        mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
+        for room in self.map.values():
+            roomCoord = room['Coordinates']
+            roomIcon = room['Icon']
+            # If the player has the area map, display the icon
+            if f"{room['Area']} Map" in self.player.inventory:
+                mapArr[roomCoord[0]][roomCoord[1]] = roomIcon
+            # Else, display a fog
+            else:
+                mapArr[roomCoord[0]][roomCoord[1]] = '~'
 
-        # Make a directed graph structure from the map JSON
-        mapGraph.add_nodes_from(map['Map'].keys())
-        for room in mapGraph.nodes():
-            for dest in map['Map'][room]['Connections'].values():
-                mapGraph.add_edge(room, dest)
-        '''
-        return False
+        # Display the array
+        rowDivider = '+'
+        for row in mapArr:
+            rowDivider += '---+'
+
+        for row in mapArr:
+            print(rowDivider)
+            rowString = '|'
+            for col in row:
+                rowString += f' {col} |'
+            print(rowString)
+        print(rowDivider)
 
     # Look around and get a feel for where you are
     def look(self):

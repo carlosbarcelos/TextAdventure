@@ -1,7 +1,7 @@
 {
   "pName" : "Name",
   "pClass" : "Brute",
-  "inventory" : ["foo", "bar"],
+  "inventory" : ["foo", "bar", "ATK Map", "DEF Map"],
   "level" : 3,
   "exp" : 15,
   "upgradesAvailable" : 2,
