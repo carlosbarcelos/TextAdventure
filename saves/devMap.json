@@ -1,0 +1,94 @@
+{
+  "ATK 1" : {
+    "Title" : "ATK 1",
+    "Description" : "ATK 1",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "ATK",
+    "Icon" : "!",
+    "Coordinates" : [0,0]
+  },
+  "ATK 2" : {
+    "Title" : "ATK 2",
+    "Description" : "ATK 2",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "ATK",
+    "Icon" : "@",
+    "Coordinates" : [0,1]
+  },
+  "ATK 3" : {
+    "Title" : "ATK 3",
+    "Description" : "ATK 3",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "ATK",
+    "Icon" : " ",
+    "Coordinates" : [0,2]
+  },
+
+  "INT 1" : {
+    "Title" : "INT 1",
+    "Description" : "INT 1",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "INT",
+    "Icon" : "!",
+    "Coordinates" : [1,0]
+  },
+  "INT 2" : {
+    "Title" : "INT 2",
+    "Description" : "INT 2",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "INT",
+    "Icon" : "@",
+    "Coordinates" : [1,1]
+  },
+  "INT 3" : {
+    "Title" : "INT 3",
+    "Description" : "INT 3",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "INT",
+    "Icon" : " ",
+    "Coordinates" : [1,2]
+  },
+
+  "DEF 1" : {
+    "Title" : "DEF 1",
+    "Description" : "DEF 1",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "DEF",
+    "Icon" : "!",
+    "Coordinates" : [2,0]
+  },
+  "DEF 2" : {
+    "Title" : "DEF 2",
+    "Description" : "DEF 2",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "DEF",
+    "Icon" : "@",
+    "Coordinates" : [2,1]
+  },
+  "DEF 3" : {
+    "Title" : "DEF 3",
+    "Description" : "DEF 3",
+    "Items" : [],
+    "Enemies" : [],
+    "Connections" : {},
+    "Area" : "DEF",
+    "Icon" : " ",
+    "Coordinates" : [2,2]
+  }
+}

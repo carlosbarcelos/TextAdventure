@@ -9,6 +9,7 @@ The main class to start the adventure
 import os       # Search files/directories
 import argparse # Command line arguments
 import json     # Handle JSON files
+import sys      # DEV TOOL
 
 from src.GameEngine import GameEngine # Import the GameEngine class
 from src.Player import Player         # Import the Player class
@@ -42,8 +43,14 @@ def outroSequence():
 # Initialize a new GameEngine with a game world and a player
 def initalize(args):
     # Get the map
-    with open(args.worldSave) as f:
-        m = json.load(f)
+    fn = f'saves/{args.mapSave}.json'
+    if args.mapSave and os.path.isfile(fn):
+        with open(fn) as f:
+            m = json.load(f)
+        print(f'Map loaded from {fn}')
+    else:
+        with open('saves/map.json') as f:
+            m = json.load(f)
 
     # Get the player
     fn = f'saves/{args.playerSave}.json'
@@ -67,6 +74,9 @@ def initalize(args):
 def main(args):
     ge = initalize(args)
 
+    ge.displayMap()
+    sys.exit(1)
+
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()
@@ -82,7 +92,7 @@ def main(args):
 #########################
 parser = argparse.ArgumentParser(description='Adventure (Working Title)')
 
-parser.add_argument('--world', dest='worldSave', type=str, default='resources/map.json',
+parser.add_argument('--map', dest='mapSave', type=str, default='',
                     help='The save file for the world')
 parser.add_argument('--player', dest='playerSave', type=str, default='',
                     help='The save file for the player. Type only the file name, without extension. Ex) Player_1')
