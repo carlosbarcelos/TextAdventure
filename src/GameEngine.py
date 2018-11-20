@@ -15,14 +15,18 @@ BATTLE_EXP = 5
 EXPLORE_EXP = 5
 TBD_DEF_EXP = 5
 
-# A simple way to ask yes or no questions
-def questionYesNo(question):
-    while "the answer is invalid":
-        reply = str(input(question+' (y/n)> ')).lower().strip()
-        if reply[0] == 'y':
-            return True
-        if reply[0] == 'n':
-            return False
+# Provide a user propt with a given question and acceptible responses
+def optionParse(question, answers):
+    while "invalid response":
+        prettyAnswers = ' ('
+        for i in range(len(answers)):
+            prettyAnswers += str(answers[i])
+            if not i == len(answers)-1:
+                prettyAnswers += '/'
+
+        reply = str(input(question+prettyAnswers+')> '))
+        if reply in answers:
+            return reply
 
 class GameEngine():
     def __init__(self, map, player):
@@ -243,9 +247,10 @@ class GameEngine():
 
     # Quit the game
     def quit(self):
-        if not questionYesNo('Are you sure you want to quit?'):
+        if 'n' == optionParse('Are you sure you want to quit?', ['y','n']):
             return False
-        if questionYesNo('Quitting...\nWould you like to save?'):
+        print('Quitting...')
+        if 'y' == optionParse('Would you like to save?', ['y','n']):
             self.save()
         self.isOver = True
         return True

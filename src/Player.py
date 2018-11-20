@@ -13,6 +13,19 @@ MIN_STAT_UP = 4
 MAX_STAT_UP = 5
 MAX_STAT_VAL = 100
 
+# Provide a user propt with a given question and acceptible responses
+def optionParse(question, answers):
+    while "invalid response":
+        prettyAnswers = ' ('
+        for i in range(len(answers)):
+            prettyAnswers += str(answers[i])
+            if not i == len(answers)-1:
+                prettyAnswers += '/'
+
+        reply = str(input(question+prettyAnswers+')> '))
+        if reply in answers:
+            return reply
+
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
     # ATK Class
@@ -71,11 +84,8 @@ class Player():
         if not availableStats:
             print('There are no stats available to upgrade.')
             return False
-        while "the stat is invalid":
-            reply = input(f'Select stat to upgrade: {availableStats}> ')
-            if reply in availableStats:
-                selectedStat = reply
-                break
+
+        selectedStat = optionParse('Select a stat to upgrade:', availableStats)
 
         # Prompt which attribute to upgrade
         availableAttr = []
@@ -85,14 +95,12 @@ class Player():
         # MAX value cannot be larger than MAX_STAT_VAL
         if (self.stats[selectedStat][1]+MAX_STAT_UP) < MAX_STAT_VAL:
             availableAttr.append('MAX')
+
         if not availableAttr:
             print(f'There are no attributes available to upgrade for {selectedStat}')
             return False
-        while "the attribute is invalid":
-            reply = input(f'Select attribute to upgrade: {availableAttr}> ')
-            if reply in availableAttr:
-                selectedAttr = reply
-                break
+
+        selectedAttr = optionParse('Select an attribute to upgrade', availableAttr)
 
         # Do the upgrade and report to user
         upgradePos = 0 if (selectedAttr=='MIN') else 1
