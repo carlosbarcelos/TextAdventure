@@ -9,6 +9,9 @@ The player class with member veriables and functions.
 from random import randint # Pseudo-random numbers
 
 MAX_EXP = 100
+MIN_STAT_UP = 4
+MAX_STAT_UP = 5
+MAX_STAT_VAL = 100
 
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
@@ -52,6 +55,52 @@ class Player():
         self.exp = (self.exp + val) % MAX_EXP
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
+
+    # Trade in one level for for one stat upgrade
+    def upgrade(self):
+        if self.upgradesAvailable < 1:
+            print('You have no upgrades available.')
+            return False
+
+        # Prompt which stat to upgrade
+        availableStats = []
+        for s in ['ATK', 'INT', 'DEF']:
+            if self.stats[s][0] != MAX_STAT_VAL and self.stats[s][1] != MAX_STAT_VAL:
+                availableStats.append(s)
+
+        if not availableStats:
+            print('There are no stats available to upgrade.')
+            return False
+        while "the stat is invalid":
+            reply = input(f'Select stat to upgrade: {availableStats}> ')
+            if reply in availableStats:
+                selectedStat = reply
+                break
+
+        # Prompt which attribute to upgrade
+        availableAttr = []
+        # MIN value cannot be larger than MAX
+        if (self.stats[selectedStat][0]+MIN_STAT_UP) < self.stats[selectedStat][1]:
+            availableAttr.append('MIN')
+        # MAX value cannot be larger than MAX_STAT_VAL
+        if (self.stats[selectedStat][1]+MAX_STAT_UP) < MAX_STAT_VAL:
+            availableAttr.append('MAX')
+        if not availableAttr:
+            print(f'There are no attributes available to upgrade for {selectedStat}')
+            return False
+        while "the attribute is invalid":
+            reply = input(f'Select attribute to upgrade: {availableAttr}> ')
+            if reply in availableAttr:
+                selectedAttr = reply
+                break
+
+        # Do the upgrade and report to user
+        upgradePos = 0 if (selectedAttr=='MIN') else 1
+        upgradeVal = MIN_STAT_UP if (selectedAttr=='MIN') else MAX_STAT_UP
+        self.stats[selectedStat][upgradePos] += upgradeVal
+        self.upgradesAvailable -= 1
+        print(f'Successfully upgraded {selectedAttr} attribute of {selectedStat} stat.')
+        return True
 
     # Add items to the player inventory
     def getItems(self, items):
