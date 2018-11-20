@@ -39,12 +39,13 @@ class GameEngine():
         'battle' : 'Initiate a battle with an enemy',
         'map' : 'Display the map with a legend',
         'stats' : 'Print the player stats',
+        'upgrade' : 'Upgrade the player stats',
         'save' : 'Save your progress and continue',
         'quit' : 'Quit the game'}
 
     # Promt the user for action
     def prompt(self):
-        newInput = input(f'{self.currentRoom} > ')
+        newInput = input(f'{self.currentRoom} > ').lower().strip()
         self.parse(newInput)
 
     # Get the action word and additional options
@@ -78,6 +79,7 @@ class GameEngine():
             'battle': lambda: self.battle(noun),
             'map': lambda: self.displayMap(),
             'stats': lambda: self.player.printStats(),
+            'upgrade': lambda: self.player.upgrade(),
             'save': lambda: self.save(),
             'quit': lambda: self.quit()
         }
