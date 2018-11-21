@@ -116,6 +116,11 @@ class Player():
             print(f'You got: {i}')
             self.inventory.append(i)
 
+    # Check the player inventory for a certain number of an item
+    def checkInventory(self, item, quantity):
+        # TODO
+        return False
+
     # Do battle with some enemy
     def battle(self, e, statTuple):
         # Enemy battle information

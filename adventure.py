@@ -11,8 +11,9 @@ import argparse # Command line arguments
 import json     # Handle JSON files
 import sys      # DEV TOOL
 
-from src.GameEngine import GameEngine # Import the GameEngine class
-from src.Player import Player         # Import the Player class
+from src.Achievements import Achievements # Import the Achievements class
+from src.GameEngine import GameEngine    # Import the GameEngine class
+from src.Player import Player            # Import the Player class
 
 # Display the one-time, intro sequence to the game
 def introSequence():
@@ -66,7 +67,18 @@ def initalize(args):
         pDetails = introSequence()
         p = Player(pDetails[0], pDetails[1])
 
-    return GameEngine(m, p)
+    # Get the achievements
+    fn = f'saves/{args.achievementSave}.json'
+    if args.achievementSave and os.path.isfile(fn):
+        with open(fn) as f:
+            aJSON = json.load(f)
+        print(f'Achievement loaded from {fn}')
+    else:
+        with open('saves/achievements.json') as f:
+            aJSON = json.load(f)
+    a = Achievements(aJSON)
+
+    return GameEngine(m, p, a)
 
 ###############
 ## Main Loop ##
@@ -74,9 +86,14 @@ def initalize(args):
 def main(args):
     ge = initalize(args)
 
+    # ge.achievements.checkAll(ge)
+    # ge.achievements.reportAll()
+    # sys.exit(1)
+
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()
+        ge.achievements.checkAll(ge)
 
     outroSequence()
     return 0
@@ -93,6 +110,8 @@ parser.add_argument('--map', dest='mapSave', type=str, default='',
                     help='The save file for the world')
 parser.add_argument('--player', dest='playerSave', type=str, default='',
                     help='The save file for the player. Type only the file name, without extension. Ex) Player_1')
+parser.add_argument('--achievement', dest='achievementSave', type=str, default='',
+                    help='The achievements to use for this game')
 
 args = parser.parse_args()
 ##############################
