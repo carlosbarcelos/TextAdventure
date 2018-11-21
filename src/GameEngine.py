@@ -29,9 +29,10 @@ def optionParse(question, answers):
             return reply
 
 class GameEngine():
-    def __init__(self, map, player):
+    def __init__(self, map, player, achievements):
         self.map = map
         self.player = player
+        self.achievements = achievements
         self.currentRoom = 'Room 1'
         self.isOver = False
         self.verbs = {
@@ -44,6 +45,7 @@ class GameEngine():
         'map' : 'Display the map with a legend',
         'stats' : 'Print the player stats',
         'upgrade' : 'Upgrade the player stats',
+        'achievements' : 'Get the current achievement progress',
         'save' : 'Save your progress and continue',
         'quit' : 'Quit the game'}
 
@@ -84,6 +86,7 @@ class GameEngine():
             'map': lambda: self.displayMap(),
             'stats': lambda: self.player.printStats(),
             'upgrade': lambda: self.player.upgrade(),
+            'achievements' : lambda: self.achievements.reportAll(),
             'save': lambda: self.save(),
             'quit': lambda: self.quit()
         }
