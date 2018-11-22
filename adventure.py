@@ -90,9 +90,8 @@ def initalize(args):
 def main(args):
     ge = initalize(args)
 
-    # ge.achievements.checkAll(ge)
-    # ge.achievements.reportAll()
-    # sys.exit(1)
+    ge.displayMap()
+    sys.exit(1)
 
     # Start the core game loop
     while(not ge.isOver):

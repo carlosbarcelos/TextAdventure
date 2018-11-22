@@ -190,9 +190,13 @@ class GameEngine():
 
     # Display the map; Expects a square map
     def displayMap(self):
-        # Create 2D map array
+        # Initalize data structures
         mapLen = int(math.sqrt(len(self.map.keys())))
         mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
+        eastConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
+        southConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
+
+        # Create 2D map and border arrays
         for room in self.map.values():
             roomCoord = room['Coordinates']
             roomIcon = room['Icon']
@@ -203,18 +207,33 @@ class GameEngine():
             else:
                 mapArr[roomCoord[0]][roomCoord[1]] = '~'
 
-        # Display the array
-        rowDivider = '+'
-        for row in mapArr:
-            rowDivider += '---+'
+            # If this room has connections, note them on the map
+            connections = room['Connections'].keys()
+            strVal =  ' '
+            if 'east' not in connections:
+                strVal =  '|'
+            eastConn[roomCoord[0]][roomCoord[1]] = strVal
 
-        for row in mapArr:
-            print(rowDivider)
-            rowString = '|'
-            for col in row:
-                rowString += f' {col} |'
-            print(rowString)
-        print(rowDivider)
+            strVal =  '   +'
+            if 'south' not in connections:
+                strVal = '---+'
+            southConn[roomCoord[0]][roomCoord[1]] = strVal
+
+        # Piece together the map and display
+        print('+' + ('---+'*len(mapArr)))
+        for i in range(len(mapArr)):
+            # Print the rooom information
+            rowStr = '|'
+            for j in range(len(mapArr[i])):
+                rowStr += f' {mapArr[i][j]} {eastConn[i][j]}'
+            print(rowStr)
+
+            # Print the divider information
+            dividerStr = '+'
+            for d in southConn[i]:
+                dividerStr += d
+            print(dividerStr)
+
 
     # Read a given story log
     def readStory(self, noun):

@@ -4,7 +4,7 @@
     "Description" : "ATK 1",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"east": "ATK 2"},
     "Area" : "ATK",
     "Icon" : "!",
     "Coordinates" : [0,0]
@@ -14,7 +14,7 @@
     "Description" : "ATK 2",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"south": "INT 2", "west" : "ATK 1", "east": "ATK 3"},
     "Area" : "ATK",
     "Icon" : "@",
     "Coordinates" : [0,1]
@@ -24,7 +24,7 @@
     "Description" : "ATK 3",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"west" : "ATK 2"},
     "Area" : "ATK",
     "Icon" : " ",
     "Coordinates" : [0,2]
@@ -35,7 +35,7 @@
     "Description" : "INT 1",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"east": "INT 2"},
     "Area" : "INT",
     "Icon" : "!",
     "Coordinates" : [1,0]
@@ -45,7 +45,7 @@
     "Description" : "INT 2",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"north": "ATK 2", "south": "DEF 2", "west" : "INT 1", "east": "INT 3"},
     "Area" : "INT",
     "Icon" : "@",
     "Coordinates" : [1,1]
@@ -55,7 +55,7 @@
     "Description" : "INT 3",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"west" : "INT 2"},
     "Area" : "INT",
     "Icon" : " ",
     "Coordinates" : [1,2]
@@ -66,7 +66,7 @@
     "Description" : "DEF 1",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"east": "DEF 2"},
     "Area" : "DEF",
     "Icon" : "!",
     "Coordinates" : [2,0]
@@ -76,7 +76,7 @@
     "Description" : "DEF 2",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
+    "Connections" : {"north": "INT 2", "west" : "DEF 1"},
     "Area" : "DEF",
     "Icon" : "@",
     "Coordinates" : [2,1]
