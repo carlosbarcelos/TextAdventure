@@ -109,7 +109,7 @@ class GameEngine():
             self.currentRoom = self.map[nextRoom]['Title']
             # Given Exp and print description if this is a new room
             if self.map[self.currentRoom]['Visited'] == 'False':
-                self.player.gainExp(EXPLORE_EXP)
+                self.player.getExp(EXPLORE_EXP)
                 self.look()
                 self.map[self.currentRoom]['Visited'] = 'True'
             return True
@@ -180,7 +180,7 @@ class GameEngine():
                 if isVictorious:
                     print('You won that battle.')
                     # Reward the player for victory
-                    self.player.gainExp(BATTLE_EXP)
+                    self.player.getExp(BATTLE_EXP)
                     if e['Inventory']:
                         self.player.getItems(e['Inventory'])
                     self.map[self.currentRoom]['Enemies'].remove(e)

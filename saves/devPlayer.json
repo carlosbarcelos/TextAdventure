@@ -4,7 +4,7 @@
   "inventory" : ["Log1", "Log3", "ATK Map", "DEF Map"],
   "level" : 3,
   "hp" : 100,
-  "exp" : 15,
+  "exp" : 99,
   "upgradesAvailable" : 2,
   "stats" :
   {

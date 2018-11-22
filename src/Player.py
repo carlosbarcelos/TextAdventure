@@ -67,10 +67,16 @@ class Player():
         print(f'=====================')
 
     # Gain additional Exp
-    def gainExp(self, val):
-        self.exp = (self.exp + val) % MAX_EXP
+    def getExp(self, val):
+        prevLevel = self.level
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
+        self.exp = (self.exp + val) % MAX_EXP
+
+        # Handle level up
+        if self.level > prevLevel:
+            self.hp = self.MAX_HP
+            print('Level Up!')
 
     # Trade in one level for for one stat upgrade
     def upgrade(self):
