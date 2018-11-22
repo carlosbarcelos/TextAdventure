@@ -26,7 +26,7 @@ def introSequence():
 
     pName = input('Welcome adventurer. What shall I call you? ')
 
-    pClasses = ['Brute', 'Scholar', 'Druid']
+    pClasses = ['Brute', 'Scholar', 'Defender']
     pClass = ''
     while pClass not in pClasses:
         pClass = input(f'Please select a class: {pClasses} > ')
@@ -89,10 +89,6 @@ def initalize(args):
 ###############
 def main(args):
     ge = initalize(args)
-
-    ge.displayMap()
-    sys.exit(1)
-
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()

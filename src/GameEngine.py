@@ -11,7 +11,7 @@ import json                   # Handle JSON files
 import math                   # Math functionality
 from datetime import datetime # Current datetime
 
-BATTLE_EXP = 5
+BATTLE_EXP = 10
 EXPLORE_EXP = 5
 TBD_DEF_EXP = 5
 
@@ -34,7 +34,7 @@ class GameEngine():
         self.player = player
         self.achievements = achievements
         self.story = story
-        self.currentRoom = 'Room 1'
+        self.currentRoom = 'ATK 1' # TODO Make this dynamic
         self.isOver = False
         self.verbs = {
         'help' : '[]',
@@ -103,11 +103,17 @@ class GameEngine():
             print('Move requires a direction input: [north, south, east, west].')
             return False
 
+        # Requested move is valid
         try:
             nextRoom = self.map[self.currentRoom]['Connections'][dir]
             self.currentRoom = self.map[nextRoom]['Title']
-            self.look()
+            # Given Exp and print description if this is a new room
+            if self.map[self.currentRoom]['Visited'] == 'False':
+                self.player.gainExp(EXPLORE_EXP)
+                self.look()
+                self.map[self.currentRoom]['Visited'] = 'True'
             return True
+        # Requested move is invalid
         except KeyError:
             print(f"Move '{dir}': Invalid direction.")
             print(f"Possible directions from {self.currentRoom}: {self.map[self.currentRoom]['Connections']}")
@@ -234,7 +240,6 @@ class GameEngine():
                 dividerStr += d
             print(dividerStr)
 
-
     # Read a given story log
     def readStory(self, noun):
         if noun is None:
@@ -256,6 +261,15 @@ class GameEngine():
     # Look around and get a feel for where you are
     def look(self):
         print(self.map[self.currentRoom]['Description'])
+
+        # Display connection information
+        connList = self.map[self.currentRoom]['Connections']
+        if connList:
+            print(f'There are ae few connections from this room: {connList}')
+        else:
+            print('There are no connections in this room.')
+
+        # Display enemy information
         enemyList = self.map[self.currentRoom]['Enemies']
         if enemyList:
             enemyNames = [e['Name'] for e in enemyList]

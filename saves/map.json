@@ -18,7 +18,8 @@
     "Connections" : {"north" : "Room 2"},
     "Area" : "ATK",
     "Icon" : " ",
-    "Coordinates" : [0,1]
+    "Coordinates" : [0,1],
+    "Visited" : "False"
   },
 
   "Room 2" : {
@@ -43,7 +44,8 @@
     "Connections" : {"north" : "Room 3", "south" : "Room 1"},
     "Area" : "INT",
     "Icon" : " ",
-    "Coordinates" : [0,1]
+    "Coordinates" : [0,1],
+    "Visited" : "False"
   },
 
   "Room 3" : {
@@ -54,7 +56,8 @@
     "Connections" : {"north" : "Room 4", "south" : "Room 2"},
     "Area" : "DEF",
     "Icon" : " ",
-    "Coordinates" : [1,0]
+    "Coordinates" : [1,0],
+    "Visited" : "False"
   },
 
   "Room 4" : {
@@ -65,6 +68,7 @@
     "Connections" : {"south" : "Room 3"},
     "Area" : "",
     "Icon" : " ",
-    "Coordinates" : [1,1]
+    "Coordinates" : [1,1],
+    "Visited" : "False"
   }
 }

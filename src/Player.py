@@ -35,7 +35,7 @@ def setPlayerStats(pClass):
     elif pClass == 'Scholar':
         stats = {'ATK' : [0, 5], 'INT' : [10, 20], 'DEF' : [5, 10]}
     # DEF Class
-    elif pClass == 'Druid':
+    elif pClass == 'Defender':
         stats = {'ATK' : [5, 10], 'INT' : [0, 5], 'DEF' : [10, 20]}
     return stats
 

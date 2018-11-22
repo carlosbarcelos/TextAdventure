@@ -7,7 +7,8 @@
     "Connections" : {"east": "ATK 2"},
     "Area" : "ATK",
     "Icon" : "!",
-    "Coordinates" : [0,0]
+    "Coordinates" : [0,0],
+    "Visited" : "True"
   },
   "ATK 2" : {
     "Title" : "ATK 2",
@@ -17,7 +18,8 @@
     "Connections" : {"south": "INT 2", "west" : "ATK 1", "east": "ATK 3"},
     "Area" : "ATK",
     "Icon" : "@",
-    "Coordinates" : [0,1]
+    "Coordinates" : [0,1],
+    "Visited" : "False"
   },
   "ATK 3" : {
     "Title" : "ATK 3",
@@ -27,7 +29,8 @@
     "Connections" : {"west" : "ATK 2"},
     "Area" : "ATK",
     "Icon" : " ",
-    "Coordinates" : [0,2]
+    "Coordinates" : [0,2],
+    "Visited" : "False"
   },
 
   "INT 1" : {
@@ -38,7 +41,8 @@
     "Connections" : {"east": "INT 2"},
     "Area" : "INT",
     "Icon" : "!",
-    "Coordinates" : [1,0]
+    "Coordinates" : [1,0],
+    "Visited" : "False"
   },
   "INT 2" : {
     "Title" : "INT 2",
@@ -48,7 +52,8 @@
     "Connections" : {"north": "ATK 2", "south": "DEF 2", "west" : "INT 1", "east": "INT 3"},
     "Area" : "INT",
     "Icon" : "@",
-    "Coordinates" : [1,1]
+    "Coordinates" : [1,1],
+    "Visited" : "False"
   },
   "INT 3" : {
     "Title" : "INT 3",
@@ -58,7 +63,8 @@
     "Connections" : {"west" : "INT 2"},
     "Area" : "INT",
     "Icon" : " ",
-    "Coordinates" : [1,2]
+    "Coordinates" : [1,2],
+    "Visited" : "False"
   },
 
   "DEF 1" : {
@@ -69,7 +75,8 @@
     "Connections" : {"east": "DEF 2"},
     "Area" : "DEF",
     "Icon" : "!",
-    "Coordinates" : [2,0]
+    "Coordinates" : [2,0],
+    "Visited" : "False"
   },
   "DEF 2" : {
     "Title" : "DEF 2",
@@ -79,7 +86,8 @@
     "Connections" : {"north": "INT 2", "west" : "DEF 1"},
     "Area" : "DEF",
     "Icon" : "@",
-    "Coordinates" : [2,1]
+    "Coordinates" : [2,1],
+    "Visited" : "False"
   },
   "DEF 3" : {
     "Title" : "DEF 3",
@@ -89,6 +97,7 @@
     "Connections" : {},
     "Area" : "DEF",
     "Icon" : " ",
-    "Coordinates" : [2,2]
+    "Coordinates" : [2,2],
+    "Visited" : "False"
   }
 }
