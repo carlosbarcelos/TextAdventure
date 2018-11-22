@@ -46,6 +46,7 @@ class Player():
         self.inventory = inventory
         self.level = level
         self.hp = hp
+        self.MAX_HP = 90 + (self.level * 9)
         self.exp = exp
         self.upgradesAvailable = upgradesAvailable
         self.stats = setPlayerStats(self.pClass)
@@ -54,7 +55,7 @@ class Player():
     def printStats(self):
         print(f'===== {self.pName} =====')
         print(f'== Class: Level {self.level} {self.pClass}')
-        print(f'== HP: {self.hp} / {90+self.level*9}')
+        print(f'== HP: {self.hp} / {self.MAX_HP}')
         if self.upgradesAvailable:
             print(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
         else:

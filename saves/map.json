@@ -1,7 +1,7 @@
 {
   "Room 1" : {
     "Title" : "Room 1",
-    "Description" : "Welcome to Room 1",
+    "Description" : "This is a save room. Type 'save' to save your progress.",
     "Items" : ["a", "b"],
     "Enemies" :
     [
@@ -15,7 +15,7 @@
     ],
     "Connections" : {"north" : "Room 2"},
     "Area" : "ATK",
-    "Icon" : " ",
+    "Icon" : "S",
     "Coordinates" : [0,1],
     "Visited" : "False"
   },

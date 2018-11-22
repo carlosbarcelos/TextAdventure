@@ -48,7 +48,7 @@ class GameEngine():
         'stats' : 'Print the player stats',
         'upgrade' : 'Upgrade the player stats',
         'achievements' : 'Get the current achievement progress',
-        'save' : 'Save your progress and continue',
+        'save' : 'Save progress [Only allowed in designated areas]',
         'quit' : 'Quit the game'}
 
     # Promt the user for action
@@ -271,7 +271,7 @@ class GameEngine():
         # Display connection information
         connList = self.map[self.currentRoom]['Connections']
         if connList:
-            print(f'There are ae few connections from this room: {connList}')
+            print(f'There are a few connections from this room: {connList}')
         else:
             print('There are no connections in this room.')
 
@@ -290,10 +290,17 @@ class GameEngine():
             print(f'== {k}: {v}')
         print(f'=====================')
 
-    # Save the player and world status
+    # Save the game and replenish the player health. Only allowed in save rooms
     def save(self):
+        if not self.map[self.currentRoom]['Icon'] == 'S':
+            print('The save feature is only allowed in designated areas.')
+            return False
+
         playerSaves = len(glob.glob1('saves/', 'Player*.json'))
         worldSaves = len(glob.glob1('saves/', 'World*.json'))
+
+        # Replenish health
+        self.player.hp = self.player.MAX_HP
 
         # Create the Player save file
         playerData = self.player.toJSON()
@@ -312,8 +319,9 @@ class GameEngine():
     def quit(self):
         if 'n' == optionParse('Are you sure you want to quit?', ['y','n']):
             return False
-        print('Quitting...')
-        if 'y' == optionParse('Would you like to save?', ['y','n']):
-            self.save()
+        # TODO Should save be allowed on quit?
+        # print('Quitting...')
+        # if 'y' == optionParse('Would you like to save?', ['y','n']):
+        #     self.save()
         self.isOver = True
         return True
