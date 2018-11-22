@@ -1,7 +1,7 @@
 {
   "Room 1" : {
     "Title" : "Room 1",
-    "Description" : "Welcome to Room 1",
+    "Description" : "This is a save room. Type 'save' to save your progress.",
     "Items" : ["a", "b"],
     "Enemies" :
     [
@@ -9,15 +9,13 @@
         "Name": "e1",
         "Description" : "Enemy 1 Description",
         "Inventory" : ["item1", "item2"],
-        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 },
-        "Area" : "ATK",
-        "Icon" : " ",
-        "Coordinates" : [0,0]
+        "Damage" : 50,
+        "Stats" : { "ATK" : 100, "INT" : 100, "DEF" : 100 }
       }
     ],
     "Connections" : {"north" : "Room 2"},
     "Area" : "ATK",
-    "Icon" : " ",
+    "Icon" : "S",
     "Coordinates" : [0,1],
     "Visited" : "False"
   },
@@ -32,12 +30,14 @@
         "Name": "e1",
         "Description" : "Enemy 1 Description",
         "Inventory" : [],
+        "Damage" : 5,
         "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 }
       },
       {
         "Name": "e2",
         "Description" : "Enemy 2 Description",
         "Inventory" : [],
+        "Damage" : 5,
         "Stats" : { "ATK" : 1}
       }
     ],
