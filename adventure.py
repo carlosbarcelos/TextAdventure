@@ -78,7 +78,11 @@ def initalize(args):
             aJSON = json.load(f)
     a = Achievements(aJSON)
 
-    return GameEngine(m, p, a)
+    # Get the story
+    with open('resources/story.json') as f:
+        s = json.load(f)
+
+    return GameEngine(m, p, a, s)
 
 ###############
 ## Main Loop ##

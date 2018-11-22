@@ -29,10 +29,11 @@ def optionParse(question, answers):
             return reply
 
 class GameEngine():
-    def __init__(self, map, player, achievements):
+    def __init__(self, map, player, achievements, story):
         self.map = map
         self.player = player
         self.achievements = achievements
+        self.story = story
         self.currentRoom = 'Room 1'
         self.isOver = False
         self.verbs = {
@@ -43,6 +44,7 @@ class GameEngine():
         'use' : '[item] Performs an action with a given item',
         'battle' : 'Initiate a battle with an enemy',
         'map' : 'Display the map with a legend',
+        'read' : 'Read a given story log',
         'stats' : 'Print the player stats',
         'upgrade' : 'Upgrade the player stats',
         'achievements' : 'Get the current achievement progress',
@@ -51,7 +53,7 @@ class GameEngine():
 
     # Promt the user for action
     def prompt(self):
-        newInput = input(f'{self.currentRoom} > ').lower().strip()
+        newInput = input(f'{self.currentRoom} > ').strip()
         self.parse(newInput)
 
     # Get the action word and additional options
@@ -84,6 +86,7 @@ class GameEngine():
             'use': lambda: self.use(noun),
             'battle': lambda: self.battle(noun),
             'map': lambda: self.displayMap(),
+            'read': lambda: self.readStory(noun),
             'stats': lambda: self.player.printStats(),
             'upgrade': lambda: self.player.upgrade(),
             'achievements' : lambda: self.achievements.reportAll(),
@@ -212,6 +215,24 @@ class GameEngine():
                 rowString += f' {col} |'
             print(rowString)
         print(rowDivider)
+
+    # Read a given story log
+    def readStory(self, noun):
+        if noun is None:
+            print('Please specify a story log.')
+            return False
+
+        # The player must have the story log to read it
+        if noun not in self.player.inventory:
+            print('You do not have access to that story log.')
+            return False
+
+        textWidth = 40
+        print(f"/{textWidth*'~'}/")
+        for l in self.story[noun]:
+            padding = textWidth - len(l)
+            print(f"/ {l}{(padding-1)*' '}/")
+        print(f"/{textWidth*'~'}/")
 
     # Look around and get a feel for where you are
     def look(self):

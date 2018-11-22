@@ -1,0 +1,22 @@
+{
+  "Log1" :
+  [
+    "Line 1",
+    "Line 2",
+    "Line 3"
+  ],
+
+  "Log2" :
+  [
+    "Line 1",
+    "Line 2",
+    "Line 3"
+  ],
+
+  "Log3" :
+  [
+    "Line 1",
+    "Line 2",
+    "Line 3"
+  ]
+}
