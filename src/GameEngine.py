@@ -34,7 +34,7 @@ class GameEngine():
         self.player = player
         self.achievements = achievements
         self.story = story
-        self.currentRoom = 'ATK 1' # TODO Make this dynamic
+        self.currentRoom = 'Room 1' # TODO Make this dynamic
         self.isOver = False
         self.verbs = {
         'help' : '[]',
@@ -187,8 +187,14 @@ class GameEngine():
                     return True
 
                 else:
-                    print('You lost that battle.')
-                    # Add the enemy back to the
+                    # The enemy hits the player
+                    self.player.hp -= e['Damage']
+                    print(f"You lost that battle. {e['Name']} hit you for {e['Damage']} HP.")
+
+                    # Check that the player is still alive
+                    if not self.player.isAlive():
+                        print('That was the last of your HP. Your adventure is over.')
+                        self.isOver = True
                     return False
 
         print(f"The enemy '{noun}' is not in this room")

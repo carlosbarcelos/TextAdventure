@@ -161,6 +161,10 @@ class Player():
         statTuple = (selectedStat, e['Stats'][selectedStat])
         return self.battle(e, statTuple)
 
+    # Is the player still alive?
+    def isAlive(self):
+        return self.hp > 0
+
     # Convert the player data to a JSON data dump
     def toJSON(self):
         jData = {}
