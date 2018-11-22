@@ -40,11 +40,12 @@ def setPlayerStats(pClass):
     return stats
 
 class Player():
-    def __init__(self, pName, pClass, inventory=[], level=1, exp=0, upgradesAvailable=0):
+    def __init__(self, pName, pClass, inventory=[], level=1, hp=99, exp=0, upgradesAvailable=0):
         self.pName = pName
         self.pClass = pClass
         self.inventory = inventory
         self.level = level
+        self.hp = hp
         self.exp = exp
         self.upgradesAvailable = upgradesAvailable
         self.stats = setPlayerStats(self.pClass)
@@ -53,6 +54,7 @@ class Player():
     def printStats(self):
         print(f'===== {self.pName} =====')
         print(f'== Class: Level {self.level} {self.pClass}')
+        print(f'== HP: {self.hp} / {90+self.level*9}')
         if self.upgradesAvailable:
             print(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
         else:
@@ -166,6 +168,7 @@ class Player():
         jData['pClass'] = self.pClass
         jData['inventory'] = self.inventory
         jData['level'] = self.level
+        jData['hp'] = self.hp
         jData['exp'] = self.exp
         jData['upgradesAvailable'] = self.upgradesAvailable
         jData['stats'] = self.stats
