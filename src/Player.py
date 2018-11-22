@@ -139,7 +139,7 @@ class Player():
 
     # Start a 'top trumps' battle with an enemy
     def topTrumpBattle(self, e):
-        eStats = e['Stats'].keys()
+        eStats = list(e['Stats'].keys())
 
         # Report the stats comparison
         # TODO: Make this look nicer
@@ -153,9 +153,7 @@ class Player():
         print(f'======================')
 
         # Ask player which stat to battle
-        selectedStat = ''
-        while selectedStat not in eStats:
-            selectedStat = input(f'Select stat to use in battle: ')
+        selectedStat = optionParse('Select stat to use in battle:', eStats)
 
         # Get the enemy value and return the battle
         statTuple = (selectedStat, e['Stats'][selectedStat])
