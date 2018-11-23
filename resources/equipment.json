@@ -87,15 +87,15 @@
     "name" : "Gold Ring",
     "description" : "Gollect 50% more gold",
     "position" : "ring",
-    "attribute" : "",
-    "value" : 50
+    "attribute" : "goldRate",
+    "value" : 0.5
   },
   "eq_boostExp" :
   {
     "name" : "Experience Staff",
     "description" : "Collect 50% more Exp",
     "position" : "staff",
-    "attribute" : "exp",
-    "value" : 50
+    "attribute" : "expRate",
+    "value" : 0.5
   }
 }

@@ -6,6 +6,9 @@
   "level" : 3,
   "hp" : 100,
   "exp" : 99,
+  "expRate" : 1,
+  "gold" : 0,
+  "goldRate" : 1,
   "upgradesAvailable" : 2,
   "stats" :
   {

@@ -16,7 +16,7 @@ MIN_STAT_UP = 4
 MAX_STAT_UP = 5
 MAX_STAT_VAL = 100
 
-eqStructure={"head":"", "chest":"", "legs":""} # Equipment dictionary structure
+eqStructure={"head":"", "chest":"", "legs":"","necklace":"", "ring":"", "staff":""} # Equipment dictionary structure
 stStructure={"ATK":0, "INT":0, "DEF":0} # Stats dictionary structure
 
 # Provide a user propt with a given question and acceptible responses
@@ -46,7 +46,7 @@ def setPlayerStats(pClass):
     return stats
 
 class Player():
-    def __init__(self, pName, pClass, inventory=[], equipment=eqStructure, level=1, hp=99, exp=0, upgradesAvailable=0, stats=stStructure):
+    def __init__(self, pName, pClass, inventory=[], equipment=eqStructure, level=1, hp=99, exp=0, expRate=1, gold=0, goldRate=1, upgradesAvailable=0, stats=stStructure):
         self.pName = pName
         self.pClass = pClass
         self.inventory = inventory
@@ -55,6 +55,9 @@ class Player():
         self.hp = hp
         self.MAX_HP = 90 + (self.level * 9)
         self.exp = exp
+        self.expRate = expRate
+        self.gold = gold
+        self.goldRate = goldRate
         self.upgradesAvailable = upgradesAvailable
         self.stats = setPlayerStats(self.pClass) # TODO Fix this to work with saves
 
@@ -67,6 +70,7 @@ class Player():
             print(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
         else:
             print(f'== Exp: {self.exp} / {MAX_EXP}')
+        print(f'== Gold: {self.gold}')
         print(f"== ATK: {self.stats['ATK'][0]}..{self.stats['ATK'][1]}")
         print(f"== INT: {self.stats['INT'][0]}..{self.stats['INT'][1]}")
         print(f"== DEF: {self.stats['DEF'][0]}..{self.stats['DEF'][1]}")
@@ -88,6 +92,7 @@ class Player():
 
     # Gain additional Exp
     def getExp(self, val):
+        val += int(round(self.expRate)) # Apply Exp rate
         prevLevel = self.level
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
@@ -97,6 +102,11 @@ class Player():
         if self.level > prevLevel:
             self.hp = self.MAX_HP
             print('Level Up!')
+
+    # Gain additional gold
+    def getGold(self, val):
+        val += int(round(self.goldRate)) # Apply gold rate
+        self.gold += val
 
     # Trade in one level for for one stat upgrade
     def upgrade(self):
@@ -243,8 +253,16 @@ class Player():
                     self.equipment[pos] = i
 
                     # Apply status effects
-                    self.stats[i.attribute][0] += i.value
-                    self.stats[i.attribute][1] += i.value
+                    # Secondary Equipment
+                    print(i.attribute)
+                    if i.attribute in ['hp','expRate','goldRate']:
+                        print(self.expRate)
+                        setattr(self, i.attribute, getattr(self, i.attribute) + i.value)
+                        print(self.expRate)
+                    # Primary Equipment
+                    else:
+                        self.stats[i.attribute][0] += i.value
+                        self.stats[i.attribute][1] += i.value
         return True
 
     # Unequip a piece of equipment
@@ -264,8 +282,15 @@ class Player():
 
             if str(e) == equipment:
                 # Remove status effects
-                self.stats[e.attribute][0] -= e.value
-                self.stats[e.attribute][1] -= e.value
+                # Secondary Equipment
+                if e.attribute in ['hp','expRate','goldRate']:
+                    print(self.expRate)
+                    setattr(self, e.attribute, getattr(self, e.attribute) - e.value)
+                    print(self.expRate)
+                # Primary Equipment
+                else:
+                    self.stats[e.attribute][0] -= e.value
+                    self.stats[e.attribute][1] -= e.value
 
                 # Do the move
                 self.equipment[pos] = ''
@@ -287,6 +312,9 @@ class Player():
         jData['level'] = self.level
         jData['hp'] = self.hp
         jData['exp'] = self.exp
+        jData['expRate'] = self.expRate
+        jData['gold'] = self.gold
+        jData['goldRate'] = self.goldRate
         jData['upgradesAvailable'] = self.upgradesAvailable
         jData['stats'] = self.stats
         return jData

@@ -61,7 +61,8 @@ def initalize(args):
             pJSON = json.load(f)
         # Create a new player with the data
         p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], pJSON['equipment'], \
-            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['upgradesAvailable'], pJSON['stats'])
+            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
+            pJSON['upgradesAvailable'], pJSON['stats'])
         print(f'Player loaded from {fn}')
     else:
         pDetails = introSequence()

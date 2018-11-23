@@ -8,7 +8,7 @@
       {
         "Name": "e1",
         "Description" : "Enemy 1 Description",
-        "Inventory" : ["item1", "Log1", "eq_legA"],
+        "Inventory" : ["item1", "Log1", "eq_legA", "eq_boostExp"],
         "Damage" : 50,
         "Stats" : { "ATK" : 1, "INT" : 1, "DEF" : 1 }
       }
