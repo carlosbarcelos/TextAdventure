@@ -9,6 +9,7 @@ The player class with member veriables and functions.
 from random import randint # Pseudo-random numbers
 
 from src.Item import Item           # Work with Item objects
+from src.Story import Story         # Work with Story objects
 from src.Equipment import Equipment # Work with Equipment objects
 
 MAX_EXP = 100
@@ -77,14 +78,16 @@ class Player():
         print(f'=====================')
 
     # Print the player inventory
-    def printInventory(self):
+    # TODO Handle -l
+    def printInventory(self, options):
         print(f'===== Inventory =====')
         for i in self.inventory:
             print(f'== {str(i)}')
         print(f'=====================')
 
     # Print the player equipment list
-    def printEquipment(self):
+    # TODO Handle -l
+    def printEquipment(self, options):
         print(f'===== Equipment =====')
         for e in self.equipment.keys():
             print(f'== {e} : {self.equipment[e]}')
@@ -171,12 +174,18 @@ class Player():
 
             # If this is a story log
             elif i[:3] == 'st_':
-                print('TODO Handle Story')
-                returnValue = True
+                try:
+                    lookupSt = resources['story'][i]
+                    s = Story(lookupSt['name'],lookupSt['description'],lookupSt['text'])
+                    print(f'You got: {str(s)}')
+                    self.inventory.append(s)
+                    returnValue = True
+                except KeyError:
+                    print(f'Exception Caught. KeyError: {i}')
 
             # If this is anything else
             else:
-                print(f'You got: {i}')
+                print(f'{i} is not a supported item type.')
                 self.inventory.append(i)
                 returnValue = True
 

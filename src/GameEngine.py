@@ -48,7 +48,7 @@ class GameEngine():
         'map' : 'Display the map with a legend',
         'read' : '[log] Read a given story log',
         'stats' : 'Print the player stats',
-        'inventory' : 'Print the player inventory',
+        'inventory' : 'Print the player inventory : [-l] Long print, include description',
         'equipment' : 'Print the player equipment',
         'upgrade' : 'Upgrade the player stats',
         'achievements' : 'Get the current achievement progress',
@@ -93,10 +93,10 @@ class GameEngine():
             'unequip': lambda: self.player.unequip(noun, options),
             'battle': lambda: self.battle(noun),
             'map': lambda: self.displayMap(),
-            'read': lambda: self.readStory(noun),
+            'read': lambda: self.readStory(noun, options),
             'stats': lambda: self.player.printStats(),
-            'inventory': lambda: self.player.printInventory(),
-            'equipment': lambda: self.player.printEquipment(),
+            'inventory': lambda: self.player.printInventory(options),
+            'equipment': lambda: self.player.printEquipment(options),
             'upgrade': lambda: self.player.upgrade(),
             'achievements' : lambda: self.achievements.reportAll(),
             'save': lambda: self.save(),
@@ -256,22 +256,26 @@ class GameEngine():
             print(dividerStr)
 
     # Read a given story log
-    def readStory(self, noun):
+    def readStory(self, noun, options):
         if noun is None:
             print('Please specify a story log.')
             return False
 
-        # The player must have the story log to read it
-        if noun not in self.player.inventory:
-            print('You do not have access to that story log.')
-            return False
+        log = noun + ' ' + ' '.join(options)
 
-        textWidth = 40
-        print(f"/{textWidth*'~'}/")
-        for l in self.resources['story'][noun]:
-            padding = textWidth - len(l)
-            print(f"/ {l}{(padding-1)*' '}/")
-        print(f"/{textWidth*'~'}/")
+        # The player must have the story log to read it
+        for i in self.player.inventory:
+            if str(i) == log:
+                textWidth = 40
+                print(f"/{textWidth*'~'}/")
+                for l in i.text:
+                    padding = textWidth - len(l)
+                    print(f"/ {l}{(padding-1)*' '}/")
+                print(f"/{textWidth*'~'}/")
+                return True
+        print('You do not have access to that story log.')
+        return False
+
 
     # Look around and get a feel for where you are
     def look(self):

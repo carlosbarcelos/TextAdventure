@@ -1,22 +1,37 @@
 {
-  "Log1" :
-  [
-    "Line 1",
-    "Line 2",
-    "Line 3"
-  ],
+  "st_1" :
+  {
+    "name" : "Log 1",
+    "description" : "A story log",
+    "text" :
+    [
+      "Line 1",
+      "Line 2",
+      "Line 3"
+    ]
+  },
 
-  "Log2" :
-  [
-    "Line 1",
-    "Line 2",
-    "Line 3"
-  ],
+  "st_2" :
+  {
+    "name" : "Log 2",
+    "description" : "A story log",
+    "text" :
+    [
+      "Line 1",
+      "Line 2",
+      "Line 3"
+    ]
+  },
 
-  "Log3" :
-  [
-    "Line 1",
-    "Line 2",
-    "Line 3"
-  ]
+  "st_3" :
+  {
+    "name" : "Log 3",
+    "description" : "A story log",
+    "text" :
+    [
+      "Line 1",
+      "Line 2",
+      "Line 3"
+    ]
+  }
 }
