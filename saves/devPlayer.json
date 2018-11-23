@@ -2,9 +2,13 @@
   "pName" : "Name",
   "pClass" : "Brute",
   "inventory" : ["Log1", "Log3", "ATK Map", "DEF Map"],
+  "equipment" : {"Head" : "", "Chest" : "" , "Legs" : ""},
   "level" : 3,
   "hp" : 100,
   "exp" : 99,
+  "expRate" : 1,
+  "gold" : 0,
+  "goldRate" : 1,
   "upgradesAvailable" : 2,
   "stats" :
   {
