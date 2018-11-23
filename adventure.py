@@ -60,8 +60,8 @@ def initalize(args):
         with open(fn) as f:
             pJSON = json.load(f)
         # Create a new player with the data
-        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], \
-            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['upgradesAvailable'])
+        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], pJSON['equipment'], \
+            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['upgradesAvailable'], pJSON['stats'])
         print(f'Player loaded from {fn}')
     else:
         pDetails = introSequence()
@@ -78,11 +78,16 @@ def initalize(args):
             aJSON = json.load(f)
     a = Achievements(aJSON)
 
-    # Get the story
+    # Build the resources/lookup tables that the game needs
+    r = {}
+    with open('resources/items.json') as f:
+        r['items'] = json.load(f)
+    with open('resources/equipment.json') as f:
+        r['equipment'] = json.load(f)
     with open('resources/story.json') as f:
-        s = json.load(f)
+        r['story'] = json.load(f)
 
-    return GameEngine(m, p, a, s)
+    return GameEngine(m, p, a, r)
 
 ###############
 ## Main Loop ##

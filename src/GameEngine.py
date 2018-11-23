@@ -29,11 +29,11 @@ def optionParse(question, answers):
             return reply
 
 class GameEngine():
-    def __init__(self, map, player, achievements, story):
+    def __init__(self, map, player, achievements, resources):
         self.map = map
         self.player = player
         self.achievements = achievements
-        self.story = story
+        self.resources = resources
         self.currentRoom = 'Room 1' # TODO Make this dynamic
         self.isOver = False
         self.verbs = {
@@ -42,10 +42,14 @@ class GameEngine():
         'move' : '[dir] Determine the direction in which to travel',
         'take' : '[item] Take an item found in the world',
         'use' : '[item] Performs an action with a given item',
-        'battle' : 'Initiate a battle with an enemy',
+        'equip': '[equipment] Equip a piece of equipment',
+        'unequip': '[equipment] Unequip a piece of equipment',
+        'battle' : '[enemy] Initiate a battle with an enemy',
         'map' : 'Display the map with a legend',
-        'read' : 'Read a given story log',
+        'read' : '[log] Read a given story log',
         'stats' : 'Print the player stats',
+        'inventory' : 'Print the player inventory',
+        'equipment' : 'Print the player equipment',
         'upgrade' : 'Upgrade the player stats',
         'achievements' : 'Get the current achievement progress',
         'save' : 'Save progress [Only allowed in designated areas]',
@@ -59,7 +63,7 @@ class GameEngine():
     # Get the action word and additional options
     def parse(self, inStr):
         returnState = False
-        returnDict = {'verb': None, 'noun': None}
+        returnDict = {'verb': None, 'noun': None, 'option': ['']}
         words = inStr.split()
 
         # Reject empty strings
@@ -67,14 +71,15 @@ class GameEngine():
             # Accept maximum one word after verb
             if len(words) == 1:
                 returnDict['verb'] = words[0]
-            elif len(words) == 2:
+            elif len(words) >= 2:
                 returnDict['verb'] = words[0]
                 returnDict['noun'] = words[1]
-            returnState = self.workInputOptions(returnDict['verb'], returnDict['noun'])
+                returnDict['option'] = words[2:]
+            returnState = self.workInputOptions(returnDict['verb'], returnDict['noun'], returnDict['option'])
         return returnState
 
     # Work on input and additional options
-    def workInputOptions(self, verb, noun):
+    def workInputOptions(self, verb, noun, options):
         if not verb in self.verbs.keys():
             return False
 
@@ -84,10 +89,14 @@ class GameEngine():
             'move': lambda: self.move(noun),
             'take': lambda: self.take(noun),
             'use': lambda: self.use(noun),
+            'equip': lambda: self.player.equip(noun, options),
+            'unequip': lambda: self.player.unequip(noun, options),
             'battle': lambda: self.battle(noun),
             'map': lambda: self.displayMap(),
             'read': lambda: self.readStory(noun),
             'stats': lambda: self.player.printStats(),
+            'inventory': lambda: self.player.printInventory(),
+            'equipment': lambda: self.player.printEquipment(),
             'upgrade': lambda: self.player.upgrade(),
             'achievements' : lambda: self.achievements.reportAll(),
             'save': lambda: self.save(),
@@ -130,7 +139,7 @@ class GameEngine():
 
         if noun in items:
             self.map[self.currentRoom]['Items'].remove(noun)
-            self.player.inventory.append(noun)
+            self.player.getItems([noun], self.resources)
             print(f'Inventory: {self.player.inventory}')
         else:
             print(f'{noun} is not in {self.currentRoom}')
@@ -182,7 +191,7 @@ class GameEngine():
                     # Reward the player for victory
                     self.player.getExp(BATTLE_EXP)
                     if e['Inventory']:
-                        self.player.getItems(e['Inventory'])
+                        self.player.getItems(e['Inventory'], self.resources)
                     self.map[self.currentRoom]['Enemies'].remove(e)
                     return True
 
@@ -259,7 +268,7 @@ class GameEngine():
 
         textWidth = 40
         print(f"/{textWidth*'~'}/")
-        for l in self.story[noun]:
+        for l in self.resources['story'][noun]:
             padding = textWidth - len(l)
             print(f"/ {l}{(padding-1)*' '}/")
         print(f"/{textWidth*'~'}/")

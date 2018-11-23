@@ -8,9 +8,9 @@
       {
         "Name": "e1",
         "Description" : "Enemy 1 Description",
-        "Inventory" : ["item1", "item2"],
+        "Inventory" : ["item1", "Log1", "eq_legA"],
         "Damage" : 50,
-        "Stats" : { "ATK" : 100, "INT" : 100, "DEF" : 100 }
+        "Stats" : { "ATK" : 1, "INT" : 1, "DEF" : 1 }
       }
     ],
     "Connections" : {"north" : "Room 2"},
