@@ -78,19 +78,26 @@ class Player():
         print(f'=====================')
 
     # Print the player inventory
-    # TODO Handle -l
     def printInventory(self, options):
         print(f'===== Inventory =====')
         for i in self.inventory:
-            print(f'== {str(i)}')
+            if options == '-l': # Long print description
+                print(f'== {i.name}: {i.description}')
+            else:
+                print(f'== {i.name}')
         print(f'=====================')
 
     # Print the player equipment list
-    # TODO Handle -l
     def printEquipment(self, options):
         print(f'===== Equipment =====')
-        for e in self.equipment.keys():
-            print(f'== {e} : {self.equipment[e]}')
+        for pos, e in self.equipment.items():
+            if e:
+                if options == '-l': # Long print description
+                    print(f'== [{pos}] {e.name}: {e.description}')
+                else:
+                    print(f'== [{pos}] {e.name}')
+            else:
+                print(f'== [{pos}] -----')
         print(f'=====================')
 
     # Gain additional Exp
@@ -236,16 +243,12 @@ class Player():
 
 
     # Equip a piece of equipment
-    # TODO Make this work for secondary equipment
     def equip(self, noun, options):
         if noun is None:
             print('Equip requires a noun as input.')
             return False
 
         equipment = noun + ' ' + ' '.join(options)
-        if equipment not in [str(i) for i in self.inventory]:
-            print(f'{equipment} is not in your inventory.')
-            return False
 
         # Move equipment from inventory to equipment slot
         for i in self.inventory:
@@ -263,7 +266,6 @@ class Player():
 
                     # Apply status effects
                     # Secondary Equipment
-                    print(i.attribute)
                     if i.attribute in ['hp','expRate','goldRate']:
                         print(self.expRate)
                         setattr(self, i.attribute, getattr(self, i.attribute) + i.value)
@@ -272,30 +274,26 @@ class Player():
                     else:
                         self.stats[i.attribute][0] += i.value
                         self.stats[i.attribute][1] += i.value
-        return True
+                    return True
+
+        print('You do not have access to that piece of equipment.')
+        return False
 
     # Unequip a piece of equipment
-    # TODO Make this work for secondary equipment
     def unequip(self, noun, options):
         if noun is None:
             print('Equip requires a noun as input.')
             return False
 
         equipment = noun + ' ' + ' '.join(options)
-        if equipment not in [str(i) for i in self.equipment.values()]:
-            print(f'{equipment} is not equiped.')
-            return False
 
         # Move equipment from equipment slot to inventory
         for pos, e in self.equipment.items():
-
             if str(e) == equipment:
                 # Remove status effects
                 # Secondary Equipment
                 if e.attribute in ['hp','expRate','goldRate']:
-                    print(self.expRate)
                     setattr(self, e.attribute, getattr(self, e.attribute) - e.value)
-                    print(self.expRate)
                 # Primary Equipment
                 else:
                     self.stats[e.attribute][0] -= e.value
@@ -304,7 +302,9 @@ class Player():
                 # Do the move
                 self.equipment[pos] = ''
                 self.inventory.append(e)
+                return True
 
+        print('That piece of equipment is not equiped.')
         return False
 
     # Is the player still alive?
