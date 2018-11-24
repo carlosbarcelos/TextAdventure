@@ -1,7 +1,7 @@
 {
   "st_1" :
   {
-    "name" : "Log 1",
+    "name" : "log 1",
     "description" : "A story log",
     "text" :
     [
@@ -13,7 +13,7 @@
 
   "st_2" :
   {
-    "name" : "Log 2",
+    "name" : "log 2",
     "description" : "A story log",
     "text" :
     [
@@ -25,7 +25,7 @@
 
   "st_3" :
   {
-    "name" : "Log 3",
+    "name" : "log 3",
     "description" : "A story log",
     "text" :
     [

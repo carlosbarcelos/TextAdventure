@@ -24,8 +24,8 @@ def optionParse(question, answers):
             if not i == len(answers)-1:
                 prettyAnswers += '/'
 
-        reply = str(input(question+prettyAnswers+')> '))
-        if reply in answers:
+        reply = str(input(question+prettyAnswers+')> ')).lower()
+        if reply in [a.lower() for a in answers]:
             return reply
 
 class GameEngine():
@@ -34,7 +34,7 @@ class GameEngine():
         self.player = player
         self.achievements = achievements
         self.resources = resources
-        self.currentRoom = 'Room 1' # TODO Make this dynamic
+        self.currentRoom = 'room 1' # TODO Make this dynamic
         self.isOver = False
         self.verbs = {
         'help' : '[]',
@@ -57,7 +57,7 @@ class GameEngine():
 
     # Promt the user for action
     def prompt(self):
-        newInput = input(f'{self.currentRoom} > ').strip()
+        newInput = input(f'\n{self.currentRoom} > ').lower().strip()
         self.parse(newInput)
 
     # Get the action word and additional options

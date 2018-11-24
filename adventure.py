@@ -26,10 +26,10 @@ def introSequence():
 
     pName = input('Welcome adventurer. What shall I call you? ')
 
-    pClasses = ['Brute', 'Scholar', 'Defender']
+    pClasses = ['brute', 'scholar', 'defender']
     pClass = ''
-    while pClass not in pClasses:
-        pClass = input(f'Please select a class: {pClasses} > ')
+    while pClass.lower() not in pClasses:
+        pClass = input(f'Please select a class: {[c.capitalize() for c in pClasses]} > ').lower()
     return (pName, pClass)
 
 # Display the one-time, outro sequence to the game

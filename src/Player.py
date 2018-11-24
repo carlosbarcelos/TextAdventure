@@ -18,7 +18,7 @@ MAX_STAT_UP = 5
 MAX_STAT_VAL = 100
 
 eqStructure={"head":"", "chest":"", "legs":"","necklace":"", "ring":"", "staff":""} # Equipment dictionary structure
-stStructure={"ATK":0, "INT":0, "DEF":0} # Stats dictionary structure
+stStructure={"atk":0, "int":0, "def":0} # Stats dictionary structure
 
 # Provide a user propt with a given question and acceptible responses
 def optionParse(question, answers):
@@ -29,21 +29,21 @@ def optionParse(question, answers):
             if not i == len(answers)-1:
                 prettyAnswers += '/'
 
-        reply = str(input(question+prettyAnswers+')> '))
-        if reply in answers:
+        reply = str(input(question+prettyAnswers+')> ')).lower()
+        if reply in [a.lower() for a in answers]:
             return reply
 
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
-    # ATK Class
-    if pClass == 'Brute':
-        stats = {'ATK' : [10, 20], 'INT' : [5, 10], 'DEF' : [0, 5]}
-    # INT Class
-    elif pClass == 'Scholar':
-        stats = {'ATK' : [0, 5], 'INT' : [10, 20], 'DEF' : [5, 10]}
-    # DEF Class
-    elif pClass == 'Defender':
-        stats = {'ATK' : [5, 10], 'INT' : [0, 5], 'DEF' : [10, 20]}
+    # atk Class
+    if pClass == 'brute':
+        stats = {'atk' : [10, 20], 'int' : [5, 10], 'def' : [0, 5]}
+    # int Class
+    elif pClass == 'scholar':
+        stats = {'atk' : [0, 5], 'int' : [10, 20], 'def' : [5, 10]}
+    # def Class
+    elif pClass == 'defender':
+        stats = {'atk' : [5, 10], 'int' : [0, 5], 'def' : [10, 20]}
     return stats
 
 class Player():
@@ -65,26 +65,41 @@ class Player():
     # Print the player stats
     def printStats(self):
         print(f'===== {self.pName} =====')
-        print(f'== Class: Level {self.level} {self.pClass}')
+        print(f'== Class: Level {self.level} {self.pClass.capitalize()}')
         print(f'== HP: {self.hp} / {self.MAX_HP}')
         if self.upgradesAvailable:
             print(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
         else:
             print(f'== Exp: {self.exp} / {MAX_EXP}')
         print(f'== Gold: {self.gold}')
-        print(f"== ATK: {self.stats['ATK'][0]}..{self.stats['ATK'][1]}")
-        print(f"== INT: {self.stats['INT'][0]}..{self.stats['INT'][1]}")
-        print(f"== DEF: {self.stats['DEF'][0]}..{self.stats['DEF'][1]}")
+        print(f"== atk: {self.stats['atk'][0]}..{self.stats['atk'][1]}")
+        print(f"== int: {self.stats['int'][0]}..{self.stats['int'][1]}")
+        print(f"== def: {self.stats['def'][0]}..{self.stats['def'][1]}")
         print(f'=====================')
 
     # Print the player inventory
     def printInventory(self, options):
+        # Prepare for pretty print
+        if not self.inventory:
+            print('Your inventory is empty.')
+            return False
+        elif options == '-l':
+            maxWidth = 0
+            for i in self.inventory:
+                maxWidth = max(maxWidth, len(i.name)+len(i.description))
+        else:
+            maxWidth = 0
+            for i in self.inventory:
+                maxWidth = max(maxWidth, len(i.name))
+
         print(f'===== Inventory =====')
         for i in self.inventory:
             if options == '-l': # Long print description
-                print(f'== {i.name}: {i.description}')
+                padding = maxWidth - len(i.name) - len(i.description)
+                print(f"= {i.name}: {i.description}{(padding-1)*' '}=")
             else:
-                print(f'== {i.name}')
+                padding = maxWidth - len(i.name)
+                print(f"= {i.name}{(padding-1)*' '}=")
         print(f'=====================')
 
     # Print the player equipment list
@@ -126,7 +141,7 @@ class Player():
 
         # Prompt which stat to upgrade
         availableStats = []
-        for s in ['ATK', 'INT', 'DEF']:
+        for s in ['atk', 'int', 'def']:
             if self.stats[s][0] != MAX_STAT_VAL and self.stats[s][1] != MAX_STAT_VAL:
                 availableStats.append(s)
 
@@ -267,9 +282,7 @@ class Player():
                     # Apply status effects
                     # Secondary Equipment
                     if i.attribute in ['hp','expRate','goldRate']:
-                        print(self.expRate)
                         setattr(self, i.attribute, getattr(self, i.attribute) + i.value)
-                        print(self.expRate)
                     # Primary Equipment
                     else:
                         self.stats[i.attribute][0] += i.value

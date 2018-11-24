@@ -1,98 +1,98 @@
 {
   "eq_headA" :
   {
-    "name" : "Attact Helmet",
+    "name" : "attact helmet",
     "description" : "Increases attack power by 10",
     "position" : "head",
-    "attribute" : "ATK",
+    "attribute" : "atk",
     "value" : 10
   },
   "eq_headI" :
   {
-    "name" : "Intelligence Helmet",
+    "name" : "intelligence helmet",
     "description" : "Increases intelligence skill by 10",
     "position" : "head",
-    "attribute" : "INT",
+    "attribute" : "int",
     "value" : 10
   },
   "eq_headD" :
   {
-    "name" : "Defense Helmet",
+    "name" : "defense helmet",
     "description" : "Increases defensive stance by 10",
     "position" : "head",
-    "attribute" : "DEF",
+    "attribute" : "def",
     "value" : 10
   },
 
   "eq_chestA" :
   {
-    "name" : "Attack Armor",
+    "name" : "attack armor",
     "description" : "Increases attack power by 10",
     "position" : "chest",
-    "attribute" : "ATK",
+    "attribute" : "atk",
     "value" : 10
   },
   "eq_chestI" :
   {
-    "name" : "Intelligence Armor",
+    "name" : "intelligence armor",
     "description" : "Increases intelligence skill by 10",
     "position" : "chest",
-    "attribute" : "INT",
+    "attribute" : "int",
     "value" : 10
   },
   "eq_chestD" :
   {
-    "name" : "Defense Armor",
+    "name" : "defense armor",
     "description" : "Increases defensive stance by 10",
     "position" : "chest",
-    "attribute" : "DEF",
+    "attribute" : "def",
     "value" : 10
   },
 
   "eq_legA" :
   {
-    "name" : "Attack Leggings",
+    "name" : "attack leggings",
     "description" : "Increases attack power by 10",
     "position" : "legs",
-    "attribute" : "ATK",
+    "attribute" : "atk",
     "value" : 10
   },
   "eq_legI" :
   {
-    "name" : "Intelligence Leggings",
+    "name" : "intelligence leggings",
     "description" : "Increases intelligence skill by 10",
     "position" : "legs",
-    "attribute" : "INT",
+    "attribute" : "int",
     "value" : 10
   },
   "eq_legD" :
   {
-    "name" : "Defense Leggings",
+    "name" : "defense leggings",
     "description" : "Increases defensive stance by 10",
     "position" : "legs",
-    "attribute" : "DEF",
+    "attribute" : "def",
     "value" : 10
   },
 
   "eq_boostHp" :
   {
-    "name" : "HP Amulet",
-    "description" : "Increase maximum HP by 10%",
+    "name" : "hp amulet",
+    "description" : "Increases maximum HP by 10%",
     "position" : "necklace",
     "attribute" : "hp",
     "value" : 50
   },
   "eq_boostGold" :
   {
-    "name" : "Gold Ring",
-    "description" : "Gollect 50% more gold",
+    "name" : "gold ring",
+    "description" : "Collect 50% more gold",
     "position" : "ring",
     "attribute" : "goldRate",
     "value" : 0.5
   },
   "eq_boostExp" :
   {
-    "name" : "Experience Staff",
+    "name" : "experience staff",
     "description" : "Collect 50% more Exp",
     "position" : "staff",
     "attribute" : "expRate",

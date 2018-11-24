@@ -1,6 +1,6 @@
 {
-  "Room 1" : {
-    "Title" : "Room 1",
+  "room 1" : {
+    "Title" : "room 1",
     "Description" : "This is a save room. Type 'save' to save your progress.",
     "Items" : ["a", "b"],
     "Enemies" :
@@ -10,18 +10,18 @@
         "Description" : "Enemy 1 Description",
         "Inventory" : ["st_1", "eq_legA", "eq_boostExp"],
         "Damage" : 50,
-        "Stats" : { "ATK" : 1, "INT" : 1, "DEF" : 1 }
+        "Stats" : { "atk" : 1, "int" : 1, "def" : 1 }
       }
     ],
-    "Connections" : {"north" : "Room 2"},
-    "Area" : "ATK",
+    "Connections" : {"north" : "room 2"},
+    "Area" : "atk",
     "Icon" : "S",
     "Coordinates" : [0,1],
     "Visited" : "False"
   },
 
-  "Room 2" : {
-    "Title" : "Room 2",
+  "room 2" : {
+    "Title" : "room 2",
     "Description" : "Welcome to Room 2",
     "Items" : [],
     "Enemies" :
@@ -31,41 +31,41 @@
         "Description" : "Enemy 1 Description",
         "Inventory" : [],
         "Damage" : 5,
-        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 }
+        "Stats" : { "atk" : 1, "int" : 3, "def" : 2 }
       },
       {
         "Name": "e2",
         "Description" : "Enemy 2 Description",
         "Inventory" : [],
         "Damage" : 5,
-        "Stats" : { "ATK" : 1}
+        "Stats" : { "atk" : 1}
       }
     ],
-    "Connections" : {"north" : "Room 3", "south" : "Room 1"},
-    "Area" : "INT",
+    "Connections" : {"north" : "room 3", "south" : "room 1"},
+    "Area" : "int",
     "Icon" : " ",
     "Coordinates" : [0,1],
     "Visited" : "False"
   },
 
-  "Room 3" : {
-    "Title" : "Room 3",
+  "room 3" : {
+    "Title" : "room 3",
     "Description" : "Welcome to Room 3",
     "Items" : ["a"],
     "Enemies" :[],
-    "Connections" : {"north" : "Room 4", "south" : "Room 2"},
-    "Area" : "DEF",
+    "Connections" : {"north" : "room 4", "south" : "room 2"},
+    "Area" : "def",
     "Icon" : " ",
     "Coordinates" : [1,0],
     "Visited" : "False"
   },
 
-  "Room 4" : {
-    "Title" : "Room 4",
+  "room 4" : {
+    "Title" : "room 4",
     "Description" : "Welcome to Room 4",
     "Items" : [],
     "Enemies" :[],
-    "Connections" : {"south" : "Room 3"},
+    "Connections" : {"south" : "room 3"},
     "Area" : "",
     "Icon" : " ",
     "Coordinates" : [1,1],
