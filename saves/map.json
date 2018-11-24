@@ -10,7 +10,7 @@
         "Description" : "Enemy 1 Description",
         "Inventory" : ["st_1", "eq_legA", "eq_boostExp"],
         "Damage" : 50,
-        "Stats" : { "atk" : 1, "int" : 1, "def" : 1 }
+        "Stats" : { "atk" : 1}
       }
     ],
     "Connections" : {"north" : "room 2"},

@@ -78,6 +78,7 @@ class Player():
         print(f'=====================')
 
     # Print the player inventory
+    # TODO Try to generalize this
     def printInventory(self, options):
         # Prepare for pretty print
         if not self.inventory:
@@ -86,25 +87,30 @@ class Player():
         elif options == '-l':
             maxWidth = 0
             for i in self.inventory:
-                maxWidth = max(maxWidth, len(i.name)+len(i.description))
+                maxWidth = max(maxWidth, len(i.name)+len(i.description)+2)
         else:
             maxWidth = 0
             for i in self.inventory:
                 maxWidth = max(maxWidth, len(i.name))
 
-        print(f'===== Inventory =====')
+        # Print the header
+        headText = "INVENTORY"
+        padding = maxWidth - len(headText)
+        print(f"+--- {headText} {(padding-3)*'-'}+")\
+
+        # Print the item
         for i in self.inventory:
             if options == '-l': # Long print description
                 padding = maxWidth - len(i.name) - len(i.description)
-                print(f"= {i.name}: {i.description}{(padding-1)*' '}=")
+                print(f"| {i.name}: {i.description}{(padding-2)*' '} |")
             else:
                 padding = maxWidth - len(i.name)
-                print(f"= {i.name}{(padding-1)*' '}=")
-        print(f'=====================')
+                print(f"| {i.name}{padding*' '} |")
+        print(f"+{(maxWidth+2)*'-'}+")
 
     # Print the player equipment list
     def printEquipment(self, options):
-        print(f'===== Equipment =====')
+        print(f'|~~ EQUIPMENT ~~|')
         for pos, e in self.equipment.items():
             if e:
                 if options == '-l': # Long print description
