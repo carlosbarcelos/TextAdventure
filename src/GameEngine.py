@@ -25,7 +25,7 @@ class GameEngine():
         self.currentRoom = 'room 1' # TODO Make this dynamic
         self.isOver = False
         self.verbs = {
-        'help' : '[]',
+        'help' : 'Display this help information',
         'look' : 'Examine your surroundings',
         'move' : '[dir] Determine the direction in which to travel',
         'take' : '[item] Take an item found in the world',
