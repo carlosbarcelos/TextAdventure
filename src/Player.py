@@ -52,21 +52,25 @@ class Player():
 
     # Print the player stats
     def printStats(self):
+        header = f'{self.pName} the {self.pClass.capitalize()}'
+
         # Get the printable text
         body = []
-        body.append(f'Class: Level {self.level} {self.pClass.capitalize()}')
-        body.append(f'== HP: {self.hp} / {self.MAX_HP}')
         if self.upgradesAvailable:
-            body.append(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
+            body.append(f'Lvl ({self.upgradesAvailable}): {self.level}')
         else:
-            body.append(f'== Exp: {self.exp} / {MAX_EXP}')
-        body.append(f'== Gold: {self.gold}')
-        body.append(f"== atk: {self.stats['atk'][0]}..{self.stats['atk'][1]}")
-        body.append(f"== int: {self.stats['int'][0]}..{self.stats['int'][1]}")
-        body.append(f"== def: {self.stats['def'][0]}..{self.stats['def'][1]}")
+            body.append(f'Lvl: {self.level}')
+        body.append(f'Exp: {self.exp} / {MAX_EXP}')
+        body.append('')
+        body.append(f'HP: {self.hp} / {self.MAX_HP}')
+        body.append(f'Gold: {self.gold}')
+        body.append('')
+        body.append(f"ATK: {self.stats['atk'][0]}..{self.stats['atk'][1]}")
+        body.append(f"INT: {self.stats['int'][0]}..{self.stats['int'][1]}")
+        body.append(f"DEF: {self.stats['def'][0]}..{self.stats['def'][1]}")
 
         # Hand off the print to the helper
-        std.prettyPrint(self.pName, body)
+        std.prettyPrint(header, body)
 
     # Print the player inventory
     def printInventory(self, options):
@@ -105,7 +109,7 @@ class Player():
 
     # Gain additional Exp
     def getExp(self, val):
-        val += int(round(self.expRate)) # Apply Exp rate
+        val = int(round(val * self.expRate)) # Apply Exp rate
         prevLevel = self.level
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
