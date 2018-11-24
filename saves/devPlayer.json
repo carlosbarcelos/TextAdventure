@@ -1,7 +1,7 @@
 {
   "pName" : "Name",
   "pClass" : "brute",
-  "inventory" : ["Log1", "Log3", "atk Map", "def Map"],
+  "inventory" : [],
   "equipment" : {"Head" : "", "Chest" : "" , "Legs" : ""},
   "level" : 3,
   "hp" : 100,

@@ -8,6 +8,7 @@ The player class with member veriables and functions.
 
 from random import randint # Pseudo-random numbers
 
+import src.stdlib as std # Import standard libraries
 from src.Item import Item           # Work with Item objects
 from src.Story import Story         # Work with Story objects
 from src.Equipment import Equipment # Work with Equipment objects
@@ -19,19 +20,6 @@ MAX_STAT_VAL = 100
 
 eqStructure={"head":"", "chest":"", "legs":"","necklace":"", "ring":"", "staff":""} # Equipment dictionary structure
 stStructure={"atk":0, "int":0, "def":0} # Stats dictionary structure
-
-# Provide a user propt with a given question and acceptible responses
-def optionParse(question, answers):
-    while "invalid response":
-        prettyAnswers = ' ('
-        for i in range(len(answers)):
-            prettyAnswers += str(answers[i])
-            if not i == len(answers)-1:
-                prettyAnswers += '/'
-
-        reply = str(input(question+prettyAnswers+')> ')).lower()
-        if reply in [a.lower() for a in answers]:
-            return reply
 
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
@@ -64,62 +52,56 @@ class Player():
 
     # Print the player stats
     def printStats(self):
-        print(f'===== {self.pName} =====')
-        print(f'== Class: Level {self.level} {self.pClass.capitalize()}')
-        print(f'== HP: {self.hp} / {self.MAX_HP}')
+        # Get the printable text
+        body = []
+        body.append(f'Class: Level {self.level} {self.pClass.capitalize()}')
+        body.append(f'== HP: {self.hp} / {self.MAX_HP}')
         if self.upgradesAvailable:
-            print(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
+            body.append(f'== Exp ({self.upgradesAvailable}): {self.exp} / {MAX_EXP}')
         else:
-            print(f'== Exp: {self.exp} / {MAX_EXP}')
-        print(f'== Gold: {self.gold}')
-        print(f"== atk: {self.stats['atk'][0]}..{self.stats['atk'][1]}")
-        print(f"== int: {self.stats['int'][0]}..{self.stats['int'][1]}")
-        print(f"== def: {self.stats['def'][0]}..{self.stats['def'][1]}")
-        print(f'=====================')
+            body.append(f'== Exp: {self.exp} / {MAX_EXP}')
+        body.append(f'== Gold: {self.gold}')
+        body.append(f"== atk: {self.stats['atk'][0]}..{self.stats['atk'][1]}")
+        body.append(f"== int: {self.stats['int'][0]}..{self.stats['int'][1]}")
+        body.append(f"== def: {self.stats['def'][0]}..{self.stats['def'][1]}")
+
+        # Hand off the print to the helper
+        std.prettyPrint(self.pName, body)
 
     # Print the player inventory
-    # TODO Try to generalize this
     def printInventory(self, options):
-        # Prepare for pretty print
         if not self.inventory:
             print('Your inventory is empty.')
             return False
-        elif options == '-l':
-            maxWidth = 0
-            for i in self.inventory:
-                maxWidth = max(maxWidth, len(i.name)+len(i.description)+2)
-        else:
-            maxWidth = 0
-            for i in self.inventory:
-                maxWidth = max(maxWidth, len(i.name))
 
-        # Print the header
-        headText = "INVENTORY"
-        padding = maxWidth - len(headText)
-        print(f"+--- {headText} {(padding-3)*'-'}+")\
-
-        # Print the item
+        # Get the printable text
+        body = []
         for i in self.inventory:
             if options == '-l': # Long print description
-                padding = maxWidth - len(i.name) - len(i.description)
-                print(f"| {i.name}: {i.description}{(padding-2)*' '} |")
+                body.append(f'{i.name}: {i.description}')
             else:
-                padding = maxWidth - len(i.name)
-                print(f"| {i.name}{padding*' '} |")
-        print(f"+{(maxWidth+2)*'-'}+")
+                body.append(f'{i.name}')
+
+        # Hand off the print to the helper
+        std.prettyPrint('INVENTORY', body)
 
     # Print the player equipment list
     def printEquipment(self, options):
-        print(f'|~~ EQUIPMENT ~~|')
+        if not ''.join([str(e) for e in self.equipment.values()]):
+            print('You are not wearing any equipment.')
+            return False
+
+        # Get the printable text
+        body = []
         for pos, e in self.equipment.items():
             if e:
                 if options == '-l': # Long print description
-                    print(f'== [{pos}] {e.name}: {e.description}')
+                    body.append(f'[{pos}] {e.name}: {e.description}')
                 else:
-                    print(f'== [{pos}] {e.name}')
-            else:
-                print(f'== [{pos}] -----')
-        print(f'=====================')
+                    body.append(f'[{pos}] {e.name}')
+
+        # Hand off the print to the helper
+        std.prettyPrint('EQUIPMENT', body)
 
     # Gain additional Exp
     def getExp(self, val):
@@ -155,7 +137,7 @@ class Player():
             print('There are no stats available to upgrade.')
             return False
 
-        selectedStat = optionParse('Select a stat to upgrade:', availableStats)
+        selectedStat = std.optionParse('Select a stat to upgrade:', availableStats)
 
         # Prompt which attribute to upgrade
         availableAttr = []
@@ -170,7 +152,7 @@ class Player():
             print(f'There are no attributes available to upgrade for {selectedStat}')
             return False
 
-        selectedAttr = optionParse('Select an attribute to upgrade', availableAttr)
+        selectedAttr = std.optionParse('Select an attribute to upgrade', availableAttr)
 
         # Do the upgrade and report to user
         upgradePos = 0 if (selectedAttr=='MIN') else 1
@@ -233,10 +215,11 @@ class Player():
         # Get the players battle value from within the range
         pStatVal = randint(self.stats[statType][0], self.stats[statType][1])
 
-        print(f'=== {statType} Battle ===')
-        print(f'= {self.pName}: {pStatVal}')
-        print(f'= Enemy: {eStatVal}')
-        print(f'==================')
+        # Prepare for pretty print
+        body = []
+        body.append(f'{self.pName}: {pStatVal}')
+        body.append(f"{e['Name']}: {eStatVal}")
+        std.prettyPrint(f'{statType} Battle', body)
 
         return pStatVal > eStatVal
 
@@ -245,18 +228,19 @@ class Player():
         eStats = list(e['Stats'].keys())
 
         # Report the stats comparison
-        # TODO: Make this look nicer
-        print('=== Stat Comparison ===')
-        print('=      Player | Enemy =')
+        body = []
+        body.append(f"{self.pName} vs. {e['Name']}")
         for s in eStats:
             pStatMin = self.stats[s][0]
             pStatMax = self.stats[s][1]
             eStat = e['Stats'][s]
-            print(f'= {s}: {pStatMin}..{pStatMax} | {eStat}')
-        print(f'======================')
+            body.append(f'{s}: {pStatMin}..{pStatMax} vs. {eStat}')
+
+        # Hand off the print to the helper
+        std.prettyPrint('Stat Comparison', body)
 
         # Ask player which stat to battle
-        selectedStat = optionParse('Select stat to use in battle:', eStats)
+        selectedStat = std.optionParse('Select stat to use in battle:', eStats)
 
         # Get the enemy value and return the battle
         statTuple = (selectedStat, e['Stats'][selectedStat])

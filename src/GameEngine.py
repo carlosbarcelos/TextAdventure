@@ -10,23 +10,11 @@ import glob                   # Search files/directories
 import json                   # Handle JSON files
 import math                   # Math functionality
 from datetime import datetime # Current datetime
+import src.stdlib as std # Import standard libraries
 
 BATTLE_EXP = 10
 EXPLORE_EXP = 5
 TBD_DEF_EXP = 5
-
-# Provide a user propt with a given question and acceptible responses
-def optionParse(question, answers):
-    while "invalid response":
-        prettyAnswers = ' ('
-        for i in range(len(answers)):
-            prettyAnswers += str(answers[i])
-            if not i == len(answers)-1:
-                prettyAnswers += '/'
-
-        reply = str(input(question+prettyAnswers+')> ')).lower()
-        if reply in [a.lower() for a in answers]:
-            return reply
 
 class GameEngine():
     def __init__(self, map, player, achievements, resources):
@@ -298,10 +286,13 @@ class GameEngine():
 
     # Display help information
     def help(self):
-        print(f'===== Action: Usage =====')
+        # Get the printable text
+        body = []
         for k, v in self.verbs.items():
-            print(f'== {k}: {v}')
-        print(f'=====================')
+            body.append(f'{k}: {v}')
+
+        # Hand off the print to the helper
+        std.prettyPrint('HELP', body)
 
     # Save the game and replenish the player health. Only allowed in save rooms
     def save(self):
@@ -330,11 +321,11 @@ class GameEngine():
 
     # Quit the game
     def quit(self):
-        if 'n' == optionParse('Are you sure you want to quit?', ['y','n']):
+        if 'n' == std.optionParse('Are you sure you want to quit?', ['y','n']):
             return False
         # TODO Should save be allowed on quit?
         # print('Quitting...')
-        # if 'y' == optionParse('Would you like to save?', ['y','n']):
+        # if 'y' == std.optionParse('Would you like to save?', ['y','n']):
         #     self.save()
         self.isOver = True
         return True
