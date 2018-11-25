@@ -1,10 +1,23 @@
 {
-  "it_1" :
+  "it_gold" :
   {
-    "name" : "item 1"
+    "name" : "gold",
+    "description" : "A valuable nugget of gold. Good for trading.",
+    "usable" : "False",
+    "uses" : 0
   },
-  "it_2" :
+  "it_key" :
   {
-    "name" : "item 2"
+    "name" : "key",
+    "description" : "One piece of the puzzle. Now find the door this key unlocks.",
+    "usable" : "True",
+    "uses" : 1
+  },
+  "it_healthPotion" :
+  {
+    "name" : "health potion",
+    "description" : "A potion of health.",
+    "usable" : "True",
+    "uses" : 3
   }
 }

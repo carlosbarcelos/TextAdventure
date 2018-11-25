@@ -8,7 +8,7 @@
       {
         "Name": "e1",
         "Description" : "Enemy 1 Description",
-        "Inventory" : ["st_1", "eq_legA", "eq_boostExp"],
+        "Inventory" : ["st_1", "eq_legA", "eq_boostExp", "it_key", "it_gold", "it_healthPotion"],
         "Damage" : 50,
         "Stats" : { "atk" : 1}
       }
@@ -16,7 +16,7 @@
     "Connections" : {"north" : "room 2"},
     "Area" : "atk",
     "Icon" : "S",
-    "Coordinates" : [0,1],
+    "Coordinates" : [1,0],
     "Visited" : "False"
   },
 
@@ -41,10 +41,10 @@
         "Stats" : { "atk" : 1}
       }
     ],
-    "Connections" : {"north" : "room 3", "south" : "room 1"},
+    "Connections" : {"east" : "room 3", "south" : "room 1"},
     "Area" : "int",
     "Icon" : " ",
-    "Coordinates" : [0,1],
+    "Coordinates" : [0,0],
     "Visited" : "False"
   },
 
@@ -53,10 +53,10 @@
     "Description" : "Welcome to Room 3",
     "Items" : ["a"],
     "Enemies" :[],
-    "Connections" : {"north" : "room 4", "south" : "room 2"},
+    "Connections" : {"south" : "room 4", "west" : "room 2"},
     "Area" : "def",
     "Icon" : " ",
-    "Coordinates" : [1,0],
+    "Coordinates" : [0,1],
     "Visited" : "False"
   },
 
@@ -65,8 +65,8 @@
     "Description" : "Welcome to Room 4",
     "Items" : [],
     "Enemies" :[],
-    "Connections" : {"south" : "room 3"},
-    "Area" : "",
+    "Connections" : {"north" : "room 3"},
+    "Area" : "atk",
     "Icon" : " ",
     "Coordinates" : [1,1],
     "Visited" : "False"

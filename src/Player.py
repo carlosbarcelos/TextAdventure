@@ -172,8 +172,14 @@ class Player():
         for i in items:
             # If this is an item
             if i[:3] == 'it_':
-                print('TODO Handle Item')
-                returnValue = True
+                try:
+                    lookupEq = resources['items'][i]
+                    it = Item(lookupEq['name'],lookupEq['description'],lookupEq['usable'],lookupEq['uses'])
+                    print(f'You got: {str(it)}')
+                    self.inventory.append(it)
+                    returnValue = True
+                except KeyError:
+                    print(f'Exception Caught. KeyError: {i}')
 
             # If this is a piece of equipment
             elif i[:3] == 'eq_':
@@ -204,6 +210,49 @@ class Player():
                 returnValue = True
 
         return returnValue
+
+    # Use a given item
+    def useItem(self, item):
+        thisItem = None
+        # Get the Item object
+        for i in self.inventory:
+            if i.name == item:
+                thisItem = i
+
+        # Make sure the item is in the inventory
+        if thisItem == None:
+            print('You do not have this item.')
+            return False
+
+        # Make sure the item can be used
+        try:
+            if not thisItem.usable:
+                print('This item is not usable.')
+                return False
+        except AttributeError:
+            print('This item is not usable.')
+            return False
+
+        # Switch on supported items
+        # TODO Support more items
+        if thisItem.name == 'gold':
+            print('TODO gold potion logic')
+        elif thisItem.name == 'key':
+            print('TODO key logic')
+        elif thisItem.name == 'health potion':
+            print('TODO health potion logic')
+        else:
+            print('This item is not supported')
+            return False
+
+        # Consume a usable item; delete if no more uses
+        if thisItem.uses >= 1:
+            thisItem.uses -= 1
+            if thisItem.uses == 0:
+                self.inventory.remove(thisItem)
+                print(f'You used the last of the {thisItem}')
+                
+        return True
 
     # Check the player inventory for a certain number of an item
     def checkInventory(self, item, quantity):
@@ -257,7 +306,10 @@ class Player():
             print('Equip requires a noun as input.')
             return False
 
-        equipment = noun + ' ' + ' '.join(options)
+        if options:
+            equipment = noun + ' ' + ' '.join(options).strip()
+        else:
+            equipment = noun
 
         # Move equipment from inventory to equipment slot
         for i in self.inventory:

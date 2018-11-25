@@ -76,7 +76,7 @@ class GameEngine():
             'look' : lambda: self.look(),
             'move': lambda: self.move(noun),
             'take': lambda: self.take(noun),
-            'use': lambda: self.use(noun),
+            'use': lambda: self.use(noun, options),
             'equip': lambda: self.player.equip(noun, options),
             'unequip': lambda: self.player.unequip(noun, options),
             'battle': lambda: self.battle(noun),
@@ -134,20 +134,24 @@ class GameEngine():
 
         return returnState
 
-    # TODO: Use a given item
-    def use(self, noun):
+    # Use a given item
+    def use(self, noun, options):
         if noun is None:
             print('Must use a specific item.')
             return False
 
-        # Try to use the item from the player inventory
-        # Try to use the item from the world
-        switcher = {
-            'key': False
-        }
+        if options:
+            item = noun + ' ' + ' '.join(options).strip()
+        else:
+            item = noun
 
-        action = switcher.get(noun)
-        return action
+        # Try to use the item from the world
+        # TODO The world needs items
+
+        # Try to use the item from the player
+        self.player.useItem(item)
+
+        return False
 
     # Battle an enemy in the room
     # TODO: Return the victor of the battle or None if no battle took place
@@ -198,6 +202,7 @@ class GameEngine():
         return None
 
     # Display the map; Expects a square map
+    # TODO Highlight the current room on the map
     def displayMap(self):
         # Initalize data structures
         mapLen = int(math.sqrt(len(self.map.keys())))
@@ -210,7 +215,7 @@ class GameEngine():
             roomCoord = room['Coordinates']
             roomIcon = room['Icon']
             # If the player has the area map, display the icon
-            if f"{room['Area']} Map" in self.player.inventory:
+            if f"{room['Area']} map" in self.player.inventory:
                 mapArr[roomCoord[0]][roomCoord[1]] = roomIcon
             # Else, display a fog
             else:
