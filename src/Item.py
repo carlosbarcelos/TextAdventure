@@ -1,7 +1,7 @@
 '''
 @title Text Adventure: Item Class
 @author Carlos Barcelos
-@date TODO
+@date 25 November 2018
 
 The item class is a generic factory for each of the items in the game.
 '''

@@ -1,7 +1,7 @@
 '''
 @title Text Adventure: Standard Libraries
 @author Carlos Barcelos
-@date TODO
+@date 23 November 2018
 
 Standard libraries for generic use.
 '''
