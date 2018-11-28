@@ -81,10 +81,17 @@ class Player():
         # Get the printable text
         body = []
         for i in self.inventory:
+            # Get the count of items
+            count = ''
+            try:
+                if i.count > 1: count = f'({i.count}) '
+            except:
+                continue
+
             if options == '-l': # Long print description
-                body.append(f'{i.name}: {i.description}')
+                body.append(f'{count}{i.name}: {i.description}')
             else:
-                body.append(f'{i.name}')
+                body.append(f'{count}{i.name}')
 
         # Hand off the print to the helper
         std.prettyPrint('INVENTORY', body)
@@ -109,6 +116,7 @@ class Player():
 
     # Gain additional Exp
     def getExp(self, val):
+        print(f'+{val} Exp')
         val = int(round(val * self.expRate)) # Apply Exp rate
         prevLevel = self.level
         self.level += (self.exp + val) // MAX_EXP
@@ -170,44 +178,45 @@ class Player():
     def getItems(self, items, resources):
         returnValue = False
         for i in items:
-            # If this is an item
-            if i[:3] == 'it_':
-                try:
+            try:
+                # If this is an item
+                if i[:3] == 'it_':
                     lookupEq = resources['items'][i]
-                    it = Item(lookupEq['name'],lookupEq['description'],lookupEq['usable'],lookupEq['uses'])
+                    it = Item(lookupEq['name'],lookupEq['description'],lookupEq['usable'],lookupEq['uses'],lookupEq['count'])
                     print(f'You got: {str(it)}')
-                    self.inventory.append(it)
+                    # If the item is already in the inventory, increase the count
+                    if self.inInventory(str(it)):
+                        for pItem in self.inventory:
+                            if str(it) == str(pItem):
+                                pItem.count += 1
+                    else:
+                        self.inventory.append(it)
                     returnValue = True
-                except KeyError:
-                    print(f'Exception Caught. KeyError: {i}')
 
-            # If this is a piece of equipment
-            elif i[:3] == 'eq_':
-                try:
+                # If this is a piece of equipment
+                elif i[:3] == 'eq_':
                     lookupEq = resources['equipment'][i]
                     e = Equipment(lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
                     print(f'You got: {str(e)}')
                     self.inventory.append(e)
                     returnValue = True
-                except KeyError:
-                    print(f'Exception Caught. KeyError: {i}')
 
-            # If this is a story log
-            elif i[:3] == 'st_':
-                try:
+                # If this is a story log
+                elif i[:3] == 'st_':
                     lookupSt = resources['story'][i]
                     s = Story(lookupSt['name'],lookupSt['description'],lookupSt['text'])
                     print(f'You got: {str(s)}')
                     self.inventory.append(s)
                     returnValue = True
-                except KeyError:
-                    print(f'Exception Caught. KeyError: {i}')
 
-            # If this is anything else
-            else:
-                print(f'{i} is not a supported item type.')
-                self.inventory.append(i)
-                returnValue = True
+                # If this is anything else
+                else:
+                    print(f'{i} is not a supported item type.')
+                    self.inventory.append(i)
+                    returnValue = True
+
+            except KeyError:
+                print(f'Exception Caught. KeyError: {i}')
 
         return returnValue
 
@@ -234,30 +243,45 @@ class Player():
             return False
 
         # Switch on supported items
-        # TODO Support more items
-        if thisItem.name == 'gold':
-            print('TODO gold potion logic')
-        elif thisItem.name == 'key':
+        if thisItem.name == 'key':
             print('TODO key logic')
         elif thisItem.name == 'health potion':
-            print('TODO health potion logic')
+            self.hp += 10
+            print('+10 Health')
+        elif thisItem.name == 'experience gem':
+            self.getExp(25)
         else:
             print('This item is not supported')
             return False
 
-        # Consume a usable item; delete if no more uses
-        if thisItem.uses >= 1:
+        # Consume a usable item
+        if thisItem.uses > 1:
             thisItem.uses -= 1
-            if thisItem.uses == 0:
+        # When this is the last use either decrease the item count or discard the item
+        else:
+            if thisItem.count > 1:
+                thisItem.count -= 1
+                thisItem.uses = thisItem.defaultUses
+            else:
                 self.inventory.remove(thisItem)
                 print(f'You used the last of the {thisItem}')
-                
+
         return True
 
-    # Check the player inventory for a certain number of an item
-    def checkInventory(self, item, quantity):
-        # TODO
-        return False
+    # Check the player inventory for a certain common name item of a certain quantity
+    def inInventory(self, itemName, count=0):
+        returnStatus = False
+        for i in self.inventory:
+            # Checj for item and count
+            if count:
+                if i.name == itemName and i.count == count:
+                    returnStatus = True
+                    break
+            # No count given, check for item
+            elif i.name == itemName:
+                returnStatus = True
+                break
+        return returnStatus
 
     # Do battle with some enemy
     def battle(self, e, statTuple):
@@ -306,10 +330,7 @@ class Player():
             print('Equip requires a noun as input.')
             return False
 
-        if options:
-            equipment = noun + ' ' + ' '.join(options).strip()
-        else:
-            equipment = noun
+        equipment = (noun + ' ' + ' '.join(options)).strip()
 
         # Move equipment from inventory to equipment slot
         for i in self.inventory:

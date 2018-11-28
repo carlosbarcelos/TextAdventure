@@ -11,11 +11,13 @@ def stringToBool(strBool):
     return strBool == 'True'
 
 class Item():
-    def __init__(self, name, description, usable, uses):
+    def __init__(self, name, description, usable, uses, count):
         self.name = name
         self.description = description
         self.usable = stringToBool(usable)
+        self.defaultUses = uses
         self.uses = uses
+        self.count = count
 
     # Overload __str__
     def __str__(self):

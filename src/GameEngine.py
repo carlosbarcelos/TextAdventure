@@ -140,10 +140,7 @@ class GameEngine():
             print('Must use a specific item.')
             return False
 
-        if options:
-            item = noun + ' ' + ' '.join(options).strip()
-        else:
-            item = noun
+        item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
         # TODO The world needs items
@@ -209,13 +206,13 @@ class GameEngine():
         mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         eastConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         southConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
-
+        print(self.player.inventory)
         # Create 2D map and border arrays
         for room in self.map.values():
             roomCoord = room['Coordinates']
             roomIcon = room['Icon']
             # If the player has the area map, display the icon
-            if f"{room['Area']} map" in self.player.inventory:
+            if self.player.inInventory(f"{room['Area']} Area Map"):
                 mapArr[roomCoord[0]][roomCoord[1]] = roomIcon
             # Else, display a fog
             else:
