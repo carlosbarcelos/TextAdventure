@@ -26,7 +26,8 @@ class GameEngine():
         self.isOver = False
         self.verbs = {
         'help' : 'Display this help information',
-        'look' : 'Examine your surroundings',
+        'look' : 'Take in your surroundings',
+        'examine' : 'Examine a n object in the world',
         'move' : '[dir] Determine the direction in which to travel',
         'take' : '[item] Take an item found in the world',
         'use' : '[item] Performs an action with a given item',
@@ -74,6 +75,7 @@ class GameEngine():
         switcher = {
             'help': lambda: self.help(),
             'look' : lambda: self.look(),
+            'examine' : lambda: self.examine(noun, options),
             'move': lambda: self.move(noun),
             'take': lambda: self.take(noun),
             'use': lambda: self.use(noun, options),
@@ -266,7 +268,6 @@ class GameEngine():
         print('You do not have access to that story log.')
         return False
 
-
     # Look around and get a feel for where you are
     def look(self):
         print(self.map[self.currentRoom]['Description'])
@@ -285,6 +286,23 @@ class GameEngine():
             print(f'There are a few enemies here: {enemyNames}')
         else:
             print('There are no enemies in this room.')
+
+
+    # Examine an object in the world
+    # TODO Should this work for player items as well?
+    def examine(self, noun, options):
+        if noun is None:
+            print('Please specify an object.')
+            return False
+
+        object = noun + ' ' + ' '.join(options)
+
+        try:
+            description = self.map[self.currentRoom]['Examine'][object]
+            print(f'{object.capitalize()} : {description}')
+        except KeyError:
+            print('error')
+            return False
 
     # Display help information
     def help(self):
