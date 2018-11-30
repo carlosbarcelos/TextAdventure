@@ -2,11 +2,16 @@
   "room 1" : {
     "Title" : "room 1",
     "Description" : "This is a save room. Type 'save' to save your progress.",
-    "Items" : ["a", "b"],
+    "Items" : ["it_key", "it_gold"],
     "Examine" :
     {
       "object 1" : "This is object 1. Shinny.",
       "object 2" : "This is object 2."
+    },
+    "Interact" :
+    {
+      "chest" : ["it_key", "it_gold"],
+      "button" : "You pushed the button"
     },
     "Enemies" :
     [

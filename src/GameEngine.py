@@ -10,7 +10,7 @@ import glob                   # Search files/directories
 import json                   # Handle JSON files
 import math                   # Math functionality
 from datetime import datetime # Current datetime
-import src.stdlib as std # Import standard libraries
+import src.stdlib as std      # Import standard libraries
 
 BATTLE_EXP = 10
 EXPLORE_EXP = 5
@@ -77,7 +77,7 @@ class GameEngine():
             'look' : lambda: self.look(),
             'examine' : lambda: self.examine(noun, options),
             'move': lambda: self.move(noun),
-            'take': lambda: self.take(noun),
+            'take': lambda: self.take(noun, options),
             'use': lambda: self.use(noun, options),
             'equip': lambda: self.player.equip(noun, options),
             'unequip': lambda: self.player.unequip(noun, options),
@@ -119,22 +119,23 @@ class GameEngine():
             return False
 
     # Taken a given item and add it to the player inventory
-    def take(self, noun):
+    def take(self, noun, options):
         if noun is None:
             print('Take requires a noun as input.')
             return False
 
-        returnState = False
-        items = self.map[self.currentRoom]['Items']
+        requestItem = (noun + ' ' + ' '.join(options)).strip()
 
-        if noun in items:
-            self.map[self.currentRoom]['Items'].remove(noun)
-            self.player.getItems([noun], self.resources)
-            print(f'Inventory: {self.player.inventory}')
-        else:
-            print(f'{noun} is not in {self.currentRoom}')
+        for i in self.map[self.currentRoom]['Items']:
+            roomItem = std.itemNameToObject(i, self.resources)
 
-        return returnState
+            if requestItem == str(roomItem):
+                self.map[self.currentRoom]['Items'].remove(i)
+                self.player.getItems([i], self.resources)
+                return True
+
+        print(f'{requestItem} is not in the room.')
+        return False
 
     # Use a given item
     def use(self, noun, options):
@@ -142,7 +143,7 @@ class GameEngine():
             print('Must use a specific item.')
             return False
 
-        item = (noun + ' ' + ' '.join(options)).strip()
+        item = noun + ' ' + ' '.join(options)
 
         # Try to use the item from the world
         # TODO The world needs items
@@ -253,7 +254,7 @@ class GameEngine():
             print('Please specify a story log.')
             return False
 
-        log = noun + ' ' + ' '.join(options)
+        log = (noun + ' ' + ' '.join(options)).strip()
 
         # The player must have the story log to read it
         for i in self.player.inventory:
@@ -289,13 +290,13 @@ class GameEngine():
 
 
     # Examine an object in the world
-    # TODO Should this work for player items as well?
+    # TODO Should this work for enemies and player items as well?
     def examine(self, noun, options):
         if noun is None:
             print('Please specify an object.')
             return False
 
-        object = noun + ' ' + ' '.join(options)
+        object = (noun + ' ' + ' '.join(options)).strip()
 
         try:
             description = self.map[self.currentRoom]['Examine'][object]

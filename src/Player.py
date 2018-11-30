@@ -8,7 +8,7 @@ The player class with member veriables and functions.
 
 from random import randint # Pseudo-random numbers
 
-import src.stdlib as std # Import standard libraries
+import src.stdlib as std            # Import standard libraries
 from src.Item import Item           # Work with Item objects
 from src.Story import Story         # Work with Story objects
 from src.Equipment import Equipment # Work with Equipment objects
@@ -83,10 +83,9 @@ class Player():
         for i in self.inventory:
             # Get the count of items
             count = ''
-            try:
-                if i.count > 1: count = f'({i.count}) '
-            except:
-                continue
+            if hasattr(i, 'count'):
+                if i.count > 1:
+                    count = f'({i.count}) '
 
             if options == '-l': # Long print description
                 body.append(f'{count}{i.name}: {i.description}')
@@ -178,45 +177,17 @@ class Player():
     def getItems(self, items, resources):
         returnValue = False
         for i in items:
-            try:
-                # If this is an item
-                if i[:3] == 'it_':
-                    lookupEq = resources['items'][i]
-                    it = Item(lookupEq['name'],lookupEq['description'],lookupEq['usable'],lookupEq['uses'],lookupEq['count'])
-                    print(f'You got: {str(it)}')
-                    # If the item is already in the inventory, increase the count
-                    if self.inInventory(str(it)):
-                        for pItem in self.inventory:
-                            if str(it) == str(pItem):
-                                pItem.count += 1
-                    else:
-                        self.inventory.append(it)
-                    returnValue = True
-
-                # If this is a piece of equipment
-                elif i[:3] == 'eq_':
-                    lookupEq = resources['equipment'][i]
-                    e = Equipment(lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
-                    print(f'You got: {str(e)}')
-                    self.inventory.append(e)
-                    returnValue = True
-
-                # If this is a story log
-                elif i[:3] == 'st_':
-                    lookupSt = resources['story'][i]
-                    s = Story(lookupSt['name'],lookupSt['description'],lookupSt['text'])
-                    print(f'You got: {str(s)}')
-                    self.inventory.append(s)
-                    returnValue = True
-
-                # If this is anything else
+            iObject = std.itemNameToObject(i, resources)
+            if iObject:
+                # If the item is already in the inventory, increase the count
+                if self.inInventory(str(iObject)):
+                    for pItem in self.inventory:
+                        if str(iObject) == str(pItem):
+                            pItem.count += 1
                 else:
-                    print(f'{i} is not a supported item type.')
-                    self.inventory.append(i)
-                    returnValue = True
-
-            except KeyError:
-                print(f'Exception Caught. KeyError: {i}')
+                    self.inventory.append(iObject)
+                print(f'You got: {str(iObject)}')
+                returnValue = True
 
         return returnValue
 
