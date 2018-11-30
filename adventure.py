@@ -26,10 +26,10 @@ def introSequence():
 
     pName = input('Welcome adventurer. What shall I call you? ')
 
-    pClasses = ['Brute', 'Scholar', 'Druid']
+    pClasses = ['brute', 'scholar', 'defender']
     pClass = ''
-    while pClass not in pClasses:
-        pClass = input(f'Please select a class: {pClasses} > ')
+    while pClass.lower() not in pClasses:
+        pClass = input(f'Please select a class: {[c.capitalize() for c in pClasses]} > ').lower()
     return (pName, pClass)
 
 # Display the one-time, outro sequence to the game
@@ -60,8 +60,9 @@ def initalize(args):
         with open(fn) as f:
             pJSON = json.load(f)
         # Create a new player with the data
-        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], \
-            pJSON['level'], pJSON['exp'], pJSON['upgradesAvailable'])
+        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], pJSON['equipment'], \
+            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
+            pJSON['upgradesAvailable'], pJSON['stats'])
         print(f'Player loaded from {fn}')
     else:
         pDetails = introSequence()
@@ -78,18 +79,22 @@ def initalize(args):
             aJSON = json.load(f)
     a = Achievements(aJSON)
 
-    return GameEngine(m, p, a)
+    # Build the resources/lookup tables that the game needs
+    r = {}
+    with open('resources/items.json') as f:
+        r['items'] = json.load(f)
+    with open('resources/equipment.json') as f:
+        r['equipment'] = json.load(f)
+    with open('resources/story.json') as f:
+        r['story'] = json.load(f)
+
+    return GameEngine(m, p, a, r)
 
 ###############
 ## Main Loop ##
 ###############
 def main(args):
     ge = initalize(args)
-
-    # ge.achievements.checkAll(ge)
-    # ge.achievements.reportAll()
-    # sys.exit(1)
-
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()

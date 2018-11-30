@@ -1,94 +1,103 @@
 {
-  "ATK 1" : {
-    "Title" : "ATK 1",
-    "Description" : "ATK 1",
+  "atk 1" : {
+    "Title" : "atk 1",
+    "Description" : "atk 1",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "ATK",
+    "Connections" : {"east": "atk 2"},
+    "Area" : "atk",
     "Icon" : "!",
-    "Coordinates" : [0,0]
+    "Coordinates" : [0,0],
+    "Visited" : "True"
   },
-  "ATK 2" : {
-    "Title" : "ATK 2",
-    "Description" : "ATK 2",
+  "atk 2" : {
+    "Title" : "atk 2",
+    "Description" : "atk 2",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "ATK",
+    "Connections" : {"south": "int 2", "west" : "atk 1", "east": "atk 3"},
+    "Area" : "atk",
     "Icon" : "@",
-    "Coordinates" : [0,1]
+    "Coordinates" : [0,1],
+    "Visited" : "False"
   },
-  "ATK 3" : {
-    "Title" : "ATK 3",
-    "Description" : "ATK 3",
+  "atk 3" : {
+    "Title" : "atk 3",
+    "Description" : "atk 3",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "ATK",
+    "Connections" : {"west" : "atk 2"},
+    "Area" : "atk",
     "Icon" : " ",
-    "Coordinates" : [0,2]
+    "Coordinates" : [0,2],
+    "Visited" : "False"
   },
 
-  "INT 1" : {
-    "Title" : "INT 1",
-    "Description" : "INT 1",
+  "int 1" : {
+    "Title" : "int 1",
+    "Description" : "int 1",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "INT",
+    "Connections" : {"east": "int 2"},
+    "Area" : "int",
     "Icon" : "!",
-    "Coordinates" : [1,0]
+    "Coordinates" : [1,0],
+    "Visited" : "False"
   },
-  "INT 2" : {
-    "Title" : "INT 2",
-    "Description" : "INT 2",
+  "int 2" : {
+    "Title" : "int 2",
+    "Description" : "int 2",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "INT",
+    "Connections" : {"north": "atk 2", "south": "def 2", "west" : "int 1", "east": "int 3"},
+    "Area" : "int",
     "Icon" : "@",
-    "Coordinates" : [1,1]
+    "Coordinates" : [1,1],
+    "Visited" : "False"
   },
-  "INT 3" : {
-    "Title" : "INT 3",
-    "Description" : "INT 3",
+  "int 3" : {
+    "Title" : "int 3",
+    "Description" : "int 3",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "INT",
+    "Connections" : {"west" : "int 2"},
+    "Area" : "int",
     "Icon" : " ",
-    "Coordinates" : [1,2]
+    "Coordinates" : [1,2],
+    "Visited" : "False"
   },
 
-  "DEF 1" : {
-    "Title" : "DEF 1",
-    "Description" : "DEF 1",
+  "def 1" : {
+    "Title" : "def 1",
+    "Description" : "def 1",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "DEF",
+    "Connections" : {"east": "def 2"},
+    "Area" : "def",
     "Icon" : "!",
-    "Coordinates" : [2,0]
+    "Coordinates" : [2,0],
+    "Visited" : "False"
   },
-  "DEF 2" : {
-    "Title" : "DEF 2",
-    "Description" : "DEF 2",
+  "def 2" : {
+    "Title" : "def 2",
+    "Description" : "def 2",
     "Items" : [],
     "Enemies" : [],
-    "Connections" : {},
-    "Area" : "DEF",
+    "Connections" : {"north": "int 2", "west" : "def 1"},
+    "Area" : "def",
     "Icon" : "@",
-    "Coordinates" : [2,1]
+    "Coordinates" : [2,1],
+    "Visited" : "False"
   },
-  "DEF 3" : {
-    "Title" : "DEF 3",
-    "Description" : "DEF 3",
+  "def 3" : {
+    "Title" : "def 3",
+    "Description" : "def 3",
     "Items" : [],
     "Enemies" : [],
     "Connections" : {},
-    "Area" : "DEF",
+    "Area" : "def",
     "Icon" : " ",
-    "Coordinates" : [2,2]
+    "Coordinates" : [2,2],
+    "Visited" : "False"
   }
 }

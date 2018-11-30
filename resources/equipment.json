@@ -1,0 +1,101 @@
+{
+  "eq_headA" :
+  {
+    "name" : "attact helmet",
+    "description" : "Increases attack power by 10",
+    "position" : "head",
+    "attribute" : "atk",
+    "value" : 10
+  },
+  "eq_headI" :
+  {
+    "name" : "intelligence helmet",
+    "description" : "Increases intelligence skill by 10",
+    "position" : "head",
+    "attribute" : "int",
+    "value" : 10
+  },
+  "eq_headD" :
+  {
+    "name" : "defense helmet",
+    "description" : "Increases defensive stance by 10",
+    "position" : "head",
+    "attribute" : "def",
+    "value" : 10
+  },
+
+  "eq_chestA" :
+  {
+    "name" : "attack armor",
+    "description" : "Increases attack power by 10",
+    "position" : "chest",
+    "attribute" : "atk",
+    "value" : 10
+  },
+  "eq_chestI" :
+  {
+    "name" : "intelligence armor",
+    "description" : "Increases intelligence skill by 10",
+    "position" : "chest",
+    "attribute" : "int",
+    "value" : 10
+  },
+  "eq_chestD" :
+  {
+    "name" : "defense armor",
+    "description" : "Increases defensive stance by 10",
+    "position" : "chest",
+    "attribute" : "def",
+    "value" : 10
+  },
+
+  "eq_legA" :
+  {
+    "name" : "attack leggings",
+    "description" : "Increases attack power by 10",
+    "position" : "legs",
+    "attribute" : "atk",
+    "value" : 10
+  },
+  "eq_legI" :
+  {
+    "name" : "intelligence leggings",
+    "description" : "Increases intelligence skill by 10",
+    "position" : "legs",
+    "attribute" : "int",
+    "value" : 10
+  },
+  "eq_legD" :
+  {
+    "name" : "defense leggings",
+    "description" : "Increases defensive stance by 10",
+    "position" : "legs",
+    "attribute" : "def",
+    "value" : 10
+  },
+
+  "eq_boostHp" :
+  {
+    "name" : "hp amulet",
+    "description" : "Increases maximum HP by 10%",
+    "position" : "necklace",
+    "attribute" : "hp",
+    "value" : 50
+  },
+  "eq_boostGold" :
+  {
+    "name" : "gold ring",
+    "description" : "Collect 50% more gold",
+    "position" : "ring",
+    "attribute" : "goldRate",
+    "value" : 0.5
+  },
+  "eq_boostExp" :
+  {
+    "name" : "experience staff",
+    "description" : "Collect 50% more Exp",
+    "position" : "staff",
+    "attribute" : "expRate",
+    "value" : 0.5
+  }
+}

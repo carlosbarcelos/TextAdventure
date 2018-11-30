@@ -1,70 +1,85 @@
 {
-  "Room 1" : {
-    "Title" : "Room 1",
-    "Description" : "Welcome to Room 1",
-    "Items" : ["a", "b"],
+  "room 1" : {
+    "Title" : "room 1",
+    "Description" : "This is a save room. Type 'save' to save your progress.",
+    "Items" : ["it_key", "it_gold"],
+    "Examine" :
+    {
+      "object 1" : "This is object 1. Shinny.",
+      "object 2" : "This is object 2."
+    },
+    "Interact" :
+    {
+      "chest" : ["it_key", "it_gold"],
+      "button" : "You pushed the button"
+    },
     "Enemies" :
     [
       {
         "Name": "e1",
         "Description" : "Enemy 1 Description",
-        "Inventory" : ["item1", "item2"],
-        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 },
-        "Area" : "ATK",
-        "Icon" : " ",
-        "Coordinates" : [0,0]
-      }
-    ],
-    "Connections" : {"north" : "Room 2"},
-    "Area" : "ATK",
-    "Icon" : " ",
-    "Coordinates" : [0,1]
-  },
+        "Inventory" : ["st_1", "eq_legA", "eq_boostExp", "it_key", "it_gold",
+          "it_hpUp", "it_hpUp", "it_expUp", "it_intMap", "it_rock"],
+          "Damage" : 50,
+          "Stats" : { "atk" : 1}
+        }
+      ],
+      "Connections" : {"north" : "room 2"},
+      "Area" : "ATK",
+      "Icon" : "S",
+      "Coordinates" : [1,0],
+      "Visited" : "False"
+    },
 
-  "Room 2" : {
-    "Title" : "Room 2",
-    "Description" : "Welcome to Room 2",
-    "Items" : [],
-    "Enemies" :
-    [
-      {
-        "Name": "e1",
-        "Description" : "Enemy 1 Description",
-        "Inventory" : [],
-        "Stats" : { "ATK" : 1, "INT" : 3, "DEF" : 2 }
-      },
-      {
-        "Name": "e2",
-        "Description" : "Enemy 2 Description",
-        "Inventory" : [],
-        "Stats" : { "ATK" : 1}
-      }
-    ],
-    "Connections" : {"north" : "Room 3", "south" : "Room 1"},
-    "Area" : "INT",
-    "Icon" : " ",
-    "Coordinates" : [0,1]
-  },
+    "room 2" : {
+      "Title" : "room 2",
+      "Description" : "Welcome to Room 2",
+      "Items" : [],
+      "Enemies" :
+      [
+        {
+          "Name": "e1",
+          "Description" : "Enemy 1 Description",
+          "Inventory" : [],
+          "Damage" : 5,
+          "Stats" : { "atk" : 1, "int" : 3, "def" : 2 }
+        },
+        {
+          "Name": "e2",
+          "Description" : "Enemy 2 Description",
+          "Inventory" : ["it_rock","it_rock","it_rock","it_rock"],
+          "Damage" : 5,
+          "Stats" : { "atk" : 1}
+        }
+      ],
+      "Connections" : {"east" : "room 3", "south" : "room 1"},
+      "Area" : "INT",
+      "Icon" : " ",
+      "Coordinates" : [0,0],
+      "Visited" : "False"
+    },
 
-  "Room 3" : {
-    "Title" : "Room 3",
-    "Description" : "Welcome to Room 3",
-    "Items" : ["a"],
-    "Enemies" :[],
-    "Connections" : {"north" : "Room 4", "south" : "Room 2"},
-    "Area" : "DEF",
-    "Icon" : " ",
-    "Coordinates" : [1,0]
-  },
+    "room 3" : {
+      "Title" : "room 3",
+      "Description" : "Welcome to Room 3",
+      "Items" : ["a"],
+      "Enemies" :[],
+      "Connections" : {"south" : "room 4", "west" : "room 2"},
+      "Area" : "DEF",
+      "Icon" : " ",
+      "Coordinates" : [0,1],
+      "Visited" : "False"
+    },
 
-  "Room 4" : {
-    "Title" : "Room 4",
-    "Description" : "Welcome to Room 4",
-    "Items" : [],
-    "Enemies" :[],
-    "Connections" : {"south" : "Room 3"},
-    "Area" : "",
-    "Icon" : " ",
-    "Coordinates" : [1,1]
+    "room 4" : {
+      "Title" : "room 4",
+      "Description" : "Welcome to Room 4",
+      "Items" : [],
+      "Enemies" :[],
+      "Connections" : {"north" : "room 3"},
+      "Area" : "ATK",
+      "Icon" : " ",
+      "Coordinates" : [1,1],
+      "Visited" : "False"
+    }
   }
-}
