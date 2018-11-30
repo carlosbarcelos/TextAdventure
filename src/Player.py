@@ -8,7 +8,7 @@ The player class with member veriables and functions.
 
 from random import randint # Pseudo-random numbers
 
-import src.stdlib as std # Import standard libraries
+import src.stdlib as std            # Import standard libraries
 from src.Item import Item           # Work with Item objects
 from src.Story import Story         # Work with Story objects
 from src.Equipment import Equipment # Work with Equipment objects
@@ -81,10 +81,16 @@ class Player():
         # Get the printable text
         body = []
         for i in self.inventory:
+            # Get the count of items
+            count = ''
+            if hasattr(i, 'count'):
+                if i.count > 1:
+                    count = f'({i.count}) '
+
             if options == '-l': # Long print description
-                body.append(f'{i.name}: {i.description}')
+                body.append(f'{count}{i.name}: {i.description}')
             else:
-                body.append(f'{i.name}')
+                body.append(f'{count}{i.name}')
 
         # Hand off the print to the helper
         std.prettyPrint('INVENTORY', body)
@@ -109,6 +115,7 @@ class Player():
 
     # Gain additional Exp
     def getExp(self, val):
+        print(f'+{val} Exp')
         val = int(round(val * self.expRate)) # Apply Exp rate
         prevLevel = self.level
         self.level += (self.exp + val) // MAX_EXP
@@ -170,45 +177,82 @@ class Player():
     def getItems(self, items, resources):
         returnValue = False
         for i in items:
-            # If this is an item
-            if i[:3] == 'it_':
-                print('TODO Handle Item')
-                returnValue = True
-
-            # If this is a piece of equipment
-            elif i[:3] == 'eq_':
-                try:
-                    lookupEq = resources['equipment'][i]
-                    e = Equipment(lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
-                    print(f'You got: {str(e)}')
-                    self.inventory.append(e)
-                    returnValue = True
-                except KeyError:
-                    print(f'Exception Caught. KeyError: {i}')
-
-            # If this is a story log
-            elif i[:3] == 'st_':
-                try:
-                    lookupSt = resources['story'][i]
-                    s = Story(lookupSt['name'],lookupSt['description'],lookupSt['text'])
-                    print(f'You got: {str(s)}')
-                    self.inventory.append(s)
-                    returnValue = True
-                except KeyError:
-                    print(f'Exception Caught. KeyError: {i}')
-
-            # If this is anything else
-            else:
-                print(f'{i} is not a supported item type.')
-                self.inventory.append(i)
+            iObject = std.itemNameToObject(i, resources)
+            if iObject:
+                # If the item is already in the inventory, increase the count
+                if self.inInventory(str(iObject)):
+                    for pItem in self.inventory:
+                        if str(iObject) == str(pItem):
+                            pItem.count += 1
+                else:
+                    self.inventory.append(iObject)
+                print(f'You got: {str(iObject)}')
                 returnValue = True
 
         return returnValue
 
-    # Check the player inventory for a certain number of an item
-    def checkInventory(self, item, quantity):
-        # TODO
-        return False
+    # Use a given item
+    def useItem(self, item):
+        thisItem = None
+        # Get the Item object
+        for i in self.inventory:
+            if i.name == item:
+                thisItem = i
+
+        # Make sure the item is in the inventory
+        if thisItem == None:
+            print('You do not have access to that item.')
+            return False
+
+        # Make sure the item can be used
+        try:
+            if not thisItem.usable:
+                print('That item is not usable.')
+                return False
+        except AttributeError:
+            print('That item is not usable.')
+            return False
+
+        # Switch on supported items
+        if thisItem.name == 'key':
+            print('TODO key logic')
+        elif thisItem.name == 'health potion':
+            self.hp += 10
+            print('+10 Health')
+        elif thisItem.name == 'experience gem':
+            self.getExp(25)
+        else:
+            print('This item is not supported')
+            return False
+
+        # Consume a usable item
+        if thisItem.uses > 1:
+            thisItem.uses -= 1
+        # When this is the last use either decrease the item count or discard the item
+        else:
+            if thisItem.count > 1:
+                thisItem.count -= 1
+                thisItem.uses = thisItem.defaultUses
+            else:
+                self.inventory.remove(thisItem)
+                print(f'You used the last of the {thisItem}')
+
+        return True
+
+    # Check the player inventory for a certain common name item of a certain quantity
+    def inInventory(self, itemName, count=0):
+        returnStatus = False
+        for i in self.inventory:
+            # Checj for item and count
+            if count:
+                if i.name == itemName and i.count == count:
+                    returnStatus = True
+                    break
+            # No count given, check for item
+            elif i.name == itemName:
+                returnStatus = True
+                break
+        return returnStatus
 
     # Do battle with some enemy
     def battle(self, e, statTuple):
@@ -257,7 +301,7 @@ class Player():
             print('Equip requires a noun as input.')
             return False
 
-        equipment = noun + ' ' + ' '.join(options)
+        equipment = (noun + ' ' + ' '.join(options)).strip()
 
         # Move equipment from inventory to equipment slot
         for i in self.inventory:

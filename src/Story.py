@@ -1,7 +1,7 @@
 '''
 @title Text Adventure: Story Class
 @author Carlos Barcelos
-@date TODO
+@date 23 November 2018
 
 The story class is a generic factory for each of the equipment in the game.
 '''

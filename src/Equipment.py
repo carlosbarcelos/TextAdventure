@@ -1,7 +1,7 @@
 '''
 @title Text Adventure: Equipment Class
 @author Carlos Barcelos
-@date TODO
+@date 23 November 2018
 
 The equipment class is a generic factory for each of the equipment in the game.
 '''

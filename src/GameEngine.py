@@ -10,7 +10,7 @@ import glob                   # Search files/directories
 import json                   # Handle JSON files
 import math                   # Math functionality
 from datetime import datetime # Current datetime
-import src.stdlib as std # Import standard libraries
+import src.stdlib as std      # Import standard libraries
 
 BATTLE_EXP = 10
 EXPLORE_EXP = 5
@@ -26,7 +26,8 @@ class GameEngine():
         self.isOver = False
         self.verbs = {
         'help' : 'Display this help information',
-        'look' : 'Examine your surroundings',
+        'look' : 'Take in your surroundings',
+        'examine' : 'Examine a n object in the world',
         'move' : '[dir] Determine the direction in which to travel',
         'take' : '[item] Take an item found in the world',
         'use' : '[item] Performs an action with a given item',
@@ -74,9 +75,10 @@ class GameEngine():
         switcher = {
             'help': lambda: self.help(),
             'look' : lambda: self.look(),
+            'examine' : lambda: self.examine(noun, options),
             'move': lambda: self.move(noun),
-            'take': lambda: self.take(noun),
-            'use': lambda: self.use(noun),
+            'take': lambda: self.take(noun, options),
+            'use': lambda: self.use(noun, options),
             'equip': lambda: self.player.equip(noun, options),
             'unequip': lambda: self.player.unequip(noun, options),
             'battle': lambda: self.battle(noun),
@@ -117,37 +119,55 @@ class GameEngine():
             return False
 
     # Taken a given item and add it to the player inventory
-    def take(self, noun):
+    def take(self, noun, options):
         if noun is None:
             print('Take requires a noun as input.')
             return False
 
-        returnState = False
-        items = self.map[self.currentRoom]['Items']
+        requestItem = (noun + ' ' + ' '.join(options)).strip()
 
-        if noun in items:
-            self.map[self.currentRoom]['Items'].remove(noun)
-            self.player.getItems([noun], self.resources)
-            print(f'Inventory: {self.player.inventory}')
-        else:
-            print(f'{noun} is not in {self.currentRoom}')
+        for i in self.map[self.currentRoom]['Items']:
+            roomItem = std.itemNameToObject(i, self.resources)
 
-        return returnState
+            if requestItem == str(roomItem):
+                self.map[self.currentRoom]['Items'].remove(i)
+                self.player.getItems([i], self.resources)
+                return True
 
-    # TODO: Use a given item
-    def use(self, noun):
+        print(f'{requestItem} is not in the room.')
+        return False
+
+    # Use a given item
+    # TODO Support more usable world items
+    def use(self, noun, options):
         if noun is None:
             print('Must use a specific item.')
             return False
 
-        # Try to use the item from the player inventory
-        # Try to use the item from the world
-        switcher = {
-            'key': False
-        }
+        item = (noun + ' ' + ' '.join(options)).strip()
 
-        action = switcher.get(noun)
-        return action
+        # Try to use the item from the world
+        worldItems = ['button', 'lever', 'chest', 'crate']
+        if item in worldItems:
+            return self.useItem(item)
+        # Try to use the item from the player
+        else:
+            return self.player.useItem(item)
+
+    # Helper: Use an item from the world
+
+    def useItem(self, item):
+        returnStatus = False
+        if item == 'button' or item == 'lever':
+            print('button | lever')
+            returnStatus = True
+        elif item == 'chest' or item == 'crate':
+            print('chest | crate')
+            returnStatus = True
+        else:
+            print('Unexpected item.')
+
+        return returnStatus
 
     # Battle an enemy in the room
     # TODO: Return the victor of the battle or None if no battle took place
@@ -198,19 +218,20 @@ class GameEngine():
         return None
 
     # Display the map; Expects a square map
+    # TODO Highlight the current room on the map
     def displayMap(self):
         # Initalize data structures
         mapLen = int(math.sqrt(len(self.map.keys())))
         mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         eastConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         southConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
-
+        print(self.player.inventory)
         # Create 2D map and border arrays
         for room in self.map.values():
             roomCoord = room['Coordinates']
             roomIcon = room['Icon']
             # If the player has the area map, display the icon
-            if f"{room['Area']} Map" in self.player.inventory:
+            if self.player.inInventory(f"{room['Area']} Area Map"):
                 mapArr[roomCoord[0]][roomCoord[1]] = roomIcon
             # Else, display a fog
             else:
@@ -249,7 +270,7 @@ class GameEngine():
             print('Please specify a story log.')
             return False
 
-        log = noun + ' ' + ' '.join(options)
+        log = (noun + ' ' + ' '.join(options)).strip()
 
         # The player must have the story log to read it
         for i in self.player.inventory:
@@ -263,7 +284,6 @@ class GameEngine():
                 return True
         print('You do not have access to that story log.')
         return False
-
 
     # Look around and get a feel for where you are
     def look(self):
@@ -283,6 +303,23 @@ class GameEngine():
             print(f'There are a few enemies here: {enemyNames}')
         else:
             print('There are no enemies in this room.')
+
+
+    # Examine an object in the world
+    # TODO Should this work for enemies and player items as well?
+    def examine(self, noun, options):
+        if noun is None:
+            print('Please specify an object.')
+            return False
+
+        object = (noun + ' ' + ' '.join(options)).strip()
+
+        try:
+            description = self.map[self.currentRoom]['Examine'][object]
+            print(f'{object.capitalize()} : {description}')
+        except KeyError:
+            print('error')
+            return False
 
     # Display help information
     def help(self):

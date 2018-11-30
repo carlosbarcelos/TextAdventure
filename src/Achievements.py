@@ -1,7 +1,7 @@
 '''
 @title Text Adventure: Achievements Class
 @author Carlos Barcelos
-@date TODO
+@date 20 November 2018
 
 The achievements class with member veriables and functions.
 '''
