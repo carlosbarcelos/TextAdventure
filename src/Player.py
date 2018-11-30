@@ -201,16 +201,16 @@ class Player():
 
         # Make sure the item is in the inventory
         if thisItem == None:
-            print('You do not have this item.')
+            print('You do not have access to that item.')
             return False
 
         # Make sure the item can be used
         try:
             if not thisItem.usable:
-                print('This item is not usable.')
+                print('That item is not usable.')
                 return False
         except AttributeError:
-            print('This item is not usable.')
+            print('That item is not usable.')
             return False
 
         # Switch on supported items

@@ -138,20 +138,36 @@ class GameEngine():
         return False
 
     # Use a given item
+    # TODO Support more usable world items
     def use(self, noun, options):
         if noun is None:
             print('Must use a specific item.')
             return False
 
-        item = noun + ' ' + ' '.join(options)
+        item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
-        # TODO The world needs items
-
+        worldItems = ['button', 'lever', 'chest', 'crate']
+        if item in worldItems:
+            return self.useItem(item)
         # Try to use the item from the player
-        self.player.useItem(item)
+        else:
+            return self.player.useItem(item)
 
-        return False
+    # Helper: Use an item from the world
+
+    def useItem(self, item):
+        returnStatus = False
+        if item == 'button' or item == 'lever':
+            print('button | lever')
+            returnStatus = True
+        elif item == 'chest' or item == 'crate':
+            print('chest | crate')
+            returnStatus = True
+        else:
+            print('Unexpected item.')
+
+        return returnStatus
 
     # Battle an enemy in the room
     # TODO: Return the victor of the battle or None if no battle took place
