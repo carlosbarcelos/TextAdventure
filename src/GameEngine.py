@@ -330,7 +330,7 @@ class GameEngine():
 
         try:
             description = self.map[self.currentRoom]['Examine'][object]
-            print(f'{object.capitalize()} : {description}')
+            std.prettyPrint(object.capitalize(), [description])
         except KeyError:
             print('error')
             return False
