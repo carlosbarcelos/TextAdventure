@@ -194,7 +194,7 @@ class GameEngine():
         # An enemy must be selected to start a battle
         if noun is None:
             print('Select an enemy to battle.')
-            return None
+            return False
 
         # Find the enemy in the room
         for e in self.map[self.currentRoom]['Enemies']:
@@ -229,7 +229,7 @@ class GameEngine():
                     return False
 
         print(f"The enemy '{noun}' is not in this room")
-        return None
+        return False
 
     # Display the map; Expects a square map
     # TODO Highlight the current room on the map
@@ -278,6 +278,8 @@ class GameEngine():
                 dividerStr += d
             print(dividerStr)
 
+        return True
+
     # Read a given story log
     def readStory(self, noun, options):
         if noun is None:
@@ -318,6 +320,7 @@ class GameEngine():
         else:
             print('There are no enemies in this room.')
 
+        return True
 
     # Examine an object in the world
     # TODO Should this work for enemies and player items as well?
@@ -331,6 +334,7 @@ class GameEngine():
         try:
             description = self.map[self.currentRoom]['Examine'][object]
             std.prettyPrint(object.capitalize(), [description])
+            return True
         except KeyError:
             print('error')
             return False
@@ -344,6 +348,7 @@ class GameEngine():
 
         # Hand off the print to the helper
         std.prettyPrint('HELP', body)
+        return True
 
     # Save the game and replenish the player health. Only allowed in save rooms
     def save(self):
