@@ -147,23 +147,37 @@ class GameEngine():
         item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
-        worldItems = ['button', 'lever', 'chest', 'crate']
-        if item in worldItems:
-            return self.useItem(item)
+        if item in self.map[self.currentRoom]['Use']:
+            return self.useObject(item)
         # Try to use the item from the player
         else:
             return self.player.useItem(item)
 
     # Helper: Use an item from the world
-
-    def useItem(self, item):
+    def useObject(self, item):
         returnStatus = False
+        itemValue = self.map[self.currentRoom]['Use'][item]
         if item == 'button' or item == 'lever':
-            print('button | lever')
+            print(itemValue['description'])
+            # TODO Revisit buttons. Whhat else should they be able to do?
+            for action in itemValue:
+                if action == 'unlock':
+                    # Make the connection in this room and that room
+                    self.map[self.currentRoom]["Connections"][itemValue[action][0]] = itemValue[action][1]
+                    self.map[itemValue[action][1]]["Connections"][std.getOppDir(itemValue[action][0])] = self.currentRoom
+                elif action == 'spawn':
+                    self.map[self.currentRoom]['Items'].append(itemValue[action])
             returnStatus = True
         elif item == 'chest' or item == 'crate':
-            print('chest | crate')
-            returnStatus = True
+            # Pretty print container contents to user
+            itemValueNames = []
+            for i in itemValue:
+                itemValueNames.append(self.resources['items'][i]['name'])
+            std.prettyPrint(item, itemValueNames)
+            # The user can take all or none of the items in the container
+            if 'y' == std.optionParse('Take all the items?', ['y','n']):
+                self.player.getItems(itemValue, self.resources)
+                returnStatus = True
         else:
             print('Unexpected item.')
 
@@ -319,7 +333,7 @@ class GameEngine():
 
         try:
             description = self.map[self.currentRoom]['Examine'][object]
-            print(f'{object.capitalize()} : {description}')
+            std.prettyPrint(object.capitalize(), [description])
             return True
         except KeyError:
             print('error')

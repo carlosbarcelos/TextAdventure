@@ -8,10 +8,14 @@
       "object 1" : "This is object 1. Shinny.",
       "object 2" : "This is object 2."
     },
-    "Interact" :
+    "Use" :
     {
-      "chest" : ["it_key", "it_gold", "it_hpUp"],
-      "button" : "You pushed the button"
+      "chest" : ["it_key", "it_gold"],
+      "button" : {
+        "description" : "This button unlocks north and spawns a rock",
+        "unlock" : ["south", "room 3"],
+        "spawn" : "it_rock"
+      }
     },
     "Enemies" :
     [
