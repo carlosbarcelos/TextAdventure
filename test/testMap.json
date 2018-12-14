@@ -34,7 +34,7 @@
         "Description" : "Enemy 3 Description",
         "Inventory" : ["it_rock","it_rock","it_rock","it_rock"],
         "Damage" : 5,
-        "Stats" : { "int" : 50}
+        "Stats" : { "int" : 1}
       }
     ],
       "Connections" : {"north" : "room 2"},

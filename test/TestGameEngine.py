@@ -92,10 +92,6 @@ class TestExamineFunction(unittest.TestCase):
         res = self.ge.examine('object', '1')
         self.assertEqual(res, False)
 
-    def testExamineWeirdInputs(self):
-        res = self.ge.examine(' object ', ' 1 ')
-        self.assertEqual(res, True)
-
 # Test the move function
 class TestMoveFunction(unittest.TestCase):
     def setUp(self):
@@ -146,10 +142,22 @@ class TestTakeFunction(unittest.TestCase):
         res = self.ge.take('experience', 'gem')
         self.assertEqual(res, False)
 
-# TODO Test the use function
-class TestUseFunction(unittest.TestCase):
-    def testUseSuccess(self):
-        self.assertEqual(0, 1)
+# # TODO Test the use function
+# class TestUseFunction(unittest.TestCase):
+#     def testUseButton(self):
+#         self.assertEqual(0, 1)
+#
+#     def testUseLever(self):
+#         self.assertEqual(0, 1)
+#
+#     def testUseChest(self):
+#         self.assertEqual(0, 1)
+#
+#     def testUseCrate(self):
+#         self.assertEqual(0, 1)
+#
+#     def testBadInput(self):
+#         self.assertEqual(0, 1)
 
 # Test the battle function
 class TestBattleFunction(unittest.TestCase):
@@ -160,9 +168,10 @@ class TestBattleFunction(unittest.TestCase):
         res = self.ge.battle('e3')
         self.assertEqual(res, True)
 
+    # TODO How to test user input?
     # def testBattleTopTrumpsSuccess(self):
     #     res = self.ge.battle('e1')
-    #     self.assertEqual(res, True) # TODO
+    #     self.assertEqual(res, True)
 
     def testBattleFailure(self):
         initialHealth = self.ge.player.hp
@@ -201,14 +210,28 @@ class TestReadFunction(unittest.TestCase):
         self.assertEqual(res, False)
 
 # Test the save function
+# TODO How to test user input?
 class TestSaveFunction(unittest.TestCase):
-    def testSaveSuccess(self):
-        self.assertEqual(0, 1)
+    def setUp(self):
+        self.ge = getGameEngine()
+
+    # def testSaveSuccess(self):
+    #     self.assertEqual(0, 1)
+    #
+    # def testSaveFailInWrongArea(self):
+    #     self.assertEqual(0, 1)
 
 # Test the quit function
+# TODO How to test user input?
 class TestQuitFunction(unittest.TestCase):
-    def testQuitSuccess(self):
-        self.assertEqual(0, 1)
+    def setUp(self):
+        self.ge = getGameEngine()
+
+    # def testQuitYes(self):
+    #     assert(0,1)
+    #
+    # def testQuitNo(self):
+    #     assert(0,1)
 
 # Test that functions get handed off to the player class
 # Player functions: battle
