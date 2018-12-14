@@ -8,7 +8,7 @@
       "object 1" : "This is object 1. Shinny.",
       "object 2" : "This is object 2."
     },
-    "Interact" :
+    "Use" :
     {
       "chest" : ["it_key", "it_gold"],
       "button" : "You pushed the button"

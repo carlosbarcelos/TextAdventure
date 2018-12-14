@@ -147,23 +147,30 @@ class GameEngine():
         item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
-        worldItems = ['button', 'lever', 'chest', 'crate']
-        if item in worldItems:
-            return self.useItem(item)
+        if item in self.map[self.currentRoom]['Use']:
+            return self.useObject(item)
         # Try to use the item from the player
         else:
             return self.player.useItem(item)
 
     # Helper: Use an item from the world
-
-    def useItem(self, item):
+    def useObject(self, item):
         returnStatus = False
+        itemValue = self.map[self.currentRoom]['Use'][item]
         if item == 'button' or item == 'lever':
-            print('button | lever')
+            print('TODO Determine button/lever behavior')
+            print(itemValue)
             returnStatus = True
         elif item == 'chest' or item == 'crate':
-            print('chest | crate')
-            returnStatus = True
+            # Pretty print container contents to user
+            itemValueNames = []
+            for i in itemValue:
+                itemValueNames.append(self.resources['items'][i]['name'])
+            std.prettyPrint(item, itemValueNames)
+            # The user can take all or none of the items in the container
+            if 'y' == std.optionParse('Take all the items?', ['y','n']):
+                self.player.getItems(itemValue, self.resources)
+                returnStatus = True
         else:
             print('Unexpected item.')
 
