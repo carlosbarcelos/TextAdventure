@@ -65,3 +65,11 @@ def itemNameToObject(item, resources):
     except KeyError:
         print(f'Exception Caught. KeyError: {item}')
         return None
+
+# Get the oppisite of the input direction
+def getOppDir(dir):
+    if dir == 'north': return 'south'
+    elif dir == 'south': return 'north'
+    elif dir == 'east': return 'west'
+    elif dir == 'west': return 'east'
+    else: return None

@@ -158,8 +158,15 @@ class GameEngine():
         returnStatus = False
         itemValue = self.map[self.currentRoom]['Use'][item]
         if item == 'button' or item == 'lever':
-            print('TODO Determine button/lever behavior')
-            print(itemValue)
+            print(itemValue['description'])
+            # TODO Revisit buttons. Whhat else should they be able to do?
+            for action in itemValue:
+                if action == 'unlock':
+                    # Make the connection in this room and that room
+                    self.map[self.currentRoom]["Connections"][itemValue[action][0]] = itemValue[action][1]
+                    self.map[itemValue[action][1]]["Connections"][std.getOppDir(itemValue[action][0])] = self.currentRoom
+                elif action == 'spawn':
+                    self.map[self.currentRoom]['Items'].append(itemValue[action])
             returnStatus = True
         elif item == 'chest' or item == 'crate':
             # Pretty print container contents to user
