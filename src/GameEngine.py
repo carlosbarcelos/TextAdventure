@@ -27,7 +27,7 @@ class GameEngine():
         self.verbs = {
         'help' : 'Display this help information',
         'look' : 'Take in your surroundings',
-        'examine' : 'Examine a n object in the world',
+        'examine' : 'Examine an object in the world',
         'move' : '[dir] Determine the direction in which to travel',
         'take' : '[item] Take an item found in the world',
         'use' : '[item] Performs an action with a given item',
@@ -205,7 +205,8 @@ class GameEngine():
 
                 # Else, start a normal battle
                 else:
-                    isVictorious = self.player.battle(e, e['Stats'].popitem())
+                    [(eStat, eStatValue)] = e['Stats'].items()
+                    isVictorious = self.player.battle(e, (eStat, eStatValue))
 
                 # Perform after action report
                 if isVictorious:
@@ -233,13 +234,13 @@ class GameEngine():
 
     # Display the map; Expects a square map
     # TODO Highlight the current room on the map
+    # TODO Print a legend of map icons
     def displayMap(self):
         # Initalize data structures
         mapLen = int(math.sqrt(len(self.map.keys())))
         mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         eastConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         southConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
-        print(self.player.inventory)
         # Create 2D map and border arrays
         for room in self.map.values():
             roomCoord = room['Coordinates']
@@ -323,7 +324,6 @@ class GameEngine():
         return True
 
     # Examine an object in the world
-    # TODO Should this work for enemies and player items as well?
     def examine(self, noun, options):
         if noun is None:
             print('Please specify an object.')
@@ -331,12 +331,24 @@ class GameEngine():
 
         object = (noun + ' ' + ' '.join(options)).strip()
 
+        # 1) Examine objects in the room (if they are there)
         try:
             description = self.map[self.currentRoom]['Examine'][object]
             std.prettyPrint(object.capitalize(), [description])
             return True
         except KeyError:
-            print('error')
+            # 2) Examine enemies in the room
+            for e in self.map[self.currentRoom]['Enemies']:
+                if e['Name'] == object:
+                    description = e['Description']
+                    std.prettyPrint(object.capitalize(), [description])
+                    return True
+            # 3) Examine objects in the player inventory
+            for i in self.player.inventory:
+                if i.name == object:
+                    description = i.description
+                    std.prettyPrint(object.capitalize(), [description])
+                    return True
             return False
 
     # Display help information

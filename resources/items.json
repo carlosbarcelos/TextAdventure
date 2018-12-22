@@ -12,7 +12,7 @@
     "name" : "health potion",
     "description" : "A potion of health.",
     "usable" : "True",
-    "uses" : 3,
+    "uses" : 1,
     "count" : 1
   },
   "it_expUp" :

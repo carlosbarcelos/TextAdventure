@@ -25,7 +25,7 @@
         "Inventory" : ["st_1", "eq_legA", "eq_boostExp", "it_key", "it_gold",
           "it_hpUp", "it_hpUp", "it_expUp", "it_intMap", "it_rock"],
           "Damage" : 50,
-          "Stats" : { "atk" : 1}
+          "Stats" : { "atk" : 10}
         }
       ],
       "Connections" : {"north" : "room 2"},
