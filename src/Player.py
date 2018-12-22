@@ -121,11 +121,28 @@ class Player():
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
         self.exp = (self.exp + val) % MAX_EXP
-
         # Handle level up
         if self.level > prevLevel:
             self.hp = self.MAX_HP
             print('Level Up!')
+        return True
+
+    # Gain additional HP
+    def getHp(self, val):
+        hpApplied = False
+        # Apply HP if not full
+        if not self.hp == self.MAX_HP:
+            # Do not give more than MAX_HP
+            if self.hp + val > self.MAX_HP:
+                hpToApply = self.MAX_HP - self.hp
+            else:
+                hpToApply = val
+            self.hp += hpToApply
+            print(f'+{hpToApply} HP')
+            hpApplied = True
+        else:
+            print('HP already at full')
+        return hpApplied
 
     # Gain additional gold
     def getGold(self, val):
@@ -194,6 +211,7 @@ class Player():
     # Use a given item
     def useItem(self, item):
         thisItem = None
+        itemUsed = False
         # Get the Item object
         for i in self.inventory:
             if i.name == item:
@@ -217,25 +235,25 @@ class Player():
         if thisItem.name == 'key':
             print('TODO key logic')
         elif thisItem.name == 'health potion':
-            self.hp += 10
-            print('+10 Health')
+            itemUsed = self.getHp(10)
         elif thisItem.name == 'experience gem':
-            self.getExp(25)
+            itemUsed = self.getExp(25)
         else:
             print('This item is not supported')
             return False
 
-        # Consume a usable item
-        if thisItem.uses > 1:
-            thisItem.uses -= 1
-        # When this is the last use either decrease the item count or discard the item
-        else:
-            if thisItem.count > 1:
-                thisItem.count -= 1
-                thisItem.uses = thisItem.defaultUses
+        # Consume a usable item if it was used
+        if itemUsed:
+            if thisItem.uses > 1:
+                thisItem.uses -= 1
+            # When this is the last use either decrease the item count or discard the item
             else:
-                self.inventory.remove(thisItem)
-                print(f'You used the last of the {thisItem}')
+                if thisItem.count > 1:
+                    thisItem.count -= 1
+                    thisItem.uses = thisItem.defaultUses
+                else:
+                    self.inventory.remove(thisItem)
+                    print(f'You used the last of the {thisItem}')
 
         return True
 

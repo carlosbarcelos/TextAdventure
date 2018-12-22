@@ -2,32 +2,41 @@
   "room 1" : {
     "Title" : "room 1",
     "Description" : "This is a save room. Type 'save' to save your progress.",
-    "Items" : ["it_key", "it_gold", "it_hpUp"],
+    "Items" : ["it_key", "it_gold", "it_hpUp", "st_1", "st_2"],
     "Examine" :
     {
       "object 1" : "This is object 1. Shinny.",
       "object 2" : "This is object 2."
     },
-    "Use" :
+    "Interact" :
     {
-      "chest" : ["it_key", "it_gold"],
-      "button" : {
-        "description" : "This button unlocks north and spawns a rock",
-        "unlock" : ["south", "room 3"],
-        "spawn" : "it_rock"
-      }
+      "chest" : ["it_key", "it_gold", "it_hpUp"],
+      "button" : "You pushed the button"
     },
     "Enemies" :
     [
       {
         "Name": "e1",
         "Description" : "Enemy 1 Description",
-        "Inventory" : ["st_1", "eq_legA", "eq_boostExp", "it_key", "it_gold",
-          "it_hpUp", "it_hpUp", "it_expUp", "it_intMap", "it_rock"],
-          "Damage" : 50,
-          "Stats" : { "atk" : 10}
-        }
-      ],
+        "Inventory" : [],
+        "Damage" : 5,
+        "Stats" : { "atk" : 1, "int" : 3, "def" : 2 }
+      },
+      {
+        "Name": "e2",
+        "Description" : "Enemy 2 Description",
+        "Inventory" : ["it_rock","it_rock","it_rock","it_rock"],
+        "Damage" : 5,
+        "Stats" : { "atk" : 50}
+      },
+      {
+        "Name": "e3",
+        "Description" : "Enemy 3 Description",
+        "Inventory" : ["it_rock","it_rock","it_rock","it_rock"],
+        "Damage" : 5,
+        "Stats" : { "int" : 1}
+      }
+    ],
       "Connections" : {"north" : "room 2"},
       "Area" : "ATK",
       "Icon" : "S",
