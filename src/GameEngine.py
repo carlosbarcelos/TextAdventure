@@ -6,11 +6,11 @@
 The GameEngine class with member veriables and functions.
 '''
 
-import glob                   # Search files/directories
-import json                   # Handle JSON files
-import math                   # Math functionality
-from datetime import datetime # Current datetime
-import src.stdlib as std      # Import standard libraries
+import glob                     # Search files/directories
+import json                     # Handle JSON files
+import math                     # Math functionality
+from datetime import datetime   # Current datetime
+import src.stdlib as std        # Import standard libraries
 
 BATTLE_EXP = 10
 EXPLORE_EXP = 5
@@ -34,11 +34,11 @@ class GameEngine():
         'equip': '[equipment] Equip a piece of equipment',
         'unequip': '[equipment] Unequip a piece of equipment',
         'battle' : '[enemy] Initiate a battle with an enemy',
-        'map' : 'Display the map with a legend',
+        'map' : 'Display the map with a legend : [-l] Legend',
         'read' : '[log] Read a given story log',
         'stats' : 'Print the player stats',
-        'inventory' : 'Print the player inventory : [-l] Long print, include description',
-        'equipment' : 'Print the player equipment : [-l] Long print, include description',
+        'inventory' : 'Print the player inventory : [-l] Long print',
+        'equipment' : 'Print the player equipment : [-l] Long print',
         'upgrade' : 'Upgrade the player stats',
         'achievements' : 'Get the current achievement progress',
         'save' : 'Save progress [Only allowed in designated areas]',
@@ -82,7 +82,7 @@ class GameEngine():
             'equip': lambda: self.player.equip(noun, options),
             'unequip': lambda: self.player.unequip(noun, options),
             'battle': lambda: self.battle(noun),
-            'map': lambda: self.displayMap(),
+            'map': lambda: self.displayMap(noun),
             'read': lambda: self.readStory(noun, options),
             'stats': lambda: self.player.printStats(),
             'inventory': lambda: self.player.printInventory(noun),
@@ -235,12 +235,20 @@ class GameEngine():
     # Display the map; Expects a square map
     # TODO Highlight the current room on the map
     # TODO Print a legend of map icons
-    def displayMap(self):
+    def displayMap(self, options):
         # Initalize data structures
         mapLen = int(math.sqrt(len(self.map.keys())))
         mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         eastConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
         southConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
+
+        # (Optionally) Print the legend
+        if options == '-l':
+            body = []
+            body.append('S : Save Room')
+            body.append('~ : Hidden')
+            std.prettyPrint('Map Legend', body)
+
         # Create 2D map and border arrays
         for room in self.map.values():
             roomCoord = room['Coordinates']

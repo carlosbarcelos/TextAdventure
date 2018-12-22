@@ -25,13 +25,14 @@ def optionParse(question, answers):
 
 # Pretty print a list of text
 def prettyPrint(header, body):
+    # Handle ANSI color adding
     maxWidth = len(header)
     for t in body:
         maxWidth = max(maxWidth, len(t))
 
     # Print the header
-    padding = maxWidth - len(header) + 1
-    print(f"+- {header} {padding*'-'}+")\
+    padding = maxWidth - len(header)
+    print(f"+- {header} {padding*'-'}-+")\
     # Print the body
     for t in body:
         padding = maxWidth - len(t) + 2
