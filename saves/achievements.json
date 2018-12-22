@@ -1,26 +1,87 @@
 {
-  "ach1" : {
-    "Name" : "name 1",
-    "Description" : "DES 1",
+  "getATKRelic" : {
+    "Name" : "Master Attacker",
+    "Description" : "Collect the relic of ATK",
     "Progress" : [99,100],
     "Requirement" : "REQ 1"
   },
-  "ach2" : {
-    "Name" : "name 2",
-    "Description" : "DES 1",
+  "geDEFRelic" : {
+    "Name" : "Master Defender",
+    "Description" : "Collect the relic of DEF",
     "Progress" : [5,5],
     "Requirement" : "REQ 1"
   },
-  "ach3" : {
-    "Name" : "name 3",
-    "Description" : "DES 1",
+  "getINTRelic" : {
+    "Name" : "Master Intellect",
+    "Description" : "Collect the relic of INT",
     "Progress" : [0,1],
     "Requirement" : "REQ 1"
   },
-  "ach4" : {
-    "Name" : "name 4",
-    "Description" : "DES 1",
+  "completeStory" : {
+    "Name" : "That's A Wrap",
+    "Description" : "Complete the main story",
+    "Progress" : [4,4],
+    "Requirement" : "REQ 1"
+  },
+  "exploreAll" : {
+    "Name" : "Master Explorer",
+    "Description" : "Explore every single room on the map",
     "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+  "100Percent" : {
+    "Name" : "Completionist",
+    "Description" : "Complete 100% of the game",
+    "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+
+  "reloadSave" : {
+    "Name" : "Reloading",
+    "Description" : "Reload an old save",
+    "Progress" : [4,4],
+    "Requirement" : "REQ 1"
+  },
+  "rageQuit" : {
+    "Name" : "Rage Quit",
+    "Description" : "Quit immediately after losing a battle",
+    "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+  "liftFog" : {
+    "Name" : "Lifting The Fog",
+    "Description" : "Have all area maps",
+    "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+  "armorClad" : {
+    "Name" : "Armor Clad",
+    "Description" : "Have a full armor set of one stat equipped",
+    "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+  "rainbowArmor" : {
+    "Name" : "Rainbow Armor",
+    "Description" : "DES 1",
+    "Progress" : [4,4],
+    "Requirement" : "REQ 1"
+  },
+  "deckedOut" : {
+    "Name" : "Decked Out",
+    "Description" : "Fully equip all equipment slots",
+    "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+  "fullStory" : {
+    "Name" : "The Full Story",
+    "Description" : "Collect all story logs",
+    "Progress" : [2,4],
+    "Requirement" : "REQ 1"
+  },
+  "rockOut" : {
+    "Name" : "Rock Out",
+    "Description" : "Collect a lot of rocks",
+    "Progress" : [4,4],
     "Requirement" : "REQ 1"
   }
 }

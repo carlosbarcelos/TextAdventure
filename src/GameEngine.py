@@ -40,7 +40,7 @@ class GameEngine():
         'inventory' : 'Print the player inventory : [-l] Long print',
         'equipment' : 'Print the player equipment : [-l] Long print',
         'upgrade' : 'Upgrade the player stats',
-        'achievements' : 'Get the current achievement progress',
+        'achievements' : 'Get the current achievement progress : [-l] Long print',
         'save' : 'Save progress [Only allowed in designated areas]',
         'quit' : 'Quit the game'}
 
@@ -88,7 +88,7 @@ class GameEngine():
             'inventory': lambda: self.player.printInventory(noun),
             'equipment': lambda: self.player.printEquipment(noun),
             'upgrade': lambda: self.player.upgrade(),
-            'achievements' : lambda: self.achievements.reportAll(),
+            'achievements' : lambda: self.achievements.reportAll(noun),
             'save': lambda: self.save(),
             'quit': lambda: self.quit()
         }
