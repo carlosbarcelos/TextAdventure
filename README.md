@@ -4,6 +4,7 @@ More information [here](https://docs.google.com/document/d/1iE4sgK5sljFo6jyxO-f0
 ## Running
 ### Required Modules
 pip install nose
+pip install colorama
 
 ## Tests
 Unit tests are contained in Adventure/test.
