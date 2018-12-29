@@ -48,6 +48,13 @@
           "it_hpUp", "it_hpUp", "it_expUp", "it_intMap", "it_rock"],
           "Damage" : 50,
           "Stats" : { "atk" : 10}
+        },
+        {
+          "Name": "e2",
+          "Description" : "Enemy 2 Description",
+          "Inventory" : ["it_rock","it_rock","it_rock","it_rock"],
+          "Damage" : 5,
+          "Stats" : { "atk" : 1}
         }
       ],
       "Connections" : {"north" : "room 2"},

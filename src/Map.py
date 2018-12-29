@@ -31,23 +31,31 @@ class Map():
 
     # Look around and get a feel for where you are
     def look(self, thisRoom):
-        print(self.map[thisRoom]['Description'])
+        body = []
+
+        body.append(self.map[thisRoom]['Description'])
+        body.append('')
 
         # Display connection information
         connList = self.map[thisRoom]['Connections']
         if connList:
-            print(f'There are a few connections from this room: {connList}')
+            body.append(f'There are a few connections from this room:')
+            for k, v in connList.items():
+                body.append(f'  To the {k.capitalize()} is {v.capitalize()}')
         else:
-            print('There are no connections in this room.')
+            body.append('There are no connections in this room.')
 
         # Display enemy information
         enemyList = self.map[thisRoom]['Enemies']
         if enemyList:
+            body.append('')
             enemyNames = [e['Name'] for e in enemyList]
-            print(f'There are a few enemies here: {enemyNames}')
-        else:
-            print('There are no enemies in this room.')
+            enemyDescriptions = [e['Description'] for e in enemyList]
+            body.append(f'There are a few enemies here:')
+            for k, v in zip(enemyNames, enemyDescriptions):
+                body.append(f'  {k} : {v}')
 
+        std.prettyPrint(self.map[thisRoom]['Title'], body)
         return True
 
     # Examine an object on the map
