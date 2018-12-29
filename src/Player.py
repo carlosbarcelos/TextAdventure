@@ -407,8 +407,9 @@ class Player():
         return self.hp > 0
 
     # Convert the player data to a JSON data dump
-    def toJSON(self):
+    def toJSON(self, currentRoom):
         jData = {}
+        jData['location'] = currentRoom
         jData['pName'] = self.pName
         jData['pClass'] = self.pClass
         jData['abilities'] = self.abilities

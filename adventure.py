@@ -14,6 +14,7 @@ import sys      # DEV TOOL
 from src.Achievements import Achievements # Import the Achievements class
 from src.GameEngine import GameEngine     # Import the GameEngine class
 from src.Player import Player             # Import the Player class
+from src.Map import Map             # Import the Map class
 import src.stdlib as std                  # Import standard libraries
 
 # Display the one-time, intro sequence to the game
@@ -56,11 +57,12 @@ def initalize(args):
     fn = f'saves/{args.mapSave}.json'
     if args.mapSave and os.path.isfile(fn):
         with open(fn) as f:
-            m = json.load(f)
+            m = Map(json.load(f))
         print(f'Map loaded from {fn}')
     else:
         with open('saves/map.json') as f:
-            m = json.load(f)
+            m = Map(json.load(f))
+    startingRoom = 'start'
 
     # Get the player
     fn = f'saves/{args.playerSave}.json'
@@ -72,6 +74,7 @@ def initalize(args):
         p = Player(pJSON['pName'], pJSON['pClass'], pJSON['abilities'], pJSON['inventory'], pJSON['equipment'], \
             pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
             pJSON['upgradesAvailable'], pJSON['stats'])
+        startingRoom = pJSON['location']
         print(f'Player loaded from {fn}')
     else:
         pDetails = introSequence()
@@ -97,7 +100,7 @@ def initalize(args):
     with open('resources/story.json') as f:
         r['story'] = json.load(f)
 
-    return GameEngine(m, p, a, r)
+    return GameEngine(m, p, a, r, startingRoom)
 
 ###############
 ## Main Loop ##

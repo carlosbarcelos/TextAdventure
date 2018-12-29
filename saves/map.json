@@ -1,4 +1,18 @@
 {
+  "start" : {
+    "Title" : "Starting Room",
+    "Description" : "This is the first room in the game.",
+    "Items" : [],
+    "Examine" : {},
+    "Use" : {},
+    "Enemies" : [],
+    "Connections" : {"north" : "room 1"},
+    "Area" : "",
+    "Icon" : ".",
+    "Coordinates" : [1,1],
+    "Visited" : "False"
+  },
+
   "room 1" : {
     "Title" : "room 1",
     "Description" : "This is a save room. Type 'save' to save your progress.",
@@ -13,7 +27,8 @@
       "chest" : ["it_key", "it_gold"],
       "button" : {
         "description" : "This button unlocks north and spawns a rock",
-        "unlock" : ["south", "room 3"]
+        "unlock" : ["south", "room 3"],
+        "spawn" : ["it_rock"]
       },
       "ab_atk" : {
         "description" : "This is an attack ability",
@@ -83,11 +98,7 @@
       "Title" : "room 3",
       "Description" : "Welcome to Room 3",
       "Items" : ["a"],
-      "Examine" :
-      {
-        "object 1" : "This is object 1. Shinny.",
-        "object 2" : "This is object 2."
-      },
+      "Examine" : {},
       "Use" :
       {
         "chest" : ["it_key", "it_gold"],
@@ -98,36 +109,10 @@
         }
       },
       "Enemies" :[],
-      "Connections" : {"south" : "room 4", "west" : "room 2"},
+      "Connections" : {"west" : "room 2"},
       "Area" : "DEF",
       "Icon" : " ",
       "Coordinates" : [0,1],
-      "Visited" : "False"
-    },
-
-    "room 4" : {
-      "Title" : "room 4",
-      "Description" : "Welcome to Room 4",
-      "Items" : [],
-      "Examine" :
-      {
-        "object 1" : "This is object 1. Shinny.",
-        "object 2" : "This is object 2."
-      },
-      "Use" :
-      {
-        "chest" : ["it_key", "it_gold"],
-        "button" : {
-          "description" : "This button unlocks north and spawns a rock",
-          "unlock" : ["south", "room 3"],
-          "spawn" : ["it_rock"]
-        }
-      },
-      "Enemies" :[],
-      "Connections" : {"north" : "room 3"},
-      "Area" : "ATK",
-      "Icon" : " ",
-      "Coordinates" : [1,1],
       "Visited" : "False"
     }
   }
