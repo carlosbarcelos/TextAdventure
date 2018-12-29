@@ -147,11 +147,43 @@ class GameEngine():
         item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
+        useStatus = False
         if item in self.map[self.currentRoom]['Use']:
-            return self.useObject(item)
+            useStatus = self.useObject(item)
+        if not useStatus:
+            useStatus = self.useAbility(item)
         # Try to use the item from the player
-        else:
-            return self.player.useItem(item)
+        if not useStatus:
+            useStatus = self.player.use(item)
+
+        if not useStatus:
+            print(f'You cannot use \'{item}\' at this time.')
+        return useStatus
+
+    # Helper: Use a given ability
+    def useAbility(self, noun):
+        useStatus = False
+        abilities = [(k, v['name'].lower()) for k,v in self.player.abilities.items()]
+
+        for k, v in abilities:
+            # Does the player have the action?
+            if v == noun:
+                # Does the room support the action
+                if f'ab_{k}' in self.map[self.currentRoom]['Use']:
+                    # TODO Give abilities more use. Right now, just open doors
+                    unlock = self.map[self.currentRoom]['Use'][f'ab_{k}']['unlock']
+                    # Handle ATK relic
+                    if k == 'atk':
+                        self.unlockAction(self.currentRoom, unlock[1], unlock[0])
+                    # Handle INT relic
+                    if k == 'int':
+                        self.unlockAction(self.currentRoom, unlock[1], unlock[0])
+                    # Handle DEF relic
+                    if k == 'def':
+                        self.unlockAction(self.currentRoom, unlock[1], unlock[0])
+                    useStatus = True
+
+        return useStatus
 
     # Helper: Use an item from the world
     def useObject(self, item):
@@ -162,11 +194,9 @@ class GameEngine():
             # TODO Revisit buttons. Whhat else should they be able to do?
             for action in itemValue:
                 if action == 'unlock':
-                    # Make the connection in this room and that room
-                    self.map[self.currentRoom]["Connections"][itemValue[action][0]] = itemValue[action][1]
-                    self.map[itemValue[action][1]]["Connections"][std.getOppDir(itemValue[action][0])] = self.currentRoom
+                    self.unlockAction(self.currentRoom, itemValue[action][1], itemValue[action][0])
                 elif action == 'spawn':
-                    self.map[self.currentRoom]['Items'].append(itemValue[action])
+                    self.spawnAction(self.currentRoom, itemValue[action])
             returnStatus = True
         elif item == 'chest' or item == 'crate':
             # Pretty print container contents to user
@@ -182,6 +212,18 @@ class GameEngine():
             print('Unexpected item.')
 
         return returnStatus
+
+    # Helper: Unlock a room connection
+    def unlockAction(self, thisRoom, thatRoom, dir):
+        self.map[thisRoom]["Connections"][dir] = thatRoom
+        self.map[thatRoom]["Connections"][std.getOppDir(dir)] = thisRoom
+        # TODO Should this grant XP
+        print('New room connection discovered!')
+
+    # Helper: Spawn a new item in the room
+    def spawnAction(self, thisRoom, items):
+        for i in items:
+            self.map[thisRoom]['Items'].append(i)
 
     # Battle an enemy in the room
     # TODO: Return the victor of the battle or None if no battle took place
