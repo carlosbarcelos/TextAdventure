@@ -18,8 +18,14 @@ MIN_STAT_UP = 4
 MAX_STAT_UP = 5
 MAX_STAT_VAL = 100
 
-eqStructure={"head":"", "chest":"", "legs":"","necklace":"", "ring":"", "staff":""} # Equipment dictionary structure
-stStructure={"atk":0, "int":0, "def":0} # Stats dictionary structure
+# Equipment dictionary structure
+eqStructure={"head":"", "chest":"", "legs":"","necklace":"", "ring":"", "staff":""}
+# Stats dictionary structure
+stStructure={"atk":0, "int":0, "def":0}
+# Abilities dictionary structure
+abStructure={"atk": {"name":"ATK Relic Name", "description":"ATK Relic Description"},
+"int": {"name":"INT Relic Name", "description":"INT Relic Description"},
+"def": {"name":"DEF Relic Name", "description":"DEF Relic Description"}}
 
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
@@ -35,9 +41,10 @@ def setPlayerStats(pClass):
     return stats
 
 class Player():
-    def __init__(self, pName, pClass, inventory=[], equipment=eqStructure, level=1, hp=99, exp=0, expRate=1, gold=0, goldRate=1, upgradesAvailable=0, stats=stStructure):
+    def __init__(self, pName, pClass, abilities=abStructure, inventory=[], equipment=eqStructure, level=1, hp=99, exp=0, expRate=1, gold=0, goldRate=1, upgradesAvailable=0, stats=stStructure):
         self.pName = pName
         self.pClass = pClass
+        self.abilities = abilities
         self.inventory = inventory
         self.equipment = equipment
         self.level = level
@@ -68,6 +75,10 @@ class Player():
         body.append(f"ATK: {self.stats['atk'][0]}..{self.stats['atk'][1]}")
         body.append(f"INT: {self.stats['int'][0]}..{self.stats['int'][1]}")
         body.append(f"DEF: {self.stats['def'][0]}..{self.stats['def'][1]}")
+        if self.abilities:
+            prettyAbilities = [self.abilities[a]['name'] for a in self.abilities.keys()]
+            body.append('')
+            body.append('Abilities: ' + ', '.join(prettyAbilities))
 
         # Hand off the print to the helper
         std.prettyPrint(header, body)
@@ -149,6 +160,17 @@ class Player():
         val += int(round(self.goldRate)) # Apply gold rate
         self.gold += val
 
+    # Give a certain ability to the player
+    def getAbility(self, stat):
+        ability = abStructure[stat]
+        # Report ability to the player
+        body = []
+        body.append(f"You collected the {ability['name']} and recieved a new ability.")
+        body.append(f"The relic reads: {ability['description']}")
+        std.prettyPrint('New Ability', body)
+        # Give the ability
+        self.abilities[stat] = ability
+
     # Trade in one level for for one stat upgrade
     def upgrade(self):
         if self.upgradesAvailable < 1:
@@ -208,7 +230,26 @@ class Player():
 
         return returnValue
 
-    # Use a given item
+    # Handle a use request from the GameEngine
+    def use(self, noun):
+        useStatus = self.useAbility(noun)
+        if not useStatus:
+            useStatus = self.useItem(noun)
+        return useStatus
+
+    # Helper: Use a given ability
+    def useAbility(self, noun):
+        useStatus = False
+        abilities = [v['name'].lower() for v in self.abilities.values()]
+
+        if noun in abilities:
+            # TODO
+            print(f'TODO: Use ability {noun}')
+            useStatus = True
+
+        return useStatus
+
+    # Helper: Use a given item
     def useItem(self, item):
         thisItem = None
         itemUsed = False
@@ -217,9 +258,8 @@ class Player():
             if i.name == item:
                 thisItem = i
 
-        # Make sure the item is in the inventory
+        # Make sure the item is in inventory
         if thisItem == None:
-            print('You do not have access to that item.')
             return False
 
         # Make sure the item can be used
@@ -385,6 +425,7 @@ class Player():
         jData = {}
         jData['pName'] = self.pName
         jData['pClass'] = self.pClass
+        jData['abilities'] = self.abilities
         jData['inventory'] = self.inventory
         jData['equipment'] = self.equipment
         jData['level'] = self.level

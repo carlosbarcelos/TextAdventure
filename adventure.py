@@ -69,7 +69,7 @@ def initalize(args):
         with open(fn) as f:
             pJSON = json.load(f)
         # Create a new player with the data
-        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], pJSON['equipment'], \
+        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['abilities'], pJSON['inventory'], pJSON['equipment'], \
             pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
             pJSON['upgradesAvailable'], pJSON['stats'])
         print(f'Player loaded from {fn}')

@@ -1,6 +1,7 @@
 {
   "pName" : "Name",
   "pClass" : "brute",
+  "abilities": {},
   "inventory" : [],
   "equipment" : {"Head" : "", "Chest" : "" , "Legs" : ""},
   "level" : 3,

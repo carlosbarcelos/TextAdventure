@@ -147,11 +147,16 @@ class GameEngine():
         item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
+        useStatus = False
         if item in self.map[self.currentRoom]['Use']:
-            return self.useObject(item)
+            useStatus = self.useObject(item)
         # Try to use the item from the player
-        else:
-            return self.player.useItem(item)
+        if not useStatus:
+            useStatus = self.player.use(item)
+
+        if not useStatus:
+            print(f'You cannot use \'{noun}\' at this time.')
+        return useStatus
 
     # Helper: Use an item from the world
     def useObject(self, item):
