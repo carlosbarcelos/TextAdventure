@@ -23,9 +23,9 @@ eqStructure={"head":"", "chest":"", "legs":"","necklace":"", "ring":"", "staff":
 # Stats dictionary structure
 stStructure={"atk":0, "int":0, "def":0}
 # Abilities dictionary structure
-abStructure={"atk": {"name":"ATK Relic Name", "description":"ATK Relic Description"},
-"int": {"name":"INT Relic Name", "description":"INT Relic Description"},
-"def": {"name":"DEF Relic Name", "description":"DEF Relic Description"}}
+abStructure={"atk": {"name":"Charge", "description":"An agressive relic, allows you to charge at full speed"},
+"int": {"name":"Decipher", "description":"An intelligent relic, gain untold insight"},
+"def": {"name":"Dodge", "description":"A defensive relic, avoid danger"}}
 
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
@@ -232,21 +232,7 @@ class Player():
 
     # Handle a use request from the GameEngine
     def use(self, noun):
-        useStatus = self.useAbility(noun)
-        if not useStatus:
-            useStatus = self.useItem(noun)
-        return useStatus
-
-    # Helper: Use a given ability
-    def useAbility(self, noun):
-        useStatus = False
-        abilities = [v['name'].lower() for v in self.abilities.values()]
-
-        if noun in abilities:
-            # TODO
-            print(f'TODO: Use ability {noun}')
-            useStatus = True
-
+        useStatus = self.useItem(noun)
         return useStatus
 
     # Helper: Use a given item

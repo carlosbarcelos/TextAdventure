@@ -13,8 +13,15 @@
       "chest" : ["it_key", "it_gold"],
       "button" : {
         "description" : "This button unlocks north and spawns a rock",
-        "unlock" : ["south", "room 3"],
-        "spawn" : "it_rock"
+        "unlock" : ["south", "room 3"]
+      },
+      "ab_atk" : {
+        "description" : "This is an attack ability",
+        "unlock" : ["south", "room 3"]
+      },
+      "ab_int" : {
+        "description" : "This button unlocks north and spawns a rock",
+        "unlock" : ["south", "room 3"]
       }
     },
     "Enemies" :
@@ -39,6 +46,15 @@
       "Title" : "room 2",
       "Description" : "Welcome to Room 2",
       "Items" : [],
+      "Examine" :
+      {
+        "object 1" : "This is object 1. Shinny.",
+        "object 2" : "This is object 2."
+      },
+      "Use" :
+      {
+        "chest" : ["it_key", "it_gold"]
+      },
       "Enemies" :
       [
         {
@@ -67,6 +83,20 @@
       "Title" : "room 3",
       "Description" : "Welcome to Room 3",
       "Items" : ["a"],
+      "Examine" :
+      {
+        "object 1" : "This is object 1. Shinny.",
+        "object 2" : "This is object 2."
+      },
+      "Use" :
+      {
+        "chest" : ["it_key", "it_gold"],
+        "button" : {
+          "description" : "This button unlocks north and spawns a rock",
+          "unlock" : ["south", "room 3"],
+          "spawn" : ["it_rock"]
+        }
+      },
       "Enemies" :[],
       "Connections" : {"south" : "room 4", "west" : "room 2"},
       "Area" : "DEF",
@@ -79,6 +109,20 @@
       "Title" : "room 4",
       "Description" : "Welcome to Room 4",
       "Items" : [],
+      "Examine" :
+      {
+        "object 1" : "This is object 1. Shinny.",
+        "object 2" : "This is object 2."
+      },
+      "Use" :
+      {
+        "chest" : ["it_key", "it_gold"],
+        "button" : {
+          "description" : "This button unlocks north and spawns a rock",
+          "unlock" : ["south", "room 3"],
+          "spawn" : ["it_rock"]
+        }
+      },
       "Enemies" :[],
       "Connections" : {"north" : "room 3"},
       "Area" : "ATK",
