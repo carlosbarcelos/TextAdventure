@@ -40,23 +40,23 @@ def prettyPrint(header, body):
     # Print the footer
     print(f"+{(maxWidth+4)*'-'}+")
 
-# Get an item object from it's dictionary name
+# Get an item object from its dictionary name
 def itemNameToObject(item, resources):
     try:
         # If this is an item
         if item[:3] == 'it_':
             lookupEq = resources['items'][item]
-            return Item(lookupEq['name'],lookupEq['description'],lookupEq['usable'],lookupEq['uses'],lookupEq['count'])
+            return Item(item,lookupEq['name'],lookupEq['description'],lookupEq['usable'])
 
         # If this is a piece of equipment
         elif item[:3] == 'eq_':
             lookupEq = resources['equipment'][item]
-            return Equipment(lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
+            return Equipment(item,lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
 
         # If this is a story log
         elif item[:3] == 'st_':
             lookupSt = resources['story'][item]
-            return Story(lookupSt['name'],lookupSt['description'],lookupSt['text'])
+            return Story(item,lookupSt['name'],lookupSt['description'],lookupSt['text'])
 
         # If this is anything else
         else:

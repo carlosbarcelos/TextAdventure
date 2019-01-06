@@ -29,6 +29,7 @@ abStructure={"atk": {"name":"Charge", "description":"An agressive relic, allows 
 
 # Set the player stats based on their selected class
 def setPlayerStats(pClass):
+    stats = {}
     # atk Class
     if pClass == 'brute':
         stats = {'atk' : [10, 20], 'int' : [5, 10], 'def' : [0, 5]}
@@ -41,21 +42,22 @@ def setPlayerStats(pClass):
     return stats
 
 class Player():
-    def __init__(self, pName, pClass, abilities=abStructure, inventory=[], equipment=eqStructure, level=1, hp=99, exp=0, expRate=1, gold=0, goldRate=1, upgradesAvailable=0, stats=stStructure):
+    def __init__(self, pName, pClass):
+        self.location = ''
         self.pName = pName
         self.pClass = pClass
-        self.abilities = abilities
-        self.inventory = inventory
-        self.equipment = equipment
-        self.level = level
-        self.hp = hp
+        self.abilities = abStructure
+        self.inventory = []
+        self.equipment = eqStructure
+        self.level = 1
+        self.hp = 99
         self.MAX_HP = 90 + (self.level * 9)
-        self.exp = exp
-        self.expRate = expRate
-        self.gold = gold
-        self.goldRate = goldRate
-        self.upgradesAvailable = upgradesAvailable
-        self.stats = setPlayerStats(self.pClass) # TODO Fix this to work with saves
+        self.exp = 0
+        self.expRate = 1
+        self.gold = 0
+        self.goldRate = 1
+        self.upgradesAvailable = 0
+        self.stats = setPlayerStats(pClass)
 
     # Print the player stats
     def printStats(self):
@@ -89,19 +91,22 @@ class Player():
             print('Your inventory is empty.')
             return False
 
-        # Get the printable text
-        body = []
+        # Get the inventory list with counts
+        countItems = {}
         for i in self.inventory:
-            # Get the count of items
-            count = ''
-            if hasattr(i, 'count'):
-                if i.count > 1:
-                    count = f'({i.count}) '
-
-            if options == '-l': # Long print description
-                body.append(f'{count}{i.name}: {i.description}')
+            if i.name in countItems:
+                countItems[i.name] += 1
             else:
-                body.append(f'{count}{i.name}')
+                countItems[i.name] = 1
+
+        # Get the printable body
+        body = []
+        for k, v in countItems.items():
+            c = f'({v}) ' if v > 1 else '' # Only print counts greater than 1
+            if options == '-l': # Long print description
+                body.append(f'{c}{k}: {i.description}')
+            else:
+                body.append(f'{c}{k}')
 
         # Hand off the print to the helper
         std.prettyPrint('INVENTORY', body)
@@ -126,8 +131,8 @@ class Player():
 
     # Gain additional Exp
     def getExp(self, val):
-        print(f'+{val} Exp')
         val = int(round(val * self.expRate)) # Apply Exp rate
+        print(f'+{val} Exp')
         prevLevel = self.level
         self.level += (self.exp + val) // MAX_EXP
         self.upgradesAvailable += (self.exp + val) // MAX_EXP
@@ -157,7 +162,8 @@ class Player():
 
     # Gain additional gold
     def getGold(self, val):
-        val += int(round(self.goldRate)) # Apply gold rate
+        val = int(round(val * self.goldRate)) # Apply gold rate
+        print(f'+{val} Gold')
         self.gold += val
 
     # Give a certain ability to the player
@@ -215,19 +221,19 @@ class Player():
     # Add items to the player inventory
     def getItems(self, items, resources):
         returnValue = False
+        goldGet = 0
         for i in items:
-            iObject = std.itemNameToObject(i, resources)
-            if iObject:
-                # If the item is already in the inventory, increase the count
-                if self.inInventory(str(iObject)):
-                    for pItem in self.inventory:
-                        if str(iObject) == str(pItem):
-                            pItem.count += 1
+            if i:
+                # Gold is a special item
+                if i.name == 'gold':
+                    goldGet += 1
+                    continue
                 else:
-                    self.inventory.append(iObject)
-                print(f'You got: {str(iObject)}')
+                    self.inventory.append(i)
+                print(f'You got: {str(i)}')
                 returnValue = True
 
+        if goldGet: self.getGold(goldGet) # Remember the gold
         return returnValue
 
     # Handle a use request from the GameEngine
@@ -244,58 +250,43 @@ class Player():
             if i.name == item:
                 thisItem = i
 
-        # Make sure the item is in inventory
-        if thisItem == None:
-            return False
-
-        # Make sure the item can be used
-        try:
-            if not thisItem.usable:
-                print('That item is not usable.')
-                return False
-        except AttributeError:
-            print('That item is not usable.')
-            return False
-
-        # Switch on supported items
-        if thisItem.name == 'key':
-            print('TODO key logic')
-        elif thisItem.name == 'health potion':
-            itemUsed = self.getHp(10)
-        elif thisItem.name == 'experience gem':
-            itemUsed = self.getExp(25)
-        else:
-            print('This item is not supported')
-            return False
-
-        # Consume a usable item if it was used
-        if itemUsed:
-            if thisItem.uses > 1:
-                thisItem.uses -= 1
-            # When this is the last use either decrease the item count or discard the item
+        # Make sure the item exists and is usable
+        if thisItem and thisItem.usable:
+            # Switch on supported items
+            if thisItem.name == 'key':
+                print('TODO key logic')
+            elif thisItem.name == 'health potion':
+                itemUsed = self.getHp(10)
+            elif thisItem.name == 'experience gem':
+                itemUsed = self.getExp(25)
             else:
-                if thisItem.count > 1:
-                    thisItem.count -= 1
-                    thisItem.uses = thisItem.defaultUses
-                else:
-                    self.inventory.remove(thisItem)
-                    print(f'You used the last of the {thisItem}')
+                print('This item is not supported')
+                return False
 
-        return True
+            # Consume a usable item if it was used
+            if itemUsed:
+                self.inventory.remove(thisItem)
+                print(f'You used the last of the {thisItem}')
+
+            return True
+        else:
+            return False
 
     # Check the player inventory for a certain common name item of a certain quantity
-    def inInventory(self, itemName, count=0):
+    def inInventory(self, itemName, itemCount=0):
         returnStatus = False
+        cnt = 0
+        # Search items in the inventory
         for i in self.inventory:
-            # Checj for item and count
-            if count:
-                if i.name == itemName and i.count == count:
-                    returnStatus = True
-                    break
-            # No count given, check for item
-            elif i.name == itemName:
-                returnStatus = True
-                break
+            if i.name == itemName:
+                cnt += 1
+
+        # Check for item and count
+        if itemCount and cnt == itemCount:
+            returnStatus = True
+        # No count given, check for item
+        elif cnt >= 1:
+            returnStatus = True
         return returnStatus
 
     # Do battle with some enemy
@@ -310,22 +301,22 @@ class Player():
         # Prepare for pretty print
         body = []
         body.append(f'{self.pName}: {pStatVal}')
-        body.append(f"{e['Name']}: {eStatVal}")
+        body.append(f"{e.name}: {eStatVal}")
         std.prettyPrint(f'{statType} Battle', body)
 
         return pStatVal > eStatVal
 
     # Start a 'top trumps' battle with an enemy
     def topTrumpBattle(self, e):
-        eStats = list(e['Stats'].keys())
+        eStats = list(e.stats.keys())
 
         # Report the stats comparison
         body = []
-        body.append(f"{self.pName} vs. {e['Name']}")
+        body.append(f"{self.pName} vs. {e.name}")
         for s in eStats:
             pStatMin = self.stats[s][0]
             pStatMax = self.stats[s][1]
-            eStat = e['Stats'][s]
+            eStat = e.stats[s]
             body.append(f'{s}: {pStatMin}..{pStatMax} vs. {eStat}')
 
         # Hand off the print to the helper
@@ -335,7 +326,7 @@ class Player():
         selectedStat = std.optionParse('Select stat to use in battle:', eStats)
 
         # Get the enemy value and return the battle
-        statTuple = (selectedStat, e['Stats'][selectedStat])
+        statTuple = (selectedStat, e.stats[selectedStat])
         return self.battle(e, statTuple)
 
 
@@ -369,6 +360,8 @@ class Player():
                     else:
                         self.stats[i.attribute][0] += i.value
                         self.stats[i.attribute][1] += i.value
+
+                    print(f'{equipment.capitalize()} equiped.')
                     return True
 
         print('You do not have access to that piece of equipment.')
@@ -397,6 +390,8 @@ class Player():
                 # Do the move
                 self.equipment[pos] = ''
                 self.inventory.append(e)
+
+                print(f'{equipment.capitalize()} unequiped.')
                 return True
 
         print('That piece of equipment is not equiped.')
@@ -413,7 +408,10 @@ class Player():
         jData['pName'] = self.pName
         jData['pClass'] = self.pClass
         jData['abilities'] = self.abilities
-        jData['inventory'] = self.inventory
+        jData['inventory'] = []
+        for item in self.inventory:
+            i = item.dictName
+            jData['inventory'].append(i)
         jData['equipment'] = self.equipment
         jData['level'] = self.level
         jData['hp'] = self.hp
@@ -424,3 +422,25 @@ class Player():
         jData['upgradesAvailable'] = self.upgradesAvailable
         jData['stats'] = self.stats
         return jData
+
+    # Convert from a JSON string to a player object
+    def toPlayer(self, details, resources):
+        player = {}
+        self.location = details['location']
+        self.pName = details['pName']
+        self.pClass = details['pClass']
+        self.abilities = details['abilities']
+        self.inventory = []
+        for item in details['inventory']:
+            i = std.itemNameToObject(item, resources)
+            self.inventory.append(i)
+        self.equipment = details['equipment']
+        self.level = details['level']
+        self.hp = details['hp']
+        self.exp = details['exp']
+        self.expRate = details['expRate']
+        self.gold = details['gold']
+        self.goldRate = details['goldRate']
+        self.upgradesAvailable = details['upgradesAvailable']
+        self.stats = details['stats']
+        return player

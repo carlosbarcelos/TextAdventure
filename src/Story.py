@@ -6,12 +6,9 @@
 The story class is a generic factory for each of the equipment in the game.
 '''
 
-class Story():
-    def __init__(self, name, description, text):
-        self.name = name
-        self.description = description
-        self.text = text
+from src.Item import Item # Item super class
 
-    # Overload __str__
-    def __str__(self):
-        return str(self.name)
+class Story(Item):
+    def __init__(self, dictName, name, description, text):
+        super().__init__(dictName, name, description, "False")
+        self.text = text

@@ -53,15 +53,24 @@ def outroSequence():
 
 # Initialize a new GameEngine with a game world and a player
 def initalize(args):
+    # Build the resources/lookup tables that the game needs
+    r = {}
+    with open('resources/items.json') as f:
+        r['items'] = json.load(f)
+    with open('resources/equipment.json') as f:
+        r['equipment'] = json.load(f)
+    with open('resources/story.json') as f:
+        r['story'] = json.load(f)
+
     # Get the map
     fn = f'saves/{args.mapSave}.json'
     if args.mapSave and os.path.isfile(fn):
         with open(fn) as f:
-            m = Map(json.load(f))
+            m = Map(json.load(f), r)
         print(f'Map loaded from {fn}')
     else:
         with open('saves/map.json') as f:
-            m = Map(json.load(f))
+            m = Map(json.load(f), r)
     startingRoom = 'start'
 
     # Get the player
@@ -71,9 +80,8 @@ def initalize(args):
         with open(fn) as f:
             pJSON = json.load(f)
         # Create a new player with the data
-        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['abilities'], pJSON['inventory'], pJSON['equipment'], \
-            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
-            pJSON['upgradesAvailable'], pJSON['stats'])
+        p = Player('temp', 'temp')
+        p.toPlayer(pJSON, r)
         startingRoom = pJSON['location']
         print(f'Player loaded from {fn}')
     else:
@@ -90,15 +98,6 @@ def initalize(args):
         with open('saves/achievements.json') as f:
             aJSON = json.load(f)
     a = Achievements(aJSON)
-
-    # Build the resources/lookup tables that the game needs
-    r = {}
-    with open('resources/items.json') as f:
-        r['items'] = json.load(f)
-    with open('resources/equipment.json') as f:
-        r['equipment'] = json.load(f)
-    with open('resources/story.json') as f:
-        r['story'] = json.load(f)
 
     return GameEngine(m, p, a, r, startingRoom)
 

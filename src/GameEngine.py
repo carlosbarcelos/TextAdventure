@@ -120,11 +120,11 @@ class GameEngine():
 
         requestItem = (noun + ' ' + ' '.join(options)).strip()
 
-        for i in self.map.map[self.currentRoom]['Items']:
+        for i in self.map.rooms[self.currentRoom].items:
             roomItem = std.itemNameToObject(i, self.resources)
 
             if requestItem == str(roomItem):
-                self.map.map[self.currentRoom]['Items'].remove(i)
+                self.map.rooms[self.currentRoom].items.remove(i)
                 self.player.getItems([i], self.resources)
                 return True
 
@@ -142,7 +142,7 @@ class GameEngine():
 
         # Try to use the item from the world
         useStatus = False
-        if item in self.map.map[self.currentRoom]['Use']:
+        if item in self.map.rooms[self.currentRoom].use:
             useStatus = self.useObject(item)
         if not useStatus:
             useStatus = self.useAbility(item)
@@ -163,9 +163,9 @@ class GameEngine():
             # Does the player have the action?
             if v == noun:
                 # Does the room support the action
-                if f'ab_{k}' in self.map.map[self.currentRoom]['Use']:
+                if f'ab_{k}' in self.map.rooms[self.currentRoom].use:
                     # TODO Give abilities more use. Right now, just open doors
-                    unlock = self.map.map[self.currentRoom]['Use'][f'ab_{k}']['unlock']
+                    unlock = self.map.rooms[self.currentRoom].use[f'ab_{k}']['unlock']
                     # Handle ATK relic
                     if k == 'atk':
                         self.map.unlockAction(self.currentRoom, unlock[1], unlock[0])
@@ -177,7 +177,7 @@ class GameEngine():
                         self.map.unlockAction(self.currentRoom, unlock[1], unlock[0])
 
                     # Actions are single use, remove from the map once used
-                    del self.map.map[self.currentRoom]['Use'][f'ab_{k}']
+                    del self.map.rooms[self.currentRoom].use[f'ab_{k}']
                     useStatus = True
 
         return useStatus
@@ -185,7 +185,7 @@ class GameEngine():
     # Helper: Use an item from the world
     def useObject(self, item):
         returnStatus = False
-        itemValue = self.map.map[self.currentRoom]['Use'][item]
+        itemValue = self.map.rooms[self.currentRoom].use[item]
         if item == 'button' or item == 'lever':
             print(itemValue['description'])
             # TODO Revisit buttons. Whhat else should they be able to do?
@@ -195,7 +195,7 @@ class GameEngine():
                 elif action == 'spawn':
                     self.map.spawnAction(self.currentRoom, itemValue[action])
             # Actions are single use, remove from the map once used
-            del self.map.map[self.currentRoom]['Use'][item]
+            del self.map.rooms[self.currentRoom].use[item]
             returnStatus = True
         elif item == 'chest' or item == 'crate':
             # Pretty print container contents to user
@@ -207,7 +207,7 @@ class GameEngine():
             if 'y' == std.optionParse('Take all the items?', ['y','n']):
                 self.player.getItems(itemValue, self.resources)
                 # Actions are single use, remove from the map once used
-                del self.map.map[self.currentRoom]['Use'][item]
+                del self.map.rooms[self.currentRoom].use[item]
                 returnStatus = True
         else:
             print('Unexpected item.')
@@ -218,7 +218,7 @@ class GameEngine():
     # TODO: Return the victor of the battle or None if no battle took place
     def battle(self, noun):
         # A battle cannot take place without an enemy
-        if not self.map.map[self.currentRoom]['Enemies']:
+        if not self.map.rooms[self.currentRoom].enemies:
             print('There are no enemies in this room to battle')
             return False
 
@@ -228,15 +228,15 @@ class GameEngine():
             return False
 
         # Find the enemy in the room
-        for e in self.map.map[self.currentRoom]['Enemies']:
-            if e['Name'] == noun:
+        for e in self.map.rooms[self.currentRoom].enemies:
+            if e.name == noun:
                 # If the enemy has move than one stat, start topTrumpBattle()
-                if len(e['Stats']) > 1:
+                if len(e.stats) > 1:
                     isVictorious = self.player.topTrumpBattle(e)
 
                 # Else, start a normal battle
                 else:
-                    [(eStat, eStatValue)] = e['Stats'].items()
+                    [(eStat, eStatValue)] = e.stats.items()
                     isVictorious = self.player.battle(e, (eStat, eStatValue))
 
                 # Perform after action report
@@ -244,15 +244,15 @@ class GameEngine():
                     print('You won that battle.')
                     # Reward the player for victory
                     self.player.getExp(BATTLE_EXP)
-                    if e['Inventory']:
-                        self.player.getItems(e['Inventory'], self.resources)
-                    self.map.map[self.currentRoom]['Enemies'].remove(e)
+                    if e.inventory:
+                        self.player.getItems(e.inventory, self.resources)
+                    self.map.rooms[self.currentRoom].enemies.remove(e)
                     return True
 
                 else:
                     # The enemy hits the player
-                    self.player.hp -= e['Damage']
-                    print(f"You lost that battle. {e['Name']} hit you for {e['Damage']} HP.")
+                    self.player.hp -= e.damage
+                    print(f"You lost that battle. {e.name} hit you for {e.damage} HP.")
 
                     # Check that the player is still alive
                     if not self.player.isAlive():
@@ -339,9 +339,10 @@ class GameEngine():
         print(f'Player saved as {fn}')
 
         # Create the World save file
+        mapData = self.map.toJSON()
         fn = f'saves/World_{worldSaves+1}.json'
         with open(fn, 'w') as s:
-            json.dump(self.map.map, s)
+            json.dump(mapData, s)
         print(f'World saved as {fn}')
 
     # Quit the game
