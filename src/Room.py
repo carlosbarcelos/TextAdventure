@@ -56,25 +56,27 @@ class Room():
         return jData
 
 # Convert from a JSON string to a room object
-# TODO: Handle if the JSON has no such attribute
 def toRoom(details, resources):
     room = {}
+    # The following must have non-null values
     room['title'] = details['title']
     room['description'] = details['description']
-    room['items'] = []
-    for item in details['items']:
-        i = std.itemNameToObject(item, resources)
-        room['items'].append(i)
-    room['examine'] = details['examine']
-    room['use'] = details['use']
-    room['ability'] = details['ability']
-    room['enemies'] = []
-    for eDetails in details['enemies']:
-        e = Enemy(eDetails['name'], eDetails, resources)
-        room['enemies'].append(e)
     room['connections'] = details['connections']
     room['area'] = details['area']
     room['icon'] = details['icon']
     room['coordinates'] = details['coordinates']
     room['visited'] = details['visited']
+
+    # The following may be empty and are handled accordingly
+    room['items'] = []
+    for item in details.get('items', []):
+        i = std.itemNameToObject(item, resources)
+        room['items'].append(i)
+    room['enemies'] = []
+    for eDetails in details.get('enemies', []):
+        e = Enemy(eDetails['name'], eDetails, resources)
+        room['enemies'].append(e)
+    room['examine'] = details.get('examine')
+    room['use'] = details.get('use')
+    room['ability'] = details.get('ability', {})
     return room

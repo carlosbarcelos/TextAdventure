@@ -2,11 +2,6 @@
   "start" : {
     "title" : "Starting Room",
     "description" : "This is the first room in the game.",
-    "items" : [],
-    "examine" : {},
-    "use" : {},
-    "ability" : {},
-    "enemies" : [],
     "connections" : {"north" : "room 1"},
     "area" : "",
     "icon" : ".",
@@ -75,7 +70,6 @@
     "room 2" : {
       "title" : "room 2",
       "description" : "Welcome to Room 2",
-      "items" : [],
       "examine" :
       {
         "object 1" : "This is object 1. Shinny.",
@@ -85,7 +79,6 @@
       {
         "chest" : ["it_key", "it_gold"]
       },
-      "ability" : {},
       "enemies" :
       [
         {
@@ -113,8 +106,6 @@
     "room 3" : {
       "title" : "room 3",
       "description" : "Welcome to Room 3",
-      "items" : [],
-      "examine" : {},
       "use" :
       {
         "chest" : ["it_key", "it_gold"],
@@ -124,8 +115,6 @@
           "spawn" : ["it_rock"]
         }
       },
-      "ability" : {},
-      "enemies" :[],
       "connections" : {"west" : "room 2"},
       "area" : "DEF",
       "icon" : " ",
