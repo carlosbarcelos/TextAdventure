@@ -20,6 +20,7 @@ class Room():
         self.items = room['items']
         self.examine = room['examine']
         self.use = room['use']
+        self.ability = room['ability']
         self.enemies = room['enemies']
         self.connections = room['connections']
         self.area = room['area']
@@ -42,6 +43,7 @@ class Room():
             jData['items'].append(i)
         jData['examine'] = self.examine
         jData['use'] = self.use
+        jData['ability'] = self.ability
         jData['enemies'] = []
         for enemy in self.enemies:
             e = enemy.toJSON()
@@ -54,6 +56,7 @@ class Room():
         return jData
 
 # Convert from a JSON string to a room object
+# TODO: Handle if the JSON has no such attribute
 def toRoom(details, resources):
     room = {}
     room['title'] = details['title']
@@ -64,6 +67,7 @@ def toRoom(details, resources):
         room['items'].append(i)
     room['examine'] = details['examine']
     room['use'] = details['use']
+    room['ability'] = details['ability']
     room['enemies'] = []
     for eDetails in details['enemies']:
         e = Enemy(eDetails['name'], eDetails, resources)

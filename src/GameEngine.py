@@ -121,9 +121,7 @@ class GameEngine():
         requestItem = (noun + ' ' + ' '.join(options)).strip()
 
         for i in self.map.rooms[self.currentRoom].items:
-            roomItem = std.itemNameToObject(i, self.resources)
-
-            if requestItem == str(roomItem):
+            if requestItem == str(i):
                 self.map.rooms[self.currentRoom].items.remove(i)
                 self.player.getItems([i], self.resources)
                 return True
@@ -157,27 +155,32 @@ class GameEngine():
     # Helper: Use a given ability
     def useAbility(self, noun):
         useStatus = False
-        abilities = [(k, v['name'].lower()) for k,v in self.player.abilities.items()]
+        playerAbilities = [(k, v['name'].lower()) for k,v in self.player.abilities.items()]
 
-        for k, v in abilities:
+        for k, v in playerAbilities:
             # Does the player have the action?
             if v == noun:
                 # Does the room support the action
-                if f'ab_{k}' in self.map.rooms[self.currentRoom].use:
+                if f'ab_{k}' in self.map.rooms[self.currentRoom].ability:
                     # TODO Give abilities more use. Right now, just open doors
-                    unlock = self.map.rooms[self.currentRoom].use[f'ab_{k}']['unlock']
-                    # Handle ATK relic
-                    if k == 'atk':
-                        self.map.unlockAction(self.currentRoom, unlock[1], unlock[0])
-                    # Handle INT relic
-                    if k == 'int':
-                        self.map.unlockAction(self.currentRoom, unlock[1], unlock[0])
-                    # Handle DEF relic
-                    if k == 'def':
-                        self.map.unlockAction(self.currentRoom, unlock[1], unlock[0])
+                    abilityValue = self.map.rooms[self.currentRoom].ability[f'ab_{k}']
+
+                    # Do all of the actions contained within the ability
+                    for action in abilityValue:
+                        # 1) Print the description
+                        if action == 'description':
+                            print(abilityValue[action])
+
+                        # 2) Unlock action
+                        elif action == 'unlock':
+                            self.map.unlockAction(self.currentRoom, abilityValue[action][1], abilityValue[action][0])
+
+                        # 3) Spawn action
+                        elif action == 'spawn':
+                            self.map.spawnAction(self.currentRoom, abilityValue[action], self.resources)
 
                     # Actions are single use, remove from the map once used
-                    del self.map.rooms[self.currentRoom].use[f'ab_{k}']
+                    del self.map.rooms[self.currentRoom].ability[f'ab_{k}']
                     useStatus = True
 
         return useStatus
@@ -193,7 +196,7 @@ class GameEngine():
                 if action == 'unlock':
                     self.map.unlockAction(self.currentRoom, itemValue[action][1], itemValue[action][0])
                 elif action == 'spawn':
-                    self.map.spawnAction(self.currentRoom, itemValue[action])
+                    self.map.spawnAction(self.currentRoom, itemValue[action], self.resources)
             # Actions are single use, remove from the map once used
             del self.map.rooms[self.currentRoom].use[item]
             returnStatus = True

@@ -5,6 +5,7 @@
     "items" : [],
     "examine" : {},
     "use" : {},
+    "ability" : {},
     "enemies" : [],
     "connections" : {"north" : "room 1"},
     "area" : "",
@@ -29,14 +30,21 @@
         "description" : "This button unlocks north and spawns a rock",
         "unlock" : ["south", "room 3"],
         "spawn" : ["it_rock"]
-      },
+      }
+    },
+    "ability" :
+    {
       "ab_atk" : {
-        "description" : "This is an attack ability",
-        "unlock" : ["south", "room 3"]
+        "description" : "This is an attack ability"
       },
       "ab_int" : {
-        "description" : "This button unlocks north and spawns a rock",
+        "description" : "This is an intelligence ability",
         "unlock" : ["south", "room 3"]
+      },
+      "ab_def" : {
+        "description" : "This is an defense ability",
+        "unlock" : ["south", "room 3"],
+        "spawn" : ["it_rock"]
       }
     },
     "enemies" :
@@ -77,6 +85,7 @@
       {
         "chest" : ["it_key", "it_gold"]
       },
+      "ability" : {},
       "enemies" :
       [
         {
@@ -115,6 +124,7 @@
           "spawn" : ["it_rock"]
         }
       },
+      "ability" : {},
       "enemies" :[],
       "connections" : {"west" : "room 2"},
       "area" : "DEF",

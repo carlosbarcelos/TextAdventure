@@ -84,12 +84,13 @@ class Map():
         print('New room connection discovered.')
 
     # Helper: Spawn a new item in the room
-    def spawnAction(self, thisRoom, items):
-        itemsAdded = False
+    def spawnAction(self, thisRoom, items, resources):
         for i in items:
-            self.rooms[thisRoom].items.append(i)
-            itemsAdded = True
-        if itemsAdded: print('New items were added to the room.')
+            iObject = std.itemNameToObject(i, resources)
+            self.rooms[thisRoom].items.append(iObject)
+            newItems.append(iObject.name)
+
+        if newItems: print(f'New items were added to the room: {newItems}')
 
     # Display the map; Expects a square map
     # TODO Highlight the current room on the map
