@@ -25,13 +25,14 @@ def optionParse(question, answers):
 
 # Pretty print a list of text
 def prettyPrint(header, body):
+    # Handle ANSI color adding
     maxWidth = len(header)
     for t in body:
         maxWidth = max(maxWidth, len(t))
 
     # Print the header
-    padding = maxWidth - len(header) + 1
-    print(f"+- {header} {padding*'-'}+")\
+    padding = maxWidth - len(header)
+    print(f"+- {header} {padding*'-'}-+")\
     # Print the body
     for t in body:
         padding = maxWidth - len(t) + 2
@@ -39,23 +40,23 @@ def prettyPrint(header, body):
     # Print the footer
     print(f"+{(maxWidth+4)*'-'}+")
 
-# Get an item object from it's dictionary name
+# Get an item object from its dictionary name
 def itemNameToObject(item, resources):
     try:
         # If this is an item
         if item[:3] == 'it_':
             lookupEq = resources['items'][item]
-            return Item(lookupEq['name'],lookupEq['description'],lookupEq['usable'],lookupEq['uses'],lookupEq['count'])
+            return Item(item,lookupEq['name'],lookupEq['description'],lookupEq['usable'])
 
         # If this is a piece of equipment
         elif item[:3] == 'eq_':
             lookupEq = resources['equipment'][item]
-            return Equipment(lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
+            return Equipment(item,lookupEq['name'],lookupEq['description'],lookupEq['position'],lookupEq['attribute'],lookupEq['value'])
 
         # If this is a story log
         elif item[:3] == 'st_':
             lookupSt = resources['story'][item]
-            return Story(lookupSt['name'],lookupSt['description'],lookupSt['text'])
+            return Story(item,lookupSt['name'],lookupSt['description'],lookupSt['text'])
 
         # If this is anything else
         else:
@@ -65,3 +66,11 @@ def itemNameToObject(item, resources):
     except KeyError:
         print(f'Exception Caught. KeyError: {item}')
         return None
+
+# Get the oppisite of the input direction
+def getOppDir(dir):
+    if dir == 'north': return 'south'
+    elif dir == 'south': return 'north'
+    elif dir == 'east': return 'west'
+    elif dir == 'west': return 'east'
+    else: return None

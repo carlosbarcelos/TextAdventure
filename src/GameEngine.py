@@ -6,39 +6,38 @@
 The GameEngine class with member veriables and functions.
 '''
 
-import glob                   # Search files/directories
-import json                   # Handle JSON files
-import math                   # Math functionality
-from datetime import datetime # Current datetime
-import src.stdlib as std      # Import standard libraries
+import glob                     # Search files/directories
+import json                     # Handle JSON files
+from datetime import datetime   # Current datetime
+import src.stdlib as std        # Import standard libraries
 
 BATTLE_EXP = 10
 EXPLORE_EXP = 5
 TBD_DEF_EXP = 5
 
 class GameEngine():
-    def __init__(self, map, player, achievements, resources):
+    def __init__(self, map, player, achievements, resources, currentRoom):
         self.map = map
         self.player = player
         self.achievements = achievements
         self.resources = resources
-        self.currentRoom = 'room 1' # TODO Make this dynamic
+        self.currentRoom = currentRoom
         self.isOver = False
         self.verbs = {
         'help' : 'Display this help information',
         'look' : 'Take in your surroundings',
-        'examine' : 'Examine a n object in the world',
+        'examine' : 'Examine an object in the world',
         'move' : '[dir] Determine the direction in which to travel',
         'take' : '[item] Take an item found in the world',
         'use' : '[item] Performs an action with a given item',
         'equip': '[equipment] Equip a piece of equipment',
         'unequip': '[equipment] Unequip a piece of equipment',
         'battle' : '[enemy] Initiate a battle with an enemy',
-        'map' : 'Display the map with a legend',
+        'map' : 'Display the map with a legend : [-l] Legend',
         'read' : '[log] Read a given story log',
         'stats' : 'Print the player stats',
-        'inventory' : 'Print the player inventory : [-l] Long print, include description',
-        'equipment' : 'Print the player equipment : [-l] Long print, include description',
+        'inventory' : 'Print the player inventory : [-l] Long print',
+        'equipment' : 'Print the player equipment : [-l] Long print',
         'upgrade' : 'Upgrade the player stats',
         'achievements' : 'Get the current achievement progress',
         'save' : 'Save progress [Only allowed in designated areas]',
@@ -74,7 +73,7 @@ class GameEngine():
 
         switcher = {
             'help': lambda: self.help(),
-            'look' : lambda: self.look(),
+            'look' : lambda: self.map.look(self.currentRoom),
             'examine' : lambda: self.examine(noun, options),
             'move': lambda: self.move(noun),
             'take': lambda: self.take(noun, options),
@@ -82,7 +81,7 @@ class GameEngine():
             'equip': lambda: self.player.equip(noun, options),
             'unequip': lambda: self.player.unequip(noun, options),
             'battle': lambda: self.battle(noun),
-            'map': lambda: self.displayMap(),
+            'map': lambda: self.map.displayMap(noun, self.player),
             'read': lambda: self.readStory(noun, options),
             'stats': lambda: self.player.printStats(),
             'inventory': lambda: self.player.printInventory(noun),
@@ -102,21 +101,16 @@ class GameEngine():
             print('Move requires a direction input: [north, south, east, west].')
             return False
 
-        # Requested move is valid
-        try:
-            nextRoom = self.map[self.currentRoom]['Connections'][dir]
-            self.currentRoom = self.map[nextRoom]['Title']
-            # Given Exp and print description if this is a new room
-            if self.map[self.currentRoom]['Visited'] == 'False':
-                self.player.getExp(EXPLORE_EXP)
-                self.look()
-                self.map[self.currentRoom]['Visited'] = 'True'
-            return True
-        # Requested move is invalid
-        except KeyError:
-            print(f"Move '{dir}': Invalid direction.")
-            print(f"Possible directions from {self.currentRoom}: {self.map[self.currentRoom]['Connections']}")
-            return False
+        nextRoom, isNew = self.map.move(self.currentRoom, dir)
+        # Make the move
+        if nextRoom:
+            self.currentRoom = nextRoom
+        # Given Exp and print description if this is a new room
+        if isNew:
+            self.player.getExp(EXPLORE_EXP)
+            self.map.look(self.currentRoom)
+
+        return True
 
     # Taken a given item and add it to the player inventory
     def take(self, noun, options):
@@ -126,11 +120,9 @@ class GameEngine():
 
         requestItem = (noun + ' ' + ' '.join(options)).strip()
 
-        for i in self.map[self.currentRoom]['Items']:
-            roomItem = std.itemNameToObject(i, self.resources)
-
-            if requestItem == str(roomItem):
-                self.map[self.currentRoom]['Items'].remove(i)
+        for i in self.map.rooms[self.currentRoom].items:
+            if requestItem == str(i):
+                self.map.rooms[self.currentRoom].items.remove(i)
                 self.player.getItems([i], self.resources)
                 return True
 
@@ -147,23 +139,79 @@ class GameEngine():
         item = (noun + ' ' + ' '.join(options)).strip()
 
         # Try to use the item from the world
-        worldItems = ['button', 'lever', 'chest', 'crate']
-        if item in worldItems:
-            return self.useItem(item)
+        useStatus = False
+        if item in self.map.rooms[self.currentRoom].use:
+            useStatus = self.useObject(item)
+        if not useStatus:
+            useStatus = self.useAbility(item)
         # Try to use the item from the player
-        else:
-            return self.player.useItem(item)
+        if not useStatus:
+            useStatus = self.player.use(item)
+
+        if not useStatus:
+            print(f'You cannot use \'{item}\' at this time.')
+        return useStatus
+
+    # Helper: Use a given ability
+    def useAbility(self, noun):
+        useStatus = False
+        playerAbilities = [(k, v['name'].lower()) for k,v in self.player.abilities.items()]
+
+        for k, v in playerAbilities:
+            # Does the player have the action?
+            if v == noun:
+                # Does the room support the action
+                if f'ab_{k}' in self.map.rooms[self.currentRoom].ability:
+                    # TODO Give abilities more use. Right now, just open doors
+                    abilityValue = self.map.rooms[self.currentRoom].ability[f'ab_{k}']
+
+                    # Do all of the actions contained within the ability
+                    for action in abilityValue:
+                        # 1) Print the description
+                        if action == 'description':
+                            print(abilityValue[action])
+
+                        # 2) Unlock action
+                        elif action == 'unlock':
+                            self.map.unlockAction(self.currentRoom, abilityValue[action][1], abilityValue[action][0])
+
+                        # 3) Spawn action
+                        elif action == 'spawn':
+                            self.map.spawnAction(self.currentRoom, abilityValue[action], self.resources)
+
+                    # Actions are single use, remove from the map once used
+                    del self.map.rooms[self.currentRoom].ability[f'ab_{k}']
+                    useStatus = True
+
+        return useStatus
 
     # Helper: Use an item from the world
-
-    def useItem(self, item):
+    def useObject(self, item):
         returnStatus = False
+        itemValue = self.map.rooms[self.currentRoom].use[item]
         if item == 'button' or item == 'lever':
-            print('button | lever')
+            print(itemValue['description'])
+            # TODO Revisit buttons. Whhat else should they be able to do?
+            for action in itemValue:
+                if action == 'unlock':
+                    self.map.unlockAction(self.currentRoom, itemValue[action][1], itemValue[action][0])
+                elif action == 'spawn':
+                    self.map.spawnAction(self.currentRoom, itemValue[action], self.resources)
+            # Actions are single use, remove from the map once used
+            del self.map.rooms[self.currentRoom].use[item]
             returnStatus = True
         elif item == 'chest' or item == 'crate':
-            print('chest | crate')
-            returnStatus = True
+            # Pretty print container contents to user
+            itemValueNames = []
+            for i in itemValue:
+                itemValueNames.append(self.resources['items'][i]['name'])
+            std.prettyPrint(item, itemValueNames)
+            # The user can take all or none of the items in the container
+            if 'y' == std.optionParse('Take all the items?', ['y','n']):
+                self.player.getItems(itemValue, self.resources)
+                # Actions are single use, remove from the map once used
+                del self.map.rooms[self.currentRoom].use[item]
+                returnStatus = True
         else:
             print('Unexpected item.')
 
@@ -173,7 +221,7 @@ class GameEngine():
     # TODO: Return the victor of the battle or None if no battle took place
     def battle(self, noun):
         # A battle cannot take place without an enemy
-        if not self.map[self.currentRoom]['Enemies']:
+        if not self.map.rooms[self.currentRoom].enemies:
             print('There are no enemies in this room to battle')
             return False
 
@@ -183,30 +231,31 @@ class GameEngine():
             return False
 
         # Find the enemy in the room
-        for e in self.map[self.currentRoom]['Enemies']:
-            if e['Name'] == noun:
+        for e in self.map.rooms[self.currentRoom].enemies:
+            if e.name == noun:
                 # If the enemy has move than one stat, start topTrumpBattle()
-                if len(e['Stats']) > 1:
+                if len(e.stats) > 1:
                     isVictorious = self.player.topTrumpBattle(e)
 
                 # Else, start a normal battle
                 else:
-                    isVictorious = self.player.battle(e, e['Stats'].popitem())
+                    [(eStat, eStatValue)] = e.stats.items()
+                    isVictorious = self.player.battle(e, (eStat, eStatValue))
 
                 # Perform after action report
                 if isVictorious:
                     print('You won that battle.')
                     # Reward the player for victory
                     self.player.getExp(BATTLE_EXP)
-                    if e['Inventory']:
-                        self.player.getItems(e['Inventory'], self.resources)
-                    self.map[self.currentRoom]['Enemies'].remove(e)
+                    if e.inventory:
+                        self.player.getItems(e.inventory, self.resources)
+                    self.map.rooms[self.currentRoom].enemies.remove(e)
                     return True
 
                 else:
                     # The enemy hits the player
-                    self.player.hp -= e['Damage']
-                    print(f"You lost that battle. {e['Name']} hit you for {e['Damage']} HP.")
+                    self.player.hp -= e.damage
+                    print(f"You lost that battle. {e.name} hit you for {e.damage} HP.")
 
                     # Check that the player is still alive
                     if not self.player.isAlive():
@@ -216,55 +265,6 @@ class GameEngine():
 
         print(f"The enemy '{noun}' is not in this room")
         return False
-
-    # Display the map; Expects a square map
-    # TODO Highlight the current room on the map
-    def displayMap(self):
-        # Initalize data structures
-        mapLen = int(math.sqrt(len(self.map.keys())))
-        mapArr = [[' ' for x in range(mapLen)] for y in range(mapLen)]
-        eastConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
-        southConn = [[' ' for x in range(mapLen)] for y in range(mapLen)]
-        print(self.player.inventory)
-        # Create 2D map and border arrays
-        for room in self.map.values():
-            roomCoord = room['Coordinates']
-            roomIcon = room['Icon']
-            # If the player has the area map, display the icon
-            if self.player.inInventory(f"{room['Area']} Area Map"):
-                mapArr[roomCoord[0]][roomCoord[1]] = roomIcon
-            # Else, display a fog
-            else:
-                mapArr[roomCoord[0]][roomCoord[1]] = '~'
-
-            # If this room has connections, note them on the map
-            connections = room['Connections'].keys()
-            strVal =  ' '
-            if 'east' not in connections:
-                strVal =  '|'
-            eastConn[roomCoord[0]][roomCoord[1]] = strVal
-
-            strVal =  '   +'
-            if 'south' not in connections:
-                strVal = '---+'
-            southConn[roomCoord[0]][roomCoord[1]] = strVal
-
-        # Piece together the map and display
-        print('+' + ('---+'*len(mapArr)))
-        for i in range(len(mapArr)):
-            # Print the rooom information
-            rowStr = '|'
-            for j in range(len(mapArr[i])):
-                rowStr += f' {mapArr[i][j]} {eastConn[i][j]}'
-            print(rowStr)
-
-            # Print the divider information
-            dividerStr = '+'
-            for d in southConn[i]:
-                dividerStr += d
-            print(dividerStr)
-
-        return True
 
     # Read a given story log
     def readStory(self, noun, options):
@@ -287,29 +287,7 @@ class GameEngine():
         print('You do not have access to that story log.')
         return False
 
-    # Look around and get a feel for where you are
-    def look(self):
-        print(self.map[self.currentRoom]['Description'])
-
-        # Display connection information
-        connList = self.map[self.currentRoom]['Connections']
-        if connList:
-            print(f'There are a few connections from this room: {connList}')
-        else:
-            print('There are no connections in this room.')
-
-        # Display enemy information
-        enemyList = self.map[self.currentRoom]['Enemies']
-        if enemyList:
-            enemyNames = [e['Name'] for e in enemyList]
-            print(f'There are a few enemies here: {enemyNames}')
-        else:
-            print('There are no enemies in this room.')
-
-        return True
-
     # Examine an object in the world
-    # TODO Should this work for enemies and player items as well?
     def examine(self, noun, options):
         if noun is None:
             print('Please specify an object.')
@@ -317,13 +295,21 @@ class GameEngine():
 
         object = (noun + ' ' + ' '.join(options)).strip()
 
-        try:
-            description = self.map[self.currentRoom]['Examine'][object]
-            print(f'{object.capitalize()} : {description}')
-            return True
-        except KeyError:
-            print('error')
-            return False
+        examineSuccess = False
+        # 1) Examine objects in the room (if they are there)
+        if not examineSuccess:
+            examineSuccess = self.map.examineObject(self.currentRoom, object)
+        # 2) Examine enemies in the room
+        if not examineSuccess:
+            examineSuccess = self.map.examineEnemy(self.currentRoom, object)
+        # 3) Examine objects in the player inventory
+        if not examineSuccess:
+            for i in self.player.inventory:
+                if i.name == object:
+                    description = i.description
+                    std.prettyPrint(object.capitalize(), [description])
+                    examineSuccess =  True
+        return examineSuccess
 
     # Display help information
     def help(self):
@@ -338,7 +324,7 @@ class GameEngine():
 
     # Save the game and replenish the player health. Only allowed in save rooms
     def save(self):
-        if not self.map[self.currentRoom]['Icon'] == 'S':
+        if not self.map.isSaveRoom(self.currentRoom):
             print('The save feature is only allowed in designated areas.')
             return False
 
@@ -349,16 +335,17 @@ class GameEngine():
         self.player.hp = self.player.MAX_HP
 
         # Create the Player save file
-        playerData = self.player.toJSON()
+        playerData = self.player.toJSON(self.currentRoom)
         fn = f'saves/Player_{playerSaves+1}.json'
         with open(fn, 'w') as s:
             json.dump(playerData, s)
         print(f'Player saved as {fn}')
 
         # Create the World save file
+        mapData = self.map.toJSON()
         fn = f'saves/World_{worldSaves+1}.json'
         with open(fn, 'w') as s:
-            json.dump(self.map, s)
+            json.dump(mapData, s)
         print(f'World saved as {fn}')
 
     # Quit the game

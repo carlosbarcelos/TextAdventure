@@ -3,65 +3,49 @@
   {
     "name" : "key",
     "description" : "One piece of the puzzle. Now find the door this key unlocks.",
-    "usable" : "True",
-    "uses" : 1,
-    "count" : 1
+    "usable" : "True"
   },
   "it_hpUp" :
   {
     "name" : "health potion",
     "description" : "A potion of health.",
-    "usable" : "True",
-    "uses" : 3,
-    "count" : 1
+    "usable" : "True"
   },
   "it_expUp" :
   {
     "name" : "experience gem",
     "description" : "Use this for a boost of experience.",
-    "usable" : "True",
-    "uses" : 1,
-    "count" : 1
+    "usable" : "True"
   },
 
   "it_rock" :
   {
     "name" : "rock",
     "description" : "Its a rock.",
-    "usable" : "False",
-    "uses" : 0,
-    "count" : 1
+    "usable" : "False"
   },
   "it_gold" :
   {
     "name" : "gold",
     "description" : "A valuable nugget of gold. Good for trading.",
-    "usable" : "False",
-    "uses" : 0,
-    "count" : 1
+    "usable" : "False"
   },
   "it_atkMap" :
   {
     "name" : "ATK Area Map",
     "description" : "A map of the ATK area.",
-    "usable" : "False",
-    "uses" : 0,
-    "count" : 1
+    "usable" : "False"
   },
   "it_intMap" :
   {
     "name" : "INT Area Map",
     "description" : "A map of the INT area.",
-    "usable" : "False",
-    "uses" : 0,
-    "count" : 1
+    "usable" : "False"
   },
   "it_atkMap" :
   {
     "name" : "DEF Area Map",
     "description" : "A map of the DEF area.",
-    "usable" : "False",
-    "uses" : 0,
-    "count" : 1
+    "usable" : "False"
   }
 }

@@ -12,8 +12,10 @@ import json     # Handle JSON files
 import sys      # DEV TOOL
 
 from src.Achievements import Achievements # Import the Achievements class
-from src.GameEngine import GameEngine    # Import the GameEngine class
-from src.Player import Player            # Import the Player class
+from src.GameEngine import GameEngine     # Import the GameEngine class
+from src.Player import Player             # Import the Player class
+from src.Map import Map             # Import the Map class
+import src.stdlib as std                  # Import standard libraries
 
 # Display the one-time, intro sequence to the game
 def introSequence():
@@ -24,12 +26,20 @@ def introSequence():
     print(' / ____ \  | |__| |    \  /    | |____  | |\  |    | |    | |__| | | | \ \  | |____ ')
     print('/_/    \_\ |_____/      \/     |______| |_| \_|    |_|     \____/  |_|  \_\ |______|\n')
 
+    # Get the player name
     pName = input('Welcome adventurer. What shall I call you? ')
 
-    pClasses = ['brute', 'scholar', 'defender']
-    pClass = ''
-    while pClass.lower() not in pClasses:
-        pClass = input(f'Please select a class: {[c.capitalize() for c in pClasses]} > ').lower()
+    # Display classes to user and get the player class
+    pClasses = {'Brute' : 'A bullheaded fighter with lots of strength but no tactical defense.',
+    'Scholar' : 'An intelligent master of the books; saved little time for strength training.',
+    'Defender' : 'A defensive master with average strength and little time for intellect.'}
+
+    body = []
+    for k, v in pClasses.items():
+        body.append(f'{k}: {v}')
+    std.prettyPrint('Class Selection', body)
+    pClass = std.optionParse('Select your class:', list(pClasses.keys()))
+
     return (pName, pClass)
 
 # Display the one-time, outro sequence to the game
@@ -43,15 +53,25 @@ def outroSequence():
 
 # Initialize a new GameEngine with a game world and a player
 def initalize(args):
+    # Build the resources/lookup tables that the game needs
+    r = {}
+    with open('resources/items.json') as f:
+        r['items'] = json.load(f)
+    with open('resources/equipment.json') as f:
+        r['equipment'] = json.load(f)
+    with open('resources/story.json') as f:
+        r['story'] = json.load(f)
+
     # Get the map
     fn = f'saves/{args.mapSave}.json'
     if args.mapSave and os.path.isfile(fn):
         with open(fn) as f:
-            m = json.load(f)
+            m = Map(json.load(f), r)
         print(f'Map loaded from {fn}')
     else:
         with open('saves/map.json') as f:
-            m = json.load(f)
+            m = Map(json.load(f), r)
+    startingRoom = 'start'
 
     # Get the player
     fn = f'saves/{args.playerSave}.json'
@@ -60,9 +80,9 @@ def initalize(args):
         with open(fn) as f:
             pJSON = json.load(f)
         # Create a new player with the data
-        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], pJSON['equipment'], \
-            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
-            pJSON['upgradesAvailable'], pJSON['stats'])
+        p = Player('temp', 'temp')
+        p.toPlayer(pJSON, r)
+        startingRoom = pJSON['location']
         print(f'Player loaded from {fn}')
     else:
         pDetails = introSequence()
@@ -79,22 +99,14 @@ def initalize(args):
             aJSON = json.load(f)
     a = Achievements(aJSON)
 
-    # Build the resources/lookup tables that the game needs
-    r = {}
-    with open('resources/items.json') as f:
-        r['items'] = json.load(f)
-    with open('resources/equipment.json') as f:
-        r['equipment'] = json.load(f)
-    with open('resources/story.json') as f:
-        r['story'] = json.load(f)
-
-    return GameEngine(m, p, a, r)
+    return GameEngine(m, p, a, r, startingRoom)
 
 ###############
 ## Main Loop ##
 ###############
 def main(args):
     ge = initalize(args)
+
     # Start the core game loop
     while(not ge.isOver):
         ge.prompt()
