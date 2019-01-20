@@ -10,8 +10,9 @@ import json # Handle JSON files
 
 import unittest # assert(actual, expected)
 from src.Achievements import Achievements # Import the Achievements class
-from src.GameEngine import GameEngine # Import the GameEngine class
-from src.Player import Player         # Import the Player class
+from src.GameEngine import GameEngine     # Import the GameEngine class
+from src.Player import Player             # Import the Player class
+from src.Map import Map                   # Import the Map class
 
 '''
 class MyTestCase1(unittest.TestCase):
@@ -28,20 +29,6 @@ class MyTestCase1(unittest.TestCase):
 '''
 
 def getGameEngine():
-        # Get the map
-        with open('test/testMap.json') as f:
-            m = json.load(f)
-        # Get the player
-        with open('test/testPlayer.json') as f:
-            pJSON = json.load(f)
-        p = Player(pJSON['pName'], pJSON['pClass'], pJSON['inventory'], pJSON['equipment'], \
-            pJSON['level'], pJSON['hp'], pJSON['exp'], pJSON['expRate'], pJSON['gold'], pJSON['goldRate'], \
-            pJSON['upgradesAvailable'], pJSON['stats'])
-        # Get the achievements
-        with open('test/testAchievement.json') as f:
-            aJSON = json.load(f)
-        a = Achievements(aJSON)
-
         # Build the resources/lookup tables that the game needs
         r = {}
         with open('resources/items.json') as f:
@@ -51,7 +38,20 @@ def getGameEngine():
         with open('resources/story.json') as f:
             r['story'] = json.load(f)
 
-        return GameEngine(m, p, a, r)
+        # Get the map
+        with open('test/testMap.json') as f:
+            m = Map(json.load(f), r)
+        # Get the player
+        with open('test/testPlayer.json') as f:
+            pJSON = json.load(f)
+        p = Player('temp', 'temp')
+        p.toPlayer(pJSON, r)
+        # Get the achievements
+        with open('test/testAchievement.json') as f:
+            aJSON = json.load(f)
+        a = Achievements(aJSON)
+
+        return GameEngine(m, p, a, r, 'room 1')
 
 # Test the print function
 class TestHelpFunction(unittest.TestCase):
@@ -61,14 +61,6 @@ class TestHelpFunction(unittest.TestCase):
     # GameEngine: help function
     def testHelp(self):
         self.assertEqual(self.ge.help(), True)
-
-    # GameEngine: look function
-    def testLook(self):
-        self.assertEqual(self.ge.look(), True)
-
-    # GameEngine: map function
-    def testMap(self):
-        self.assertEqual(self.ge.displayMap(), True)
 
 # Test the examine function
 class TestExamineFunction(unittest.TestCase):
@@ -113,9 +105,11 @@ class TestMoveFunction(unittest.TestCase):
         res = self.ge.move('south')
         self.assertEqual(res, False)
 
-    def testMoveRecentlyOpenedRoom(self):
-        res = self.ge.move('') # TODO
-        self.assertEqual(res, True)
+    # TODO
+    # def testMoveRecentlyOpenedRoom(self):
+    #     nextRoom, isNew = self.ge.move('')
+    #     self.assertEqual(nextRoom, )
+    #     self.assertEqual(isNew, )
 
 # Test the take function
 class TestTakeFunction(unittest.TestCase):

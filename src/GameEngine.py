@@ -102,6 +102,9 @@ class GameEngine():
             return False
 
         nextRoom, isNew = self.map.move(self.currentRoom, dir)
+        if nextRoom is None:
+            return False
+
         # Make the move
         if nextRoom:
             self.currentRoom = nextRoom
