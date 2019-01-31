@@ -86,7 +86,7 @@ class Map():
     # Helper: Spawn a new item in the room
     def spawnAction(self, thisRoom, items, resources):
         newItems = []
-        
+
         for i in items:
             iObject = std.itemNameToObject(i, resources)
             self.rooms[thisRoom].items.append(iObject)
@@ -117,6 +117,9 @@ class Map():
             # If the player has the area map, display the icon
             if player.inInventory(f"{room.area} Area Map"):
                 mapArr[roomCoord[0]][roomCoord[1]] = roomIcon
+            # If this is an empty room, display filled in icon
+            elif room.title == 'empty':
+                mapArr[roomCoord[0]][roomCoord[1]] = '#'
             # Else, display a fog
             else:
                 mapArr[roomCoord[0]][roomCoord[1]] = '~'
@@ -161,10 +164,30 @@ class Map():
             jData[k] = v.toJSON()
         return jData
 
-
 # Convert from a JSON string to an map object
 def toMap(mapJSON, resources):
+    # Add the explicity rooms
     map = {}
     for name, details in mapJSON.items():
         map[name] = Room(name, details, resources)
+
+
+    # Find the coordinates of the implicit, empty rooms
+    filledCoords = []
+    maxX = 0
+    maxY = 0
+    for roomName in map:
+        coord = map[roomName].coordinates
+        if coord[0] > maxX: maxX = coord[0] # Find the maximum X coordinate
+        if coord[1] > maxY: maxY = coord[1] # Find the maximum Y coordinate
+        filledCoords.append(coord)
+
+    # Add the implicit, empty rooms
+    emptyDesc = {'title':'empty','description':'empty','connections':{},'area':'empty','icon':'|||','coordinates':[],'visited':True}
+    for i in range(maxX+1):
+        for j in range(maxY+1):
+            if [i,j] not in filledCoords:
+                emptyDesc['coordinates'] = [i,j]
+                map[f'empty_{i}_{j}'] = Room('empty', emptyDesc, resources)
+
     return map
