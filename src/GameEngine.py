@@ -149,7 +149,15 @@ class GameEngine():
             useStatus = self.useAbility(item)
         # Try to use the item from the player
         if not useStatus:
-            useStatus = self.player.use(item)
+            # Key is a special case item
+            if item == 'key':
+                if self.player.inInventory('key', 1):
+                    useStatus = True
+                    self.player.removeItem('key')
+                    keyValue = self.map.rooms[self.currentRoom].use['key']
+                    self.map.unlockAction(self.currentRoom, keyValue['unlock'][1], keyValue['unlock'][0])
+            else:
+                useStatus = self.player.use(item)
 
         if not useStatus:
             print(f'You cannot use \'{item}\' at this time.')
