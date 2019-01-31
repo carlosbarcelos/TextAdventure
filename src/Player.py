@@ -236,6 +236,14 @@ class Player():
         if goldGet: self.getGold(goldGet) # Remember the gold
         return returnValue
 
+    # Remove item from the player inventory
+    def removeItem(self, itemName):
+        returnStatus = False
+        for i in self.inventory:
+            if i.name == itemName:
+                self.inventory.remove(i)
+        return returnStatus
+
     # Handle a use request from the GameEngine
     def use(self, noun):
         useStatus = self.useItem(noun)
@@ -253,9 +261,7 @@ class Player():
         # Make sure the item exists and is usable
         if thisItem and thisItem.usable:
             # Switch on supported items
-            if thisItem.name == 'key':
-                print('TODO key logic')
-            elif thisItem.name == 'health potion':
+            if thisItem.name == 'health potion':
                 itemUsed = self.getHp(10)
             elif thisItem.name == 'experience gem':
                 itemUsed = self.getExp(25)

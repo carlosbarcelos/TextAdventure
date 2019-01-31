@@ -14,7 +14,7 @@ import sys      # DEV TOOL
 from src.Achievements import Achievements # Import the Achievements class
 from src.GameEngine import GameEngine     # Import the GameEngine class
 from src.Player import Player             # Import the Player class
-from src.Map import Map             # Import the Map class
+from src.Map import Map                   # Import the Map class
 import src.stdlib as std                  # Import standard libraries
 
 # Display the one-time, intro sequence to the game

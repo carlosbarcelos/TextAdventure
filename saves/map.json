@@ -25,6 +25,9 @@
         "description" : "This button unlocks north and spawns a rock",
         "unlock" : ["south", "room 3"],
         "spawn" : ["it_rock"]
+      },
+      "key" : {
+        "unlock" : ["south", "room 3"]
       }
     },
     "ability" :
