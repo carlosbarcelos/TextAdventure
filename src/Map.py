@@ -85,6 +85,8 @@ class Map():
 
     # Helper: Spawn a new item in the room
     def spawnAction(self, thisRoom, items, resources):
+        newItems = []
+        
         for i in items:
             iObject = std.itemNameToObject(i, resources)
             self.rooms[thisRoom].items.append(iObject)
